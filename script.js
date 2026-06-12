@@ -177,29 +177,34 @@ function initHeroCanvas() {
     H = canvas.height = canvas.offsetHeight;
   }
 
-  class Particle {
-    constructor() { this.reset(true); }
+  let frame = 0;
 
-    reset(init = false) {
-      this.x  = Math.random() * W;
-      this.y  = init ? Math.random() * H : H + 10;
-      this.r  = Math.random() * 1.2 + 0.3;
-      this.vy = -(Math.random() * 0.4 + 0.1);
-      this.vx = (Math.random() - 0.5) * 0.15;
-      this.alpha = Math.random() * 0.6 + 0.1;
+  class Particle {
+    constructor(burst = false) { this.reset(true, burst); }
+
+    reset(init = false, burst = false) {
+      this.x  = burst ? (W * 0.4 + (Math.random() - 0.5) * W * 0.5) : Math.random() * W;
+      this.y  = init ? Math.random() * H : (burst ? H * 0.5 : H + 10);
+      this.r  = Math.random() * 1.8 + 0.2;
+      this.vy = -(Math.random() * 0.8 + (burst ? 0.5 : 0.1));
+      this.vx = (Math.random() - 0.5) * (burst ? 0.6 : 0.2);
+      this.alpha = Math.random() * 0.7 + 0.15;
       this.life  = 0;
-      this.maxLife = Math.random() * 300 + 150;
+      this.maxLife = Math.random() * 280 + 120;
+      this.wobble = Math.random() * Math.PI * 2;
+      this.wobbleSpeed = (Math.random() - 0.5) * 0.02;
     }
 
     update() {
-      this.x += this.vx;
+      this.wobble += this.wobbleSpeed;
+      this.x += this.vx + Math.sin(this.wobble * 2) * 0.25;
       this.y += this.vy;
       this.life++;
       if (this.y < -10 || this.life > this.maxLife) this.reset();
     }
 
     draw() {
-      const fade = Math.min(this.life / 60, 1) * Math.min((this.maxLife - this.life) / 60, 1);
+      const fade = Math.min(this.life / 50, 1) * Math.min((this.maxLife - this.life) / 50, 1);
       ctx.beginPath();
       ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
       ctx.fillStyle = `rgba(120, 90, 20, ${this.alpha * fade})`;
@@ -207,21 +212,76 @@ function initHeroCanvas() {
     }
   }
 
+  class Streak {
+    constructor() { this.reset(); }
+    reset() {
+      this.x  = Math.random() * W;
+      this.y  = Math.random() * H;
+      this.len = Math.random() * 60 + 20;
+      this.speed = Math.random() * 1.5 + 0.5;
+      this.alpha = Math.random() * 0.08 + 0.02;
+      this.angle = -Math.PI / 2 + (Math.random() - 0.5) * 0.4;
+      this.life = 0;
+      this.maxLife = Math.random() * 80 + 40;
+    }
+    update() {
+      this.x += Math.cos(this.angle) * this.speed;
+      this.y += Math.sin(this.angle) * this.speed;
+      this.life++;
+      if (this.life > this.maxLife) this.reset();
+    }
+    draw() {
+      const fade = Math.min(this.life / 15, 1) * Math.min((this.maxLife - this.life) / 15, 1);
+      ctx.beginPath();
+      ctx.moveTo(this.x, this.y);
+      ctx.lineTo(
+        this.x - Math.cos(this.angle) * this.len,
+        this.y - Math.sin(this.angle) * this.len
+      );
+      ctx.strokeStyle = `rgba(154, 122, 48, ${this.alpha * fade})`;
+      ctx.lineWidth = 0.5;
+      ctx.stroke();
+    }
+  }
+
+  let particles, streaks;
+
   function init() {
     resize();
-    particles = Array.from({ length: 120 }, () => new Particle());
+    particles = Array.from({ length: 200 }, () => new Particle());
+    streaks   = Array.from({ length: 18 },  () => new Streak());
   }
 
   function drawGrid() {
     const step = 80;
-    ctx.strokeStyle = 'rgba(120, 90, 20, 0.06)';
+    const t = frame * 0.002;
     ctx.lineWidth = 1;
     for (let x = 0; x < W; x += step) {
+      const alpha = 0.04 + Math.sin(t + x * 0.01) * 0.02;
+      ctx.strokeStyle = `rgba(120, 90, 20, ${alpha})`;
       ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
     }
     for (let y = 0; y < H; y += step) {
+      const alpha = 0.04 + Math.cos(t + y * 0.01) * 0.02;
+      ctx.strokeStyle = `rgba(120, 90, 20, ${alpha})`;
       ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
     }
+  }
+
+  function drawOrbs() {
+    const t = frame * 0.003;
+    const orbs = [
+      { x: W * 0.3 + Math.sin(t * 0.7) * W * 0.12, y: H * 0.4 + Math.cos(t * 0.5) * H * 0.15, r: 180, a: 0.06 },
+      { x: W * 0.7 + Math.cos(t * 0.6) * W * 0.1,  y: H * 0.6 + Math.sin(t * 0.8) * H * 0.1,  r: 140, a: 0.05 },
+      { x: W * 0.5 + Math.sin(t * 0.4) * W * 0.08, y: H * 0.2 + Math.cos(t * 0.9) * H * 0.08, r: 100, a: 0.04 },
+    ];
+    orbs.forEach(o => {
+      const g = ctx.createRadialGradient(o.x, o.y, 0, o.x, o.y, o.r);
+      g.addColorStop(0, `rgba(154,122,48,${o.a})`);
+      g.addColorStop(1, 'rgba(154,122,48,0)');
+      ctx.fillStyle = g;
+      ctx.fillRect(0, 0, W, H);
+    });
   }
 
   function drawVignette() {
@@ -233,9 +293,9 @@ function initHeroCanvas() {
   }
 
   function loop() {
+    frame++;
     ctx.clearRect(0, 0, W, H);
 
-    // 背景グラデーション
     const bg = ctx.createLinearGradient(0, 0, W, H);
     bg.addColorStop(0, '#ede8de');
     bg.addColorStop(0.5, '#e8e2d6');
@@ -244,6 +304,8 @@ function initHeroCanvas() {
     ctx.fillRect(0, 0, W, H);
 
     drawGrid();
+    drawOrbs();
+    streaks.forEach(s => { s.update(); s.draw(); });
     particles.forEach(p => { p.update(); p.draw(); });
     drawVignette();
 
