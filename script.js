@@ -185,7 +185,7 @@ function initHeroCanvas() {
       const fade = Math.min(this.life / 60, 1) * Math.min((this.maxLife - this.life) / 60, 1);
       ctx.beginPath();
       ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(200, 170, 100, ${this.alpha * fade})`;
+      ctx.fillStyle = `rgba(120, 90, 20, ${this.alpha * fade})`;
       ctx.fill();
     }
   }
@@ -197,7 +197,7 @@ function initHeroCanvas() {
 
   function drawGrid() {
     const step = 80;
-    ctx.strokeStyle = 'rgba(200, 170, 100, 0.03)';
+    ctx.strokeStyle = 'rgba(120, 90, 20, 0.06)';
     ctx.lineWidth = 1;
     for (let x = 0; x < W; x += step) {
       ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
@@ -209,8 +209,8 @@ function initHeroCanvas() {
 
   function drawVignette() {
     const grad = ctx.createRadialGradient(W / 2, H / 2, H * 0.1, W / 2, H / 2, H * 0.9);
-    grad.addColorStop(0, 'rgba(8,11,16,0)');
-    grad.addColorStop(1, 'rgba(8,11,16,0.92)');
+    grad.addColorStop(0, 'rgba(237,232,222,0)');
+    grad.addColorStop(1, 'rgba(237,232,222,0.88)');
     ctx.fillStyle = grad;
     ctx.fillRect(0, 0, W, H);
   }
@@ -220,9 +220,9 @@ function initHeroCanvas() {
 
     // 背景グラデーション
     const bg = ctx.createLinearGradient(0, 0, W, H);
-    bg.addColorStop(0, '#050810');
-    bg.addColorStop(0.5, '#080d18');
-    bg.addColorStop(1, '#050810');
+    bg.addColorStop(0, '#ede8de');
+    bg.addColorStop(0.5, '#e8e2d6');
+    bg.addColorStop(1, '#ede8de');
     ctx.fillStyle = bg;
     ctx.fillRect(0, 0, W, H);
 
