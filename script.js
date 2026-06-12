@@ -8,7 +8,7 @@ document.getElementById('footer-year').textContent = new Date().getFullYear();
 // ── Works グリッド ─────────────────────────────────────────
 function buildWorks() {
   const grid = document.getElementById('works-grid');
-  if (!grid || !window.WORKS) return;
+  if (!grid || typeof WORKS === 'undefined') return;
 
   WORKS.forEach((work, i) => {
     const card = document.createElement('article');
@@ -64,7 +64,7 @@ function formatDate(str) {
 
 function buildArticles() {
   const list = document.getElementById('articles-list');
-  if (!list || !window.ARTICLES) return;
+  if (!list || typeof ARTICLES === 'undefined') return;
 
   ARTICLES.forEach((article, i) => {
     const item = document.createElement('a');
@@ -93,7 +93,7 @@ function buildArticles() {
 
 // ── About ────────────────────────────────────────────────
 function buildAbout() {
-  if (!window.ABOUT) return;
+  if (typeof ABOUT === 'undefined') return;
 
   const bio = document.getElementById('about-bio');
   if (bio) bio.textContent = ABOUT.bio;
@@ -108,18 +108,35 @@ function buildAbout() {
   const linksEl = document.getElementById('about-links');
   if (linksEl && ABOUT.links) {
     linksEl.innerHTML = ABOUT.links
-      .map(l => `<a class="about-link-btn" href="${l.url}" target="_blank" rel="noopener">${l.label}</a>`)
+      .map(l => `<a class="about-link-btn" href="${l.url}" target="_blank" rel="noopener">
+        ${l.icon ? `<span class="link-icon">${l.icon}</span>` : ''}
+        <span>${l.label}</span>
+      </a>`)
       .join('');
   }
+}
+
+// ── ナビアイコン ──────────────────────────────────────────
+function buildNavIcons() {
+  const el = document.getElementById('nav-icons');
+  if (!el || typeof FOOTER_LINKS === 'undefined') return;
+
+  el.innerHTML = FOOTER_LINKS
+    .map(l => `<a class="nav-icon-link" href="${l.url}" target="_blank" rel="noopener" aria-label="${l.label}">
+      ${l.icon ? l.icon : l.label}
+    </a>`)
+    .join('');
 }
 
 // ── フッターリンク ────────────────────────────────────────
 function buildFooterLinks() {
   const el = document.getElementById('footer-links');
-  if (!el || !window.FOOTER_LINKS) return;
+  if (!el || typeof FOOTER_LINKS === 'undefined') return;
 
   el.innerHTML = FOOTER_LINKS
-    .map(l => `<a href="${l.url}" target="_blank" rel="noopener">${l.label}</a>`)
+    .map(l => `<a class="footer-icon-link" href="${l.url}" target="_blank" rel="noopener" aria-label="${l.label}">
+      ${l.icon ? l.icon : l.label}
+    </a>`)
     .join('');
 }
 
@@ -259,6 +276,7 @@ document.addEventListener('DOMContentLoaded', () => {
   buildWorks();
   buildArticles();
   buildAbout();
+  buildNavIcons();
   buildFooterLinks();
   initNav();
   initHeroCanvas();
