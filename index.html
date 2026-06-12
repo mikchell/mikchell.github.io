@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mikchell — Portfolio</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Noto+Sans+JP:wght@300;400;500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+  <!-- ナビゲーション -->
+  <nav id="navbar">
+    <div class="nav-inner">
+      <a href="#hero" class="nav-logo">M.</a>
+      <ul class="nav-links">
+        <li><a href="#works">Works</a></li>
+        <li><a href="#articles">Articles</a></li>
+        <li><a href="#about">About</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- ヒーローセクション -->
+  <section id="hero">
+    <canvas id="hero-canvas"></canvas>
+    <div class="hero-content">
+      <p class="hero-eyebrow">Software Engineer</p>
+      <h1 class="hero-name">Mikchell</h1>
+      <p class="hero-tagline">Crafting digital experiences<br class="br-sp"> with precision and purpose.</p>
+      <div class="hero-cta">
+        <a href="#works" class="btn-primary">View Works</a>
+        <a href="#articles" class="btn-ghost">Read Articles</a>
+      </div>
+    </div>
+    <div class="hero-scroll-hint">
+      <span>Scroll</span>
+      <div class="scroll-line"></div>
+    </div>
+  </section>
+
+  <!-- 作品セクション -->
+  <section id="works">
+    <div class="section-inner">
+      <header class="section-header">
+        <span class="section-label">01 / Works</span>
+        <h2 class="section-title">Selected <em>Projects</em></h2>
+      </header>
+      <div id="works-grid" class="works-grid">
+        <!-- data.js から動的生成 -->
+      </div>
+    </div>
+  </section>
+
+  <!-- 記事セクション -->
+  <section id="articles">
+    <div class="section-inner">
+      <header class="section-header">
+        <span class="section-label">02 / Articles</span>
+        <h2 class="section-title">Latest <em>Writing</em></h2>
+      </header>
+      <div class="articles-platforms">
+        <div id="articles-list" class="articles-list">
+          <!-- data.js から動的生成 -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- About セクション -->
+  <section id="about">
+    <div class="section-inner about-inner">
+      <div class="about-text">
+        <header class="section-header">
+          <span class="section-label">03 / About</span>
+          <h2 class="section-title">Who I <em>Am</em></h2>
+        </header>
+        <p id="about-bio" class="about-bio">
+          <!-- data.js から生成 -->
+        </p>
+        <div id="about-skills" class="about-skills">
+          <!-- data.js から生成 -->
+        </div>
+        <div id="about-links" class="about-links">
+          <!-- data.js から生成 -->
+        </div>
+      </div>
+      <div class="about-visual">
+        <div class="about-frame">
+          <div class="about-frame-inner"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- フッター -->
+  <footer id="footer">
+    <div class="footer-inner">
+      <p class="footer-copy">&copy; <span id="footer-year"></span> Mikchell. All rights reserved.</p>
+      <div id="footer-links" class="footer-social">
+        <!-- data.js から生成 -->
+      </div>
+    </div>
+  </footer>
+
+  <script src="data.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
