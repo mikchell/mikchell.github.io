@@ -11,7 +11,7 @@
 </head>
 <body>
 
-  <!-- ナビゲーション -->
+  <!-- スクロール後に表示される上部ナビ -->
   <nav id="navbar">
     <div class="nav-inner">
       <a href="#hero" class="nav-logo">M.</a>
@@ -26,22 +26,97 @@
     </div>
   </nav>
 
-  <!-- ヒーローセクション -->
+  <!-- ヒーローセクション (umaoスタイル) -->
   <section id="hero">
-    <canvas id="hero-canvas"></canvas>
-    <div class="hero-content">
-      <p class="hero-eyebrow">Software Engineer</p>
-      <h1 class="hero-name">mikchell</h1>
-      <p class="hero-tagline">Crafting digital experiences<br class="br-sp"> with precision and purpose.</p>
-      <div class="hero-cta">
-        <a href="#works" class="btn-primary">View Works</a>
-        <a href="#articles" class="btn-ghost">Read Articles</a>
+
+    <!-- 左側ナビカード -->
+    <div class="hero-card">
+      <a href="#hero" class="hero-card-logo">M.</a>
+      <nav class="hero-card-nav">
+        <a href="#works">Works</a>
+        <a href="#articles">Articles</a>
+        <a href="#about">About</a>
+      </nav>
+    </div>
+
+    <!-- 中央犬イラスト -->
+    <div class="hero-illustration">
+      <div class="dog-wrap">
+        <!-- 柴犬 SVG イラスト -->
+        <svg class="dog-svg" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 280 320" aria-label="Shiba Inu illustration">
+
+          <!-- 影 -->
+          <ellipse cx="140" cy="313" rx="92" ry="10" fill="rgba(20,60,100,0.12)"/>
+
+          <!-- 積み重ねブロック (umaoスタイル) -->
+          <rect x="48" y="278" width="184" height="20" rx="5" fill="#4a90cc"/>
+          <rect x="56" y="257" width="168" height="23" rx="5" fill="#e89ab0"/>
+          <rect x="62" y="238" width="156" height="21" rx="5" fill="#f5c49a"/>
+
+          <!-- カールしたしっぽ (右側・巻き尾) -->
+          <path class="dog-tail" d="M200 188 C236 168 250 138 238 114 C228 96 212 102 216 116 C222 132 216 156 198 172 C184 184 176 194 180 204 C184 212 198 208 200 188Z" fill="#e07828"/>
+
+          <!-- ボディ -->
+          <ellipse cx="140" cy="205" rx="72" ry="58" fill="#e07828"/>
+
+          <!-- 胸・腹のクリームパッチ -->
+          <ellipse cx="140" cy="198" rx="40" ry="50" fill="#f5daa0"/>
+
+          <!-- 前足 (ブロックの上に乗せる) -->
+          <ellipse cx="108" cy="252" rx="24" ry="14" fill="#e07828"/>
+          <ellipse cx="172" cy="252" rx="24" ry="14" fill="#e07828"/>
+          <ellipse cx="108" cy="256" rx="15" ry="7" fill="#f5daa0" opacity="0.7"/>
+          <ellipse cx="172" cy="256" rx="15" ry="7" fill="#f5daa0" opacity="0.7"/>
+
+          <!-- 左耳 (外側・立ち耳) -->
+          <path d="M104 92 C88 72 84 46 96 36 C106 28 116 36 118 50 C120 64 116 82 118 96Z" fill="#e07828"/>
+          <!-- 左耳 (内側・クリーム) -->
+          <path d="M107 88 C94 71 91 52 100 44 C107 38 113 44 115 55 C116 67 113 83 115 92Z" fill="#f5daa0"/>
+
+          <!-- 右耳 (外側・立ち耳) -->
+          <path d="M176 92 C192 72 196 46 184 36 C174 28 164 36 162 50 C160 64 164 82 162 96Z" fill="#e07828"/>
+          <!-- 右耳 (内側・クリーム) -->
+          <path d="M173 88 C186 71 189 52 180 44 C173 38 167 44 165 55 C164 67 167 83 165 92Z" fill="#f5daa0"/>
+
+          <!-- 頭 -->
+          <circle cx="140" cy="138" r="62" fill="#e07828"/>
+
+          <!-- 口まわりのクリームマズル -->
+          <ellipse cx="140" cy="158" rx="30" ry="24" fill="#f5daa0"/>
+
+          <!-- 左目 -->
+          <circle cx="116" cy="126" r="13" fill="#1a0800"/>
+          <circle cx="120" cy="122" r="4.5" fill="white"/>
+
+          <!-- 右目 -->
+          <circle cx="164" cy="126" r="13" fill="#1a0800"/>
+          <circle cx="168" cy="122" r="4.5" fill="white"/>
+
+          <!-- 鼻 -->
+          <ellipse cx="140" cy="151" rx="9" ry="7" fill="#1a0800"/>
+
+          <!-- 口 -->
+          <path d="M130 161 Q140 171 150 161" stroke="#a04808" stroke-width="2" fill="none" stroke-linecap="round"/>
+
+        </svg>
+      </div>
+      <div class="hero-text">
+        <h1 class="hero-name">mikchell</h1>
+        <p class="hero-eyebrow">Software Engineer</p>
       </div>
     </div>
+
+    <!-- 右上ソーシャルアイコン -->
+    <div id="hero-social" class="hero-social">
+      <!-- data.js から生成 -->
+    </div>
+
+    <!-- スクロールヒント (左下) -->
     <div class="hero-scroll-hint">
       <span>Scroll</span>
       <div class="scroll-line"></div>
     </div>
+
   </section>
 
   <!-- 作品セクション -->
