@@ -116,6 +116,18 @@ function buildAbout() {
   }
 }
 
+// ── ナビアイコン ──────────────────────────────────────────
+function buildNavIcons() {
+  const el = document.getElementById('nav-icons');
+  if (!el || typeof FOOTER_LINKS === 'undefined') return;
+
+  el.innerHTML = FOOTER_LINKS
+    .map(l => `<a class="nav-icon-link" href="${l.url}" target="_blank" rel="noopener" aria-label="${l.label}">
+      ${l.icon ? l.icon : l.label}
+    </a>`)
+    .join('');
+}
+
 // ── フッターリンク ────────────────────────────────────────
 function buildFooterLinks() {
   const el = document.getElementById('footer-links');
@@ -264,6 +276,7 @@ document.addEventListener('DOMContentLoaded', () => {
   buildWorks();
   buildArticles();
   buildAbout();
+  buildNavIcons();
   buildFooterLinks();
   initNav();
   initHeroCanvas();
