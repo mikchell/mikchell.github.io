@@ -509,6 +509,9 @@ section:not(#hero) {
 }
 
 .about-link-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
   font-family: var(--font-mono);
   font-size: 0.7rem;
   letter-spacing: 0.15em;
@@ -522,6 +525,14 @@ section:not(#hero) {
   background: var(--gold);
   color: var(--bg);
   border-color: var(--gold);
+}
+.about-link-btn .link-icon {
+  display: flex;
+  align-items: center;
+}
+.about-link-btn .link-icon svg {
+  width: 1rem;
+  height: 1rem;
 }
 
 .about-visual {
@@ -599,6 +610,7 @@ section:not(#hero) {
 .footer-social {
   display: flex;
   gap: 1.5rem;
+  align-items: center;
 }
 
 .footer-social a {
@@ -610,6 +622,18 @@ section:not(#hero) {
   transition: color var(--transition);
 }
 .footer-social a:hover { color: var(--gold); }
+
+.footer-icon-link {
+  display: flex;
+  align-items: center;
+  color: var(--muted);
+  transition: color var(--transition);
+}
+.footer-icon-link:hover { color: var(--gold); }
+.footer-icon-link svg {
+  width: 1.25rem;
+  height: 1.25rem;
+}
 
 /* ===== アニメーション ===== */
 @keyframes fadeUp {
