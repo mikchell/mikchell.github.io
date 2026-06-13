@@ -6,14 +6,14 @@
 }
 
 :root {
-  --bg:          #c5dce8;
-  --bg-2:        #b9d2e0;
-  --bg-card:     #ffffff;
-  --border:      rgba(0, 50, 100, 0.12);
-  --accent:      #2a6099;
-  --accent-dim:  rgba(42, 96, 153, 0.4);
-  --text:        #1a2a3a;
-  --muted:       rgba(26, 42, 58, 0.5);
+  --bg:          #1e1c14;
+  --bg-2:        #262318;
+  --bg-card:     #2c2920;
+  --border:      rgba(221, 219, 209, 0.1);
+  --accent:      #c4c1a8;
+  --accent-dim:  rgba(196, 193, 168, 0.3);
+  --text:        #dddbd1;
+  --muted:       rgba(221, 219, 209, 0.45);
   --font-serif:  'Cormorant Garamond', 'Noto Serif JP', Georgia, serif;
   --font-sans:   'Noto Sans JP', system-ui, sans-serif;
   --font-mono:   'Space Mono', monospace;
@@ -38,7 +38,7 @@ body {
 a { color: inherit; text-decoration: none; }
 img { display: block; width: 100%; object-fit: cover; }
 
-/* ===== スクロール後に出るトップナビ ===== */
+/* ===== ナビゲーション（常時表示） ===== */
 #navbar {
   position: fixed;
   top: 0;
@@ -46,18 +46,10 @@ img { display: block; width: 100%; object-fit: cover; }
   right: 0;
   z-index: 100;
   padding: 1.25rem 2.5rem;
-  opacity: 0;
-  pointer-events: none;
-  transition: opacity 0.3s, background var(--transition), backdrop-filter var(--transition);
-}
-#navbar.scrolled {
-  opacity: 1;
-  pointer-events: all;
-  background: rgba(197, 220, 232, 0.88);
+  background: rgba(30, 28, 20, 0.85);
   backdrop-filter: blur(20px);
   border-bottom: 1px solid var(--border);
 }
-
 .nav-inner {
   max-width: 1200px;
   margin: 0 auto;
@@ -65,16 +57,6 @@ img { display: block; width: 100%; object-fit: cover; }
   align-items: center;
   justify-content: space-between;
 }
-
-.nav-logo {
-  font-family: var(--font-serif);
-  font-size: 1.75rem;
-  font-weight: 600;
-  color: var(--accent);
-  letter-spacing: 0.05em;
-  transition: opacity var(--transition);
-}
-.nav-logo:hover { opacity: 0.7; }
 
 .nav-links {
   list-style: none;
@@ -113,100 +95,58 @@ img { display: block; width: 100%; object-fit: cover; }
 .nav-icon-link:hover { color: var(--accent); }
 .nav-icon-link svg { width: 1.1rem; height: 1.1rem; }
 
-/* ===== ヒーロー (umaoスタイル) ===== */
+/* ===== ヒーロー ===== */
 #hero {
   position: relative;
   min-height: 100svh;
-  background: var(--bg);
+  padding-top: 4rem;
+  background: radial-gradient(ellipse at center, #3a362a 0%, #1e1c14 100%);
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
 }
 
-/* 左側ナビカード */
-.hero-card {
+#hero-canvas {
   position: absolute;
-  left: 3.5rem;
-  top: 50%;
-  transform: translateY(-50%);
-  background: var(--bg-card);
-  border-radius: var(--radius);
-  padding: 2.5rem 2rem;
-  box-shadow: 0 8px 40px rgba(0, 50, 100, 0.1);
-  z-index: 2;
-  min-width: 180px;
-  opacity: 0;
-  animation: fadeUp 0.8s cubic-bezier(0.16,1,0.3,1) 0.2s forwards;
-}
-.hero-card-logo {
-  font-family: var(--font-serif);
-  font-size: 2rem;
-  font-weight: 600;
-  color: var(--accent);
-  display: block;
-  margin-bottom: 2rem;
-}
-.hero-card-nav {
-  display: flex;
-  flex-direction: column;
-  gap: 1rem;
-}
-.hero-card-nav a {
-  font-family: var(--font-mono);
-  font-size: 0.72rem;
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-  color: var(--text);
-  font-weight: 700;
-  transition: color var(--transition), letter-spacing var(--transition);
-}
-.hero-card-nav a:hover {
-  color: var(--accent);
-  letter-spacing: 0.24em;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  z-index: 1;
+  pointer-events: none;
 }
 
-/* 中央犬イラスト */
-.hero-illustration {
+/* 中央テキスト */
+.hero-center {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.5rem;
   z-index: 2;
-  opacity: 0;
-  animation: fadeIn 0.9s cubic-bezier(0.16,1,0.3,1) 0.5s forwards;
-}
-.dog-wrap {
-  animation: float 3.5s ease-in-out infinite;
-}
-.dog-svg {
-  width: 260px;
-  height: auto;
-  filter: drop-shadow(0 20px 32px rgba(0,40,80,0.14));
-}
-.dog-tail {
-  transform-origin: 196px 205px;
-  animation: tailWag 1.4s ease-in-out infinite alternate;
-}
-.hero-text {
   text-align: center;
-  opacity: 0;
-  animation: fadeUp 0.8s cubic-bezier(0.16,1,0.3,1) 0.9s forwards;
+  pointer-events: none;
 }
+
 .hero-name {
   font-family: var(--font-serif);
-  font-size: 2.6rem;
+  font-size: clamp(3.5rem, 9vw, 7rem);
   font-weight: 300;
   color: var(--text);
-  letter-spacing: 0.06em;
+  letter-spacing: 0.08em;
+  line-height: 1;
+  opacity: 0;
+  animation: nameBlast 1.4s cubic-bezier(0.16,1,0.3,1) 0.35s forwards;
+  text-shadow:
+    0 0 80px rgba(221,219,209,0.18),
+    0 0 200px rgba(196,193,168,0.08);
 }
 .hero-eyebrow {
   font-family: var(--font-mono);
   font-size: 0.7rem;
-  letter-spacing: 0.28em;
+  letter-spacing: 0.35em;
   text-transform: uppercase;
   color: var(--muted);
-  margin-top: 0.4rem;
+  margin-top: 1.2rem;
+  opacity: 0;
+  animation: fadeUp 1s cubic-bezier(0.16,1,0.3,1) 1.5s forwards;
 }
 
 /* 右上ソーシャルアイコン */
@@ -287,7 +227,7 @@ section:not(#hero) { padding: 8rem 2.5rem; }
 }
 .section-title em {
   font-style: italic;
-  background: linear-gradient(90deg, var(--accent) 0%, #5090cc 40%, var(--accent) 60%, #1a4f80 100%);
+  background: linear-gradient(90deg, var(--accent) 0%, #e8e4cc 40%, var(--accent) 60%, #a09c84 100%);
   background-size: 200% auto;
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
@@ -632,12 +572,18 @@ section:not(#hero) { padding: 8rem 2.5rem; }
 
 /* ===== アニメーション ===== */
 @keyframes fadeUp {
-  from { opacity: 0; transform: translateY(20px); }
+  from { opacity: 0; transform: translateY(24px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 @keyframes fadeIn {
   from { opacity: 0; }
   to   { opacity: 1; }
+}
+@keyframes nameBlast {
+  0%   { opacity: 0; transform: scale(0.5) translateY(40px); filter: blur(24px); letter-spacing: -0.04em; }
+  50%  { filter: blur(0); }
+  72%  { opacity: 1; transform: scale(1.07) translateY(-6px); letter-spacing: 0.1em; }
+  100% { opacity: 1; transform: scale(1) translateY(0); letter-spacing: 0.08em; }
 }
 @keyframes cardEntrance {
   0%   { opacity: 0; transform: translateY(60px) scale(0.95); }
@@ -652,10 +598,6 @@ section:not(#hero) { padding: 8rem 2.5rem; }
   0%, 100% { transform: translateY(0); }
   50%       { transform: translateY(-10px); }
 }
-@keyframes tailWag {
-  0%   { transform: rotate(-12deg); }
-  100% { transform: rotate(16deg); }
-}
 @keyframes scrollPulse {
   0%, 100% { opacity: 0.3; transform: scaleY(0.8); }
   50%       { opacity: 1;   transform: scaleY(1); }
@@ -667,42 +609,22 @@ section:not(#hero) { padding: 8rem 2.5rem; }
 
 /* ===== スクロールバー ===== */
 ::-webkit-scrollbar { width: 4px; }
-::-webkit-scrollbar-track { background: var(--bg-2); }
-::-webkit-scrollbar-thumb { background: rgba(42,96,153,0.25); border-radius: 2px; }
+::-webkit-scrollbar-track { background: var(--bg); }
+::-webkit-scrollbar-thumb { background: rgba(196, 193, 168, 0.2); border-radius: 2px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--accent-dim); }
 
 /* ===== テキスト選択 ===== */
 ::selection { background: var(--accent); color: white; }
 
 /* ===== レスポンシブ ===== */
-@media (max-width: 1100px) {
-  .hero-card {
-    left: 2rem;
-    padding: 2rem 1.5rem;
-  }
-}
-
 @media (max-width: 900px) {
-  .hero-card {
-    position: static;
-    transform: none;
-    width: calc(100% - 4rem);
-    margin: 2rem auto 0;
-    display: flex;
-    align-items: center;
-    gap: 2rem;
-  }
-  .hero-card-nav { flex-direction: row; gap: 1.5rem; }
   .hero-scroll-hint { display: none; }
   .about-inner { grid-template-columns: 1fr; gap: 3rem; }
   .about-visual { display: none; }
 }
 
 @media (max-width: 640px) {
-  #navbar { padding: 1rem 1.25rem; }
   section:not(#hero) { padding: 5rem 1.25rem; }
-  .hero-card { width: calc(100% - 2.5rem); }
-  .dog-svg { width: 200px; }
   .works-grid { grid-template-columns: 1fr; }
   .article-item { grid-template-columns: auto 1fr; gap: 1rem; padding: 1.25rem; }
   .article-arrow { display: none; }

@@ -156,15 +156,109 @@ function buildFooterLinks() {
     .join('');
 }
 
-// ── ナビゲーション スクロール ─────────────────────────────
-function initNav() {
-  const navbar = document.getElementById('navbar');
-  const hero   = document.getElementById('hero');
-  const onScroll = () => {
-    const past = window.scrollY > (hero ? hero.offsetHeight * 0.6 : 300);
-    navbar.classList.toggle('scrolled', past);
-  };
-  window.addEventListener('scroll', onScroll, { passive: true });
+// ── ヒーロー キャンバスアニメーション ────────────────────
+function initHeroCanvas() {
+  const canvas = document.getElementById('hero-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+
+  let w, h, particles, rafId;
+  const mouse = { x: -9999, y: -9999 };
+  const COUNT = 160;
+  const LINK_DIST = 140;
+  const REPEL_DIST = 130;
+
+  function resize() {
+    w = canvas.width  = canvas.offsetWidth;
+    h = canvas.height = canvas.offsetHeight;
+  }
+
+  function spawn() {
+    particles = Array.from({ length: COUNT }, () => ({
+      x:    Math.random() * w,
+      y:    Math.random() * h,
+      r:    Math.random() * 2.5 + 0.4,
+      vx:   (Math.random() - 0.5) * 1.4,
+      vy:   (Math.random() - 0.5) * 1.4,
+      base: Math.random() * 0.55 + 0.12,
+      t:    Math.random() * Math.PI * 2,
+      ts:   Math.random() * 0.03 + 0.008,
+    }));
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, w, h);
+
+    ctx.lineWidth = 0.7;
+    for (let i = 0; i < particles.length; i++) {
+      for (let j = i + 1; j < particles.length; j++) {
+        const dx = particles[i].x - particles[j].x;
+        const dy = particles[i].y - particles[j].y;
+        const d  = Math.sqrt(dx * dx + dy * dy);
+        if (d < LINK_DIST) {
+          ctx.beginPath();
+          ctx.moveTo(particles[i].x, particles[i].y);
+          ctx.lineTo(particles[j].x, particles[j].y);
+          ctx.strokeStyle = `rgba(196,193,168,${(1 - d / LINK_DIST) * 0.22})`;
+          ctx.stroke();
+        }
+      }
+    }
+
+    for (const p of particles) {
+      p.t += p.ts;
+      const dx = p.x - mouse.x;
+      const dy = p.y - mouse.y;
+      const d  = Math.sqrt(dx * dx + dy * dy);
+      if (d < REPEL_DIST && d > 0) {
+        const f = ((REPEL_DIST - d) / REPEL_DIST) * 5;
+        p.x += (dx / d) * f;
+        p.y += (dy / d) * f;
+      }
+      p.x += p.vx;
+      p.y += p.vy;
+      if (p.x < 0) p.x = w; else if (p.x > w) p.x = 0;
+      if (p.y < 0) p.y = h; else if (p.y > h) p.y = 0;
+
+      const alpha = p.base * (0.6 + 0.4 * Math.sin(p.t));
+      if (p.r > 1.6) {
+        ctx.shadowBlur  = 14;
+        ctx.shadowColor = `rgba(221,219,209,0.7)`;
+      } else {
+        ctx.shadowBlur = 0;
+      }
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(221,219,209,${alpha})`;
+      ctx.fill();
+    }
+    ctx.shadowBlur = 0;
+    rafId = requestAnimationFrame(draw);
+  }
+
+  const hero = document.getElementById('hero');
+  if (hero) {
+    hero.addEventListener('mousemove', e => {
+      const r = canvas.getBoundingClientRect();
+      mouse.x = e.clientX - r.left;
+      mouse.y = e.clientY - r.top;
+    }, { passive: true });
+    hero.addEventListener('mouseleave', () => {
+      mouse.x = -9999;
+      mouse.y = -9999;
+    }, { passive: true });
+  }
+
+  resize();
+  spawn();
+  rafId = requestAnimationFrame(draw);
+
+  window.addEventListener('resize', () => {
+    cancelAnimationFrame(rafId);
+    resize();
+    spawn();
+    rafId = requestAnimationFrame(draw);
+  }, { passive: true });
 }
 
 // ── スクロール表示アニメーション ─────────────────────────
@@ -188,10 +282,10 @@ document.addEventListener('DOMContentLoaded', () => {
   buildWorks();
   buildArticles();
   buildAbout();
-  buildHeroSocial();
   buildNavIcons();
+  buildHeroSocial();
   buildFooterLinks();
-  initNav();
+  initHeroCanvas();
 
   requestAnimationFrame(initScrollReveal);
 });
