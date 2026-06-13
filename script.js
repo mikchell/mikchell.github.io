@@ -110,21 +110,21 @@ function buildAbout() {
   if (bio) {
     bio.innerHTML = ABOUT.bio
       .split(/\n\n+/)
-      .map(p => `<p>${p.trim()}</p>`)
+      .map((p, i) => `<p class="reveal-item" style="transition-delay:${0.15 + i * 0.14}s">${p.trim()}</p>`)
       .join('');
   }
 
   const skillsEl = document.getElementById('about-skills');
   if (skillsEl && ABOUT.skills) {
     skillsEl.innerHTML = ABOUT.skills
-      .map(s => `<span class="skill-pill">${s}</span>`)
+      .map((s, i) => `<span class="skill-item reveal-item" style="transition-delay:${0.2 + i * 0.07}s">${s}</span>`)
       .join('');
   }
 
   const linksEl = document.getElementById('about-links');
   if (linksEl && ABOUT.links) {
     linksEl.innerHTML = ABOUT.links
-      .map(l => `<a class="about-link-btn" href="${l.url}" target="_blank" rel="noopener">
+      .map((l, i) => `<a class="about-link-btn reveal-item" style="transition-delay:${0.25 + i * 0.1}s" href="${l.url}" target="_blank" rel="noopener">
         ${l.icon ? `<span class="link-icon">${l.icon}</span>` : ''}
         <span>${l.label}</span>
       </a>`)
