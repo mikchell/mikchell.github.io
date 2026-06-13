@@ -5,6 +5,15 @@
 document.getElementById('footer-year').textContent = new Date().getFullYear();
 
 // ── Works グリッド ─────────────────────────────────────────
+function getVideoEmbed(url) {
+  const yt = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/)([^&?/]+)/);
+  if (yt) return `<iframe src="https://www.youtube.com/embed/${yt[1]}?rel=0" allowfullscreen loading="lazy"></iframe>`;
+  const vm = url.match(/vimeo\.com\/(\d+)/);
+  if (vm) return `<iframe src="https://player.vimeo.com/video/${vm[1]}" allowfullscreen loading="lazy"></iframe>`;
+  if (/\.(mp4|webm|ogg|mov)$/i.test(url)) return `<video src="${url}" controls muted playsinline></video>`;
+  return null;
+}
+
 function buildWorks() {
   const grid = document.getElementById('works-grid');
   if (!grid || typeof WORKS === 'undefined') return;
@@ -14,9 +23,12 @@ function buildWorks() {
     card.className = 'work-card';
     card.style.animationDelay = `${i * 0.12}s`;
 
-    const thumb = work.thumbnail
-      ? `<img src="${work.thumbnail}" alt="${work.title}" loading="lazy" />`
-      : `<div class="work-thumb-placeholder"><span>${work.title[0]}</span></div>`;
+    const videoEmbed = work.video ? getVideoEmbed(work.video) : null;
+    const thumb = videoEmbed
+      ? videoEmbed
+      : work.thumbnail
+        ? `<img src="${work.thumbnail}" alt="${work.title}" loading="lazy" />`
+        : `<div class="work-thumb-placeholder"><span>${work.title[0]}</span></div>`;
 
     const tags = (work.tags || [])
       .map(t => `<span class="work-tag">${t}</span>`)
