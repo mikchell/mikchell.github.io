@@ -499,6 +499,8 @@ section:not(#hero) { padding: 8rem 2.5rem; }
   line-height: 1.9;
   margin-bottom: 2.5rem;
 }
+.about-bio p { margin: 0 0 1em; }
+.about-bio p:last-child { margin-bottom: 0; }
 
 .about-skills {
   display: flex;

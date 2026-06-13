@@ -87,7 +87,12 @@ function buildAbout() {
   if (typeof ABOUT === 'undefined') return;
 
   const bio = document.getElementById('about-bio');
-  if (bio) bio.textContent = ABOUT.bio;
+  if (bio) {
+    bio.innerHTML = ABOUT.bio
+      .split(/\n\n+/)
+      .map(p => `<p>${p.trim()}</p>`)
+      .join('');
+  }
 
   const skillsEl = document.getElementById('about-skills');
   if (skillsEl && ABOUT.skills) {
