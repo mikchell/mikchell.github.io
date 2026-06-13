@@ -438,6 +438,13 @@ section:not(#hero) { padding: 8rem 2.5rem; }
   border: 1px solid var(--border);
   flex-shrink: 0;
 }
+.article-platform svg {
+  width: 1.2rem;
+  height: 1.2rem;
+  color: var(--accent);
+  transition: color var(--transition);
+}
+.article-item:hover .article-platform svg { color: var(--text); }
 .article-platform-text {
   font-family: var(--font-mono);
   font-size: 0.6rem;
