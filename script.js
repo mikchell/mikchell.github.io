@@ -348,9 +348,22 @@ function initScrollReveal() {
     });
   }, { threshold: 0.1 });
 
-  document.querySelectorAll('.work-card, .article-item').forEach(el => {
+  document.querySelectorAll('.work-card, .article-item, .reveal-item').forEach(el => {
     observer.observe(el);
   });
+
+  const aboutSection = document.getElementById('about');
+  if (aboutSection) {
+    const aboutObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          aboutSection.classList.add('img-visible');
+          aboutObserver.disconnect();
+        }
+      });
+    }, { threshold: 0.15 });
+    aboutObserver.observe(aboutSection);
+  }
 }
 
 // ── 初期化 ───────────────────────────────────────────────

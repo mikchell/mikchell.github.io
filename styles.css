@@ -741,6 +741,17 @@ section:not(#hero) { padding: 8rem 2.5rem; }
   100% { background-position:  200% center; }
 }
 
+/* ===== スクロール表示アニメーション ===== */
+.reveal-item {
+  opacity: 0;
+  transform: translateY(36px);
+  transition: opacity 0.85s cubic-bezier(0.16,1,0.3,1), transform 0.85s cubic-bezier(0.16,1,0.3,1);
+}
+.reveal-item.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
 /* ===== スクロールバー ===== */
 ::-webkit-scrollbar { width: 4px; }
 ::-webkit-scrollbar-track { background: var(--bg); }
