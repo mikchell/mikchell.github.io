@@ -101,11 +101,23 @@ img { display: block; width: 100%; object-fit: cover; }
   position: relative;
   min-height: 100svh;
   padding-top: 4rem;
-  background: radial-gradient(ellipse at center, #3a362a 0%, #1e1c14 100%);
+  background: radial-gradient(ellipse 120% 80% at 50% 60%, #3d3927 0%, #252219 45%, #1a1810 100%);
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
+}
+#hero::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 55% at 18% 68%, rgba(70,85,160,0.07) 0%, transparent 65%),
+    radial-gradient(ellipse 65% 70% at 84% 25%, rgba(120,70,170,0.06) 0%, transparent 65%),
+    radial-gradient(ellipse 40% 30% at 52% 48%, rgba(196,193,168,0.05) 0%, transparent 70%);
+  animation: auroraShift 30s ease-in-out infinite alternate;
+  pointer-events: none;
+  z-index: 0;
 }
 
 #hero-canvas {
@@ -118,12 +130,27 @@ img { display: block; width: 100%; object-fit: cover; }
 
 /* 中央テキスト */
 .hero-center {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   z-index: 2;
   text-align: center;
   pointer-events: none;
+}
+.hero-center::before {
+  content: '';
+  position: absolute;
+  width: 700px;
+  height: 700px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(196,193,168,0.07) 0%, transparent 65%);
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  animation: orbBreathe 5s ease-in-out infinite;
+  pointer-events: none;
+  z-index: -1;
 }
 
 .hero-name {
@@ -134,10 +161,12 @@ img { display: block; width: 100%; object-fit: cover; }
   letter-spacing: 0.08em;
   line-height: 1;
   opacity: 0;
-  animation: nameBlast 1.4s cubic-bezier(0.16,1,0.3,1) 0.35s forwards;
+  animation: nameBlast 3s cubic-bezier(0.16,1,0.3,1) 0.2s forwards, heroGlow 5s ease-in-out 4s infinite;
   text-shadow:
-    0 0 80px rgba(221,219,209,0.18),
-    0 0 200px rgba(196,193,168,0.08);
+    0 0 40px rgba(255,252,225,0.55),
+    0 0 110px rgba(221,219,209,0.28),
+    0 0 260px rgba(196,193,168,0.14),
+    0 4px 32px rgba(0,0,0,0.8);
 }
 .hero-eyebrow {
   font-family: var(--font-mono);
@@ -147,7 +176,7 @@ img { display: block; width: 100%; object-fit: cover; }
   color: var(--muted);
   margin-top: 1.2rem;
   opacity: 0;
-  animation: fadeUp 1s cubic-bezier(0.16,1,0.3,1) 1.5s forwards;
+  animation: fadeUp 1.4s cubic-bezier(0.16,1,0.3,1) 2.8s forwards;
 }
 
 /* 右上ソーシャルアイコン */
@@ -584,11 +613,54 @@ section:not(#hero) { padding: 8rem 2.5rem; }
   to   { opacity: 1; transform: scale(1); }
 }
 @keyframes nameBlast {
-  0%   { opacity: 0; transform: scale(0.2) translateY(80px); filter: blur(60px); letter-spacing: -0.1em; }
-  40%  { filter: blur(0); opacity: 1; }
-  75%  { transform: scale(1.12) translateY(-10px); letter-spacing: 0.14em; }
-  90%  { transform: scale(0.97) translateY(3px); }
-  100% { opacity: 1; transform: scale(1) translateY(0); letter-spacing: 0.08em; }
+  0%   {
+    opacity: 0;
+    transform: scale(0.04) translateY(200px);
+    filter: blur(100px) brightness(10);
+    letter-spacing: 3em;
+  }
+  14% {
+    opacity: 0.4;
+    filter: blur(45px) brightness(5);
+    letter-spacing: 1.4em;
+  }
+  36% {
+    filter: blur(3px) brightness(2);
+    opacity: 0.85;
+    letter-spacing: 0.26em;
+  }
+  56% {
+    transform: scale(1.22) translateY(-26px);
+    filter: blur(0) brightness(1.4);
+    letter-spacing: 0.18em;
+    opacity: 1;
+  }
+  76% { transform: scale(0.94) translateY(8px); letter-spacing: 0.04em; }
+  90% { transform: scale(1.04) translateY(-3px); letter-spacing: 0.10em; }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    letter-spacing: 0.08em;
+    filter: brightness(1);
+  }
+}
+@keyframes heroGlow {
+  0%, 100% {
+    text-shadow: 0 0 40px rgba(255,252,225,0.3), 0 0 110px rgba(221,219,209,0.1), 0 4px 32px rgba(0,0,0,0.8);
+  }
+  50% {
+    text-shadow: 0 0 80px rgba(255,252,225,0.75), 0 0 180px rgba(221,219,209,0.35), 0 0 360px rgba(196,193,168,0.12), 0 4px 32px rgba(0,0,0,0.8);
+  }
+}
+@keyframes auroraShift {
+  0%   { transform: translate(0, 0)    scale(1);    opacity: 0.7; }
+  33%  { transform: translate(-2%, 3%) scale(1.05); opacity: 1;   }
+  66%  { transform: translate(3%, -2%) scale(0.97); opacity: 0.5; }
+  100% { transform: translate(-1%, 1%) scale(1.03); opacity: 0.8; }
+}
+@keyframes orbBreathe {
+  0%, 100% { transform: translate(-50%,-50%) scale(0.85); opacity: 0.5; }
+  50%       { transform: translate(-50%,-50%) scale(1.25); opacity: 1; }
 }
 @keyframes cardEntrance {
   0%   { opacity: 0; transform: translateY(80px) scale(0.88) rotateX(12deg); }

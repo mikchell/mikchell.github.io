@@ -174,11 +174,11 @@ function initHeroCanvas() {
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
 
-  let w, h, particles, rafId;
+  let w, h, particles, rings = [], ringTimer, rafId;
   const mouse = { x: -9999, y: -9999 };
-  const COUNT = 160;
-  const LINK_DIST = 140;
-  const REPEL_DIST = 130;
+  const COUNT = 240;
+  const LINK_DIST = 170;
+  const REPEL_DIST = 145;
 
   function resize() {
     w = canvas.width  = canvas.offsetWidth;
@@ -186,22 +186,70 @@ function initHeroCanvas() {
   }
 
   function spawn() {
-    particles = Array.from({ length: COUNT }, () => ({
+    // 秋の星座の星の位置（正規化座標）
+    const CONST_POSITIONS = [
+      // Cassiopeia（W字・上部）
+      [0.06,0.10],[0.13,0.05],[0.20,0.09],[0.27,0.04],[0.34,0.08],
+      // Cygnus（北十字・右上）
+      [0.74,0.06],[0.71,0.15],[0.68,0.25],[0.65,0.35],[0.62,0.44],[0.59,0.25],[0.77,0.25],
+      // Pegasus（大四辺形・右）
+      [0.82,0.40],[0.82,0.56],[0.70,0.56],[0.70,0.40],
+      // Andromeda
+      [0.60,0.34],[0.50,0.27],
+      // Aquila（わし・左中）
+      [0.23,0.57],[0.23,0.50],[0.23,0.64],[0.15,0.62],[0.31,0.62],
+      // Delphinus（イルカ・中央）
+      [0.44,0.51],[0.41,0.55],[0.43,0.60],[0.47,0.58],[0.53,0.53],
+    ];
+
+    const constParticles = CONST_POSITIONS.map(([nx, ny]) => ({
+      x:    nx * w + (Math.random() - 0.5) * 6,
+      y:    ny * h + (Math.random() - 0.5) * 6,
+      r:    Math.random() * 1.6 + 1.0,
+      vx:   (Math.random() - 0.5) * 0.7,
+      vy:   (Math.random() - 0.5) * 0.7,
+      base: Math.random() * 0.3 + 0.4,
+      t:    Math.random() * Math.PI * 2,
+      ts:   Math.random() * 0.015 + 0.004,
+      star: Math.random() < 0.3,
+    }));
+
+    const bgParticles = Array.from({ length: COUNT - CONST_POSITIONS.length }, () => ({
       x:    Math.random() * w,
       y:    Math.random() * h,
-      r:    Math.random() * 2.5 + 0.4,
-      vx:   (Math.random() - 0.5) * 1.4,
-      vy:   (Math.random() - 0.5) * 1.4,
-      base: Math.random() * 0.55 + 0.12,
+      r:    Math.random() * 2.0 + 0.3,
+      vx:   (Math.random() - 0.5) * 1.2,
+      vy:   (Math.random() - 0.5) * 1.2,
+      base: Math.random() * 0.4 + 0.06,
       t:    Math.random() * Math.PI * 2,
-      ts:   Math.random() * 0.03 + 0.008,
+      ts:   Math.random() * 0.025 + 0.005,
+      star: Math.random() < 0.08,
     }));
+
+    particles = [...constParticles, ...bgParticles];
+  }
+
+  function scheduleRing() {
+    rings.push({ r: 0, alpha: 0.55 });
+    ringTimer = setTimeout(scheduleRing, 2000 + Math.random() * 2000);
   }
 
   function draw() {
     ctx.clearRect(0, 0, w, h);
 
-    ctx.lineWidth = 0.7;
+    for (let i = rings.length - 1; i >= 0; i--) {
+      const ring = rings[i];
+      ring.r   += 2.8;
+      ring.alpha *= 0.973;
+      if (ring.alpha < 0.004) { rings.splice(i, 1); continue; }
+      ctx.beginPath();
+      ctx.arc(w / 2, h / 2, ring.r, 0, Math.PI * 2);
+      ctx.strokeStyle = `rgba(196,193,168,${ring.alpha * 0.28})`;
+      ctx.lineWidth = 1.3;
+      ctx.stroke();
+    }
+
+    ctx.lineWidth = 0.65;
     for (let i = 0; i < particles.length; i++) {
       for (let j = i + 1; j < particles.length; j++) {
         const dx = particles[i].x - particles[j].x;
@@ -211,7 +259,7 @@ function initHeroCanvas() {
           ctx.beginPath();
           ctx.moveTo(particles[i].x, particles[i].y);
           ctx.lineTo(particles[j].x, particles[j].y);
-          ctx.strokeStyle = `rgba(196,193,168,${(1 - d / LINK_DIST) * 0.22})`;
+          ctx.strokeStyle = `rgba(196,193,168,${(1 - d / LINK_DIST) * 0.28})`;
           ctx.stroke();
         }
       }
@@ -223,7 +271,7 @@ function initHeroCanvas() {
       const dy = p.y - mouse.y;
       const d  = Math.sqrt(dx * dx + dy * dy);
       if (d < REPEL_DIST && d > 0) {
-        const f = ((REPEL_DIST - d) / REPEL_DIST) * 5;
+        const f = ((REPEL_DIST - d) / REPEL_DIST) * 6;
         p.x += (dx / d) * f;
         p.y += (dy / d) * f;
       }
@@ -232,19 +280,31 @@ function initHeroCanvas() {
       if (p.x < 0) p.x = w; else if (p.x > w) p.x = 0;
       if (p.y < 0) p.y = h; else if (p.y > h) p.y = 0;
 
-      const alpha = p.base * (0.6 + 0.4 * Math.sin(p.t));
-      if (p.r > 1.6) {
-        ctx.shadowBlur  = 14;
-        ctx.shadowColor = `rgba(221,219,209,0.7)`;
-      } else {
+      const alpha = p.base * (0.55 + 0.45 * Math.sin(p.t));
+      if (p.star) {
+        ctx.shadowBlur  = 24;
+        ctx.shadowColor = `rgba(196,193,168,0.95)`;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r * 1.7, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(240,238,228,${alpha * 1.6})`;
+        ctx.fill();
         ctx.shadowBlur = 0;
+      } else if (p.r > 1.8) {
+        ctx.shadowBlur  = 16;
+        ctx.shadowColor = `rgba(221,219,209,0.65)`;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(221,219,209,${alpha})`;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      } else {
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(221,219,209,${alpha})`;
+        ctx.fill();
       }
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(221,219,209,${alpha})`;
-      ctx.fill();
     }
-    ctx.shadowBlur = 0;
+
     rafId = requestAnimationFrame(draw);
   }
 
@@ -263,12 +323,16 @@ function initHeroCanvas() {
 
   resize();
   spawn();
+  scheduleRing();
   rafId = requestAnimationFrame(draw);
 
   window.addEventListener('resize', () => {
     cancelAnimationFrame(rafId);
+    clearTimeout(ringTimer);
+    rings = [];
     resize();
     spawn();
+    scheduleRing();
     rafId = requestAnimationFrame(draw);
   }, { passive: true });
 }
