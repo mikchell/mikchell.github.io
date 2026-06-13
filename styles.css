@@ -373,14 +373,11 @@ section:not(#hero) { padding: 8rem 2.5rem; }
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 2.5rem;
-  height: 2.5rem;
-  border: 1px solid var(--border);
   flex-shrink: 0;
 }
 .article-platform svg {
-  width: 1.2rem;
-  height: 1.2rem;
+  width: 2rem;
+  height: 2rem;
   color: var(--accent);
   transition: color var(--transition);
 }
@@ -433,10 +430,7 @@ section:not(#hero) { padding: 8rem 2.5rem; }
 #about { background: var(--bg-2); }
 
 .about-inner {
-  display: grid;
-  grid-template-columns: 1fr 380px;
-  gap: 6rem;
-  align-items: center;
+  max-width: 860px;
 }
 
 .about-bio {
@@ -572,35 +566,38 @@ section:not(#hero) { padding: 8rem 2.5rem; }
 
 /* ===== アニメーション ===== */
 @keyframes fadeUp {
-  from { opacity: 0; transform: translateY(24px); }
-  to   { opacity: 1; transform: translateY(0); }
+  from { opacity: 0; transform: translateY(48px) scale(0.97); }
+  to   { opacity: 1; transform: translateY(0)    scale(1); }
 }
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to   { opacity: 1; }
+  from { opacity: 0; transform: scale(0.95); }
+  to   { opacity: 1; transform: scale(1); }
 }
 @keyframes nameBlast {
-  0%   { opacity: 0; transform: scale(0.5) translateY(40px); filter: blur(24px); letter-spacing: -0.04em; }
-  50%  { filter: blur(0); }
-  72%  { opacity: 1; transform: scale(1.07) translateY(-6px); letter-spacing: 0.1em; }
+  0%   { opacity: 0; transform: scale(0.2) translateY(80px); filter: blur(60px); letter-spacing: -0.1em; }
+  40%  { filter: blur(0); opacity: 1; }
+  75%  { transform: scale(1.12) translateY(-10px); letter-spacing: 0.14em; }
+  90%  { transform: scale(0.97) translateY(3px); }
   100% { opacity: 1; transform: scale(1) translateY(0); letter-spacing: 0.08em; }
 }
 @keyframes cardEntrance {
-  0%   { opacity: 0; transform: translateY(60px) scale(0.95); }
+  0%   { opacity: 0; transform: translateY(80px) scale(0.88) rotateX(12deg); }
   60%  { opacity: 1; }
+  80%  { transform: translateY(-8px) scale(1.02) rotateX(0); }
   100% { opacity: 1; transform: translateY(0) scale(1); }
 }
 @keyframes slideFromRight {
-  from { opacity: 0; transform: translateX(40px); }
-  to   { opacity: 1; transform: translateX(0); }
+  from { opacity: 0; transform: translateX(80px) scale(0.95); }
+  to   { opacity: 1; transform: translateX(0)    scale(1); }
 }
 @keyframes float {
-  0%, 100% { transform: translateY(0); }
-  50%       { transform: translateY(-10px); }
+  0%, 100% { transform: translateY(0)    rotate(0deg); }
+  33%       { transform: translateY(-14px) rotate(-1deg); }
+  66%       { transform: translateY(-6px)  rotate(1deg); }
 }
 @keyframes scrollPulse {
-  0%, 100% { opacity: 0.3; transform: scaleY(0.8); }
-  50%       { opacity: 1;   transform: scaleY(1); }
+  0%, 100% { opacity: 0.2; transform: scaleY(0.6); }
+  50%       { opacity: 1;   transform: scaleY(1.1); }
 }
 @keyframes shimmer {
   0%   { background-position: -200% center; }
@@ -619,8 +616,6 @@ section:not(#hero) { padding: 8rem 2.5rem; }
 /* ===== レスポンシブ ===== */
 @media (max-width: 900px) {
   .hero-scroll-hint { display: none; }
-  .about-inner { grid-template-columns: 1fr; gap: 3rem; }
-  .about-visual { display: none; }
 }
 
 @media (max-width: 640px) {
