@@ -14,7 +14,6 @@
   <!-- ナビゲーション -->
   <nav id="navbar">
     <div class="nav-inner">
-      <a href="#hero" class="nav-logo">M.</a>
       <ul class="nav-links">
         <li><a href="#works">Works</a></li>
         <li><a href="#articles">Articles</a></li>
@@ -28,20 +27,27 @@
 
   <!-- ヒーローセクション -->
   <section id="hero">
+
+    <!-- キャンバスアニメーション -->
     <canvas id="hero-canvas"></canvas>
-    <div class="hero-content">
-      <p class="hero-eyebrow">Software Engineer</p>
+
+    <!-- 中央テキスト -->
+    <div class="hero-center">
       <h1 class="hero-name">mikchell</h1>
-      <p class="hero-tagline">Crafting digital experiences<br class="br-sp"> with precision and purpose.</p>
-      <div class="hero-cta">
-        <a href="#works" class="btn-primary">View Works</a>
-        <a href="#articles" class="btn-ghost">Read Articles</a>
-      </div>
+      <p class="hero-eyebrow">Software Engineer</p>
     </div>
+
+    <!-- 右上ソーシャルアイコン -->
+    <div id="hero-social" class="hero-social">
+      <!-- data.js から生成 -->
+    </div>
+
+    <!-- スクロールヒント (左下) -->
     <div class="hero-scroll-hint">
       <span>Scroll</span>
       <div class="scroll-line"></div>
     </div>
+
   </section>
 
   <!-- 作品セクション -->
@@ -49,7 +55,6 @@
     <div class="section-inner">
       <header class="section-header">
         <span class="section-label">01 / Works</span>
-        <h2 class="section-title">Selected <em>Projects</em></h2>
       </header>
       <div id="works-grid" class="works-grid">
         <!-- data.js から動的生成 -->
@@ -62,7 +67,6 @@
     <div class="section-inner">
       <header class="section-header">
         <span class="section-label">02 / Articles</span>
-        <h2 class="section-title">Latest <em>Writing</em></h2>
       </header>
       <div class="articles-platforms">
         <div id="articles-list" class="articles-list">
@@ -88,11 +92,6 @@
         </div>
         <div id="about-links" class="about-links">
           <!-- data.js から生成 -->
-        </div>
-      </div>
-      <div class="about-visual">
-        <div class="about-frame">
-          <div class="about-frame-inner"></div>
         </div>
       </div>
     </div>

@@ -2,7 +2,6 @@
    script.js — ポートフォリオ メインロジック
    ================================================================ */
 
-// ── フッター年 ──────────────────────────────────────────────
 document.getElementById('footer-year').textContent = new Date().getFullYear();
 
 // ── Works グリッド ─────────────────────────────────────────
@@ -34,9 +33,7 @@ function buildWorks() {
     `;
 
     card.addEventListener('click', e => {
-      if (!e.target.closest('a')) {
-        window.open(work.url, '_blank', 'noopener');
-      }
+      if (!e.target.closest('a')) window.open(work.url, '_blank', 'noopener');
     });
 
     grid.appendChild(card);
@@ -45,11 +42,12 @@ function buildWorks() {
 
 // ── Articles リスト ────────────────────────────────────────
 const PLATFORM_LABELS = {
-  zenn:   'Zenn',
-  qiita:  'Qiita',
-  note:   'note',
-  medium: 'Medium',
-  blog:   'Blog',
+  zenn: 'Zenn', qiita: 'Qiita', note: 'note', medium: 'Medium', blog: 'Blog',
+};
+
+const PLATFORM_ICONS = {
+  zenn: `<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M.264 23.771h4.984c.264 0 .498-.147.645-.352L19.614.874c.176-.293-.029-.645-.381-.645h-4.72c-.235 0-.44.117-.557.323L.03 23.361c-.088.176.029.41.234.41zM17.445 23.419l6.479-10.408c.205-.323-.029-.733-.41-.733h-4.691c-.176 0-.352.088-.44.235l-6.655 10.643c-.176.264.029.616.352.616h4.779c.234-.001.468-.118.586-.353z"/></svg>`,
+  qiita: `<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C5.3726 0 0 5.3726 0 12s5.3726 12 12 12c3.3984 0 6.4665-1.413 8.6498-3.6832-.383-.0574-.7746-.2062-1.1466-.4542-.7145-.4763-1.3486-.9263-1.6817-1.674-1.2945 1.3807-3.0532 1.835-5.1822 2.0503-4.311.4359-8.0456-1.4893-8.4979-6.2996-.1922-2.045.2628-3.989 1.1804-5.582l-.5342-2.1009c-.0862-.3652.2498-.7126.6057-.6262l1.8456.448c1.0974-.9012 2.4249-1.49 3.8892-1.638 1.2526-.1267 2.467.0834 3.571.5624l1.7348-1.0494c.3265-.1974.7399.0257.7711.4164l.1 2.4747v.0002c1.334 1.4084 2.2424 3.3319 2.4478 5.516.116 1.2339-.012 2.1776-.339 3.078-.1531.4215-.1992.7778.0776 1.1305.2674.3408.6915 1.0026 1.1644.8917.7107-.1666 1.4718-.1223 1.9422.1715C23.4925 15.9525 24 14.0358 24 12c0-6.6274-5.3726-12-12-12Zm-.0727 5.727a5.2731 5.2731 0 0 0-.6146.0273c-2.2084.2233-3.9572 1.8135-4.4937 3.8484l-1.3176-.1996-.014.2589 1.2972.1407c-.0352.1497-.0643.2384-.086.3923l-1.1319.0902.0103.2025 1.1032-.088c-.0194.1713-.031.2814-.0332.4565l-1.0078.412.0495.2499.9598-.4492c.002.1339.008.2053.0207.3407.2667 2.8371 2.6364 3.3981 5.4677 3.1118 2.8312-.2863 5.0517-1.3114 4.785-4.1486-.013-.1361-.0324-.2068-.0553-.3392l1.0397.2257.0242-.229-1.0906-.207c-.0342-.1687-.0765-.271-.1264-.4327l1.1208-.1374-.0158-.2019-1.1499.1409a5.1093 5.1093 0 0 0-.1665-.4259l1.2665-.4042-.0397-.2536-1.3471.4667c-.819-1.7168-2.5002-2.8224-4.4546-2.8482Z"/></svg>`,
 };
 
 function formatDate(str) {
@@ -57,9 +55,7 @@ function formatDate(str) {
     return new Intl.DateTimeFormat('ja-JP', {
       year: 'numeric', month: 'long', day: 'numeric',
     }).format(new Date(str));
-  } catch {
-    return str;
-  }
+  } catch { return str; }
 }
 
 function buildArticles() {
@@ -75,10 +71,13 @@ function buildArticles() {
     item.style.animationDelay = `${i * 0.1}s`;
 
     const platformLabel = PLATFORM_LABELS[article.platform] || article.platform;
+    const platformIcon = PLATFORM_ICONS[article.platform];
 
     item.innerHTML = `
       <div class="article-platform">
-        <span class="article-platform-text">${platformLabel}</span>
+        ${platformIcon
+          ? platformIcon
+          : `<span class="article-platform-text">${platformLabel}</span>`}
       </div>
       <div class="article-body">
         <p class="article-title">${article.title}</p>
@@ -96,7 +95,12 @@ function buildAbout() {
   if (typeof ABOUT === 'undefined') return;
 
   const bio = document.getElementById('about-bio');
-  if (bio) bio.textContent = ABOUT.bio;
+  if (bio) {
+    bio.innerHTML = ABOUT.bio
+      .split(/\n\n+/)
+      .map(p => `<p>${p.trim()}</p>`)
+      .join('');
+  }
 
   const skillsEl = document.getElementById('about-skills');
   if (skillsEl && ABOUT.skills) {
@@ -114,6 +118,18 @@ function buildAbout() {
       </a>`)
       .join('');
   }
+}
+
+// ── ヒーロー ソーシャルアイコン ───────────────────────────
+function buildHeroSocial() {
+  const el = document.getElementById('hero-social');
+  if (!el || typeof FOOTER_LINKS === 'undefined') return;
+
+  el.innerHTML = FOOTER_LINKS
+    .map(l => `<a class="hero-social-link" href="${l.url}" target="_blank" rel="noopener" aria-label="${l.label}">
+      ${l.icon ? l.icon : l.label}
+    </a>`)
+    .join('');
 }
 
 // ── ナビアイコン ──────────────────────────────────────────
@@ -140,11 +156,108 @@ function buildFooterLinks() {
     .join('');
 }
 
-// ── ナビゲーション スクロール ─────────────────────────────
-function initNav() {
-  const navbar = document.getElementById('navbar');
-  window.addEventListener('scroll', () => {
-    navbar.classList.toggle('scrolled', window.scrollY > 50);
+// ── ヒーロー キャンバスアニメーション ────────────────────
+function initHeroCanvas() {
+  const canvas = document.getElementById('hero-canvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+
+  let w, h, particles, rafId;
+  const mouse = { x: -9999, y: -9999 };
+  const COUNT = 160;
+  const LINK_DIST = 140;
+  const REPEL_DIST = 130;
+
+  function resize() {
+    w = canvas.width  = canvas.offsetWidth;
+    h = canvas.height = canvas.offsetHeight;
+  }
+
+  function spawn() {
+    particles = Array.from({ length: COUNT }, () => ({
+      x:    Math.random() * w,
+      y:    Math.random() * h,
+      r:    Math.random() * 2.5 + 0.4,
+      vx:   (Math.random() - 0.5) * 1.4,
+      vy:   (Math.random() - 0.5) * 1.4,
+      base: Math.random() * 0.55 + 0.12,
+      t:    Math.random() * Math.PI * 2,
+      ts:   Math.random() * 0.03 + 0.008,
+    }));
+  }
+
+  function draw() {
+    ctx.clearRect(0, 0, w, h);
+
+    ctx.lineWidth = 0.7;
+    for (let i = 0; i < particles.length; i++) {
+      for (let j = i + 1; j < particles.length; j++) {
+        const dx = particles[i].x - particles[j].x;
+        const dy = particles[i].y - particles[j].y;
+        const d  = Math.sqrt(dx * dx + dy * dy);
+        if (d < LINK_DIST) {
+          ctx.beginPath();
+          ctx.moveTo(particles[i].x, particles[i].y);
+          ctx.lineTo(particles[j].x, particles[j].y);
+          ctx.strokeStyle = `rgba(196,193,168,${(1 - d / LINK_DIST) * 0.22})`;
+          ctx.stroke();
+        }
+      }
+    }
+
+    for (const p of particles) {
+      p.t += p.ts;
+      const dx = p.x - mouse.x;
+      const dy = p.y - mouse.y;
+      const d  = Math.sqrt(dx * dx + dy * dy);
+      if (d < REPEL_DIST && d > 0) {
+        const f = ((REPEL_DIST - d) / REPEL_DIST) * 5;
+        p.x += (dx / d) * f;
+        p.y += (dy / d) * f;
+      }
+      p.x += p.vx;
+      p.y += p.vy;
+      if (p.x < 0) p.x = w; else if (p.x > w) p.x = 0;
+      if (p.y < 0) p.y = h; else if (p.y > h) p.y = 0;
+
+      const alpha = p.base * (0.6 + 0.4 * Math.sin(p.t));
+      if (p.r > 1.6) {
+        ctx.shadowBlur  = 14;
+        ctx.shadowColor = `rgba(221,219,209,0.7)`;
+      } else {
+        ctx.shadowBlur = 0;
+      }
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.fillStyle = `rgba(221,219,209,${alpha})`;
+      ctx.fill();
+    }
+    ctx.shadowBlur = 0;
+    rafId = requestAnimationFrame(draw);
+  }
+
+  const hero = document.getElementById('hero');
+  if (hero) {
+    hero.addEventListener('mousemove', e => {
+      const r = canvas.getBoundingClientRect();
+      mouse.x = e.clientX - r.left;
+      mouse.y = e.clientY - r.top;
+    }, { passive: true });
+    hero.addEventListener('mouseleave', () => {
+      mouse.x = -9999;
+      mouse.y = -9999;
+    }, { passive: true });
+  }
+
+  resize();
+  spawn();
+  rafId = requestAnimationFrame(draw);
+
+  window.addEventListener('resize', () => {
+    cancelAnimationFrame(rafId);
+    resize();
+    spawn();
+    rafId = requestAnimationFrame(draw);
   }, { passive: true });
 }
 
@@ -164,124 +277,15 @@ function initScrollReveal() {
   });
 }
 
-// ── ヒーローキャンバス (粒子アニメーション) ──────────────
-function initHeroCanvas() {
-  const canvas = document.getElementById('hero-canvas');
-  if (!canvas) return;
-
-  const ctx = canvas.getContext('2d');
-  let W, H, particles;
-
-  function resize() {
-    W = canvas.width  = canvas.offsetWidth;
-    H = canvas.height = canvas.offsetHeight;
-  }
-
-  class Particle {
-    constructor() { this.reset(true); }
-
-    reset(init = false) {
-      this.x  = Math.random() * W;
-      this.y  = init ? Math.random() * H : H + 10;
-      this.r  = Math.random() * 1.2 + 0.3;
-      this.vy = -(Math.random() * 0.4 + 0.1);
-      this.vx = (Math.random() - 0.5) * 0.15;
-      this.alpha = Math.random() * 0.6 + 0.1;
-      this.life  = 0;
-      this.maxLife = Math.random() * 300 + 150;
-    }
-
-    update() {
-      this.x += this.vx;
-      this.y += this.vy;
-      this.life++;
-      if (this.y < -10 || this.life > this.maxLife) this.reset();
-    }
-
-    draw() {
-      const fade = Math.min(this.life / 60, 1) * Math.min((this.maxLife - this.life) / 60, 1);
-      ctx.beginPath();
-      ctx.arc(this.x, this.y, this.r, 0, Math.PI * 2);
-      ctx.fillStyle = `rgba(120, 90, 20, ${this.alpha * fade})`;
-      ctx.fill();
-    }
-  }
-
-  function init() {
-    resize();
-    particles = Array.from({ length: 120 }, () => new Particle());
-  }
-
-  function drawGrid() {
-    const step = 80;
-    ctx.strokeStyle = 'rgba(120, 90, 20, 0.06)';
-    ctx.lineWidth = 1;
-    for (let x = 0; x < W; x += step) {
-      ctx.beginPath(); ctx.moveTo(x, 0); ctx.lineTo(x, H); ctx.stroke();
-    }
-    for (let y = 0; y < H; y += step) {
-      ctx.beginPath(); ctx.moveTo(0, y); ctx.lineTo(W, y); ctx.stroke();
-    }
-  }
-
-  function drawVignette() {
-    const grad = ctx.createRadialGradient(W / 2, H / 2, H * 0.1, W / 2, H / 2, H * 0.9);
-    grad.addColorStop(0, 'rgba(237,232,222,0)');
-    grad.addColorStop(1, 'rgba(237,232,222,0.88)');
-    ctx.fillStyle = grad;
-    ctx.fillRect(0, 0, W, H);
-  }
-
-  function loop() {
-    ctx.clearRect(0, 0, W, H);
-
-    // 背景グラデーション
-    const bg = ctx.createLinearGradient(0, 0, W, H);
-    bg.addColorStop(0, '#ede8de');
-    bg.addColorStop(0.5, '#e8e2d6');
-    bg.addColorStop(1, '#ede8de');
-    ctx.fillStyle = bg;
-    ctx.fillRect(0, 0, W, H);
-
-    drawGrid();
-    particles.forEach(p => { p.update(); p.draw(); });
-    drawVignette();
-
-    requestAnimationFrame(loop);
-  }
-
-  init();
-  loop();
-
-  window.addEventListener('resize', () => {
-    resize();
-    particles.forEach(p => p.reset(true));
-  }, { passive: true });
-}
-
-// ── マウスパララックス (ヒーロー文字) ────────────────────
-function initParallax() {
-  const content = document.querySelector('.hero-content');
-  if (!content) return;
-
-  window.addEventListener('mousemove', e => {
-    const cx = (e.clientX / window.innerWidth - 0.5) * 16;
-    const cy = (e.clientY / window.innerHeight - 0.5) * 8;
-    content.style.transform = `translate(${cx}px, ${cy}px)`;
-  }, { passive: true });
-}
-
 // ── 初期化 ───────────────────────────────────────────────
 document.addEventListener('DOMContentLoaded', () => {
   buildWorks();
   buildArticles();
   buildAbout();
   buildNavIcons();
+  buildHeroSocial();
   buildFooterLinks();
-  initNav();
   initHeroCanvas();
-  initParallax();
 
-  // DOM 構築後に IntersectionObserver をセット
   requestAnimationFrame(initScrollReveal);
 });
