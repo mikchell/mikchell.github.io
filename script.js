@@ -158,14 +158,7 @@ function buildNavIcons() {
 
 // ── フッターリンク ────────────────────────────────────────
 function buildFooterLinks() {
-  const el = document.getElementById('footer-links');
-  if (!el || typeof FOOTER_LINKS === 'undefined') return;
-
-  el.innerHTML = FOOTER_LINKS
-    .map(l => `<a class="footer-icon-link" href="${l.url}" target="_blank" rel="noopener" aria-label="${l.label}">
-      ${l.icon ? l.icon : l.label}
-    </a>`)
-    .join('');
+  // フッターにはアイコンを表示しない
 }
 
 // ── ヒーロー キャンバスアニメーション ────────────────────
@@ -175,10 +168,13 @@ function initHeroCanvas() {
   const ctx = canvas.getContext('2d');
 
   let w, h, particles, rings = [], ringTimer, rafId;
+  let visible = true;
   const mouse = { x: -9999, y: -9999 };
-  const COUNT = 240;
-  const LINK_DIST = 170;
-  const REPEL_DIST = 145;
+  const COUNT = 180;
+  const LINK_DIST   = 150;
+  const LINK_DIST2  = LINK_DIST * LINK_DIST;
+  const REPEL_DIST  = 120;
+  const REPEL_DIST2 = REPEL_DIST * REPEL_DIST;
 
   function resize() {
     w = canvas.width  = canvas.offsetWidth;
@@ -186,7 +182,6 @@ function initHeroCanvas() {
   }
 
   function spawn() {
-    // 秋の星座の星の位置（正規化座標）
     const CONST_POSITIONS = [
       // Cassiopeia（W字・上部）
       [0.06,0.10],[0.13,0.05],[0.20,0.09],[0.27,0.04],[0.34,0.08],
@@ -203,27 +198,28 @@ function initHeroCanvas() {
     ];
 
     const constParticles = CONST_POSITIONS.map(([nx, ny]) => ({
-      x:    nx * w + (Math.random() - 0.5) * 6,
-      y:    ny * h + (Math.random() - 0.5) * 6,
-      r:    Math.random() * 1.6 + 1.0,
-      vx:   (Math.random() - 0.5) * 0.7,
-      vy:   (Math.random() - 0.5) * 0.7,
+      x: nx * w + (Math.random() - 0.5) * 6,
+      y: ny * h + (Math.random() - 0.5) * 6,
+      r: Math.random() * 1.6 + 1.0,
+      vx: (Math.random() - 0.5) * 0.7,
+      vy: (Math.random() - 0.5) * 0.7,
       base: Math.random() * 0.3 + 0.4,
-      t:    Math.random() * Math.PI * 2,
-      ts:   Math.random() * 0.015 + 0.004,
+      t: Math.random() * Math.PI * 2,
+      ts: Math.random() * 0.015 + 0.004,
       star: Math.random() < 0.3,
     }));
 
-    const bgParticles = Array.from({ length: COUNT - CONST_POSITIONS.length }, () => ({
-      x:    Math.random() * w,
-      y:    Math.random() * h,
-      r:    Math.random() * 2.0 + 0.3,
-      vx:   (Math.random() - 0.5) * 1.2,
-      vy:   (Math.random() - 0.5) * 1.2,
-      base: Math.random() * 0.4 + 0.06,
-      t:    Math.random() * Math.PI * 2,
-      ts:   Math.random() * 0.025 + 0.005,
-      star: Math.random() < 0.08,
+    const bgCount = COUNT - CONST_POSITIONS.length;
+    const bgParticles = Array.from({ length: bgCount }, () => ({
+      x: Math.random() * w,
+      y: Math.random() * h,
+      r: Math.random() * 1.6 + 0.3,
+      vx: (Math.random() - 0.5) * 1.0,
+      vy: (Math.random() - 0.5) * 1.0,
+      base: Math.random() * 0.35 + 0.06,
+      t: Math.random() * Math.PI * 2,
+      ts: Math.random() * 0.022 + 0.005,
+      star: false,
     }));
 
     particles = [...constParticles, ...bgParticles];
@@ -249,31 +245,32 @@ function initHeroCanvas() {
       ctx.stroke();
     }
 
+    // 接続線を一括描画
+    ctx.beginPath();
+    ctx.strokeStyle = 'rgba(196,193,168,0.14)';
     ctx.lineWidth = 0.65;
     for (let i = 0; i < particles.length; i++) {
       for (let j = i + 1; j < particles.length; j++) {
         const dx = particles[i].x - particles[j].x;
         const dy = particles[i].y - particles[j].y;
-        const d  = Math.sqrt(dx * dx + dy * dy);
-        if (d < LINK_DIST) {
-          ctx.beginPath();
+        if (dx * dx + dy * dy < LINK_DIST2) {
           ctx.moveTo(particles[i].x, particles[i].y);
           ctx.lineTo(particles[j].x, particles[j].y);
-          ctx.strokeStyle = `rgba(196,193,168,${(1 - d / LINK_DIST) * 0.28})`;
-          ctx.stroke();
         }
       }
     }
+    ctx.stroke();
 
     for (const p of particles) {
       p.t += p.ts;
-      const dx = p.x - mouse.x;
-      const dy = p.y - mouse.y;
-      const d  = Math.sqrt(dx * dx + dy * dy);
-      if (d < REPEL_DIST && d > 0) {
-        const f = ((REPEL_DIST - d) / REPEL_DIST) * 6;
-        p.x += (dx / d) * f;
-        p.y += (dy / d) * f;
+      const mdx = p.x - mouse.x;
+      const mdy = p.y - mouse.y;
+      const md2 = mdx * mdx + mdy * mdy;
+      if (md2 < REPEL_DIST2 && md2 > 0) {
+        const md = Math.sqrt(md2);
+        const f  = ((REPEL_DIST - md) / REPEL_DIST) * 6;
+        p.x += (mdx / md) * f;
+        p.y += (mdy / md) * f;
       }
       p.x += p.vx;
       p.y += p.vy;
@@ -282,25 +279,33 @@ function initHeroCanvas() {
 
       const alpha = p.base * (0.55 + 0.45 * Math.sin(p.t));
       if (p.star) {
-        ctx.shadowBlur  = 24;
-        ctx.shadowColor = `rgba(196,193,168,0.95)`;
+        // 輝星：グロー2層
+        ctx.shadowBlur  = 28;
+        ctx.shadowColor = 'rgba(220,216,190,0.95)';
         ctx.beginPath();
-        ctx.arc(p.x, p.y, p.r * 1.7, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(240,238,228,${alpha * 1.6})`;
+        ctx.arc(p.x, p.y, p.r * 2.2, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(255,253,240,${alpha * 0.35})`;
         ctx.fill();
-        ctx.shadowBlur = 0;
-      } else if (p.r > 1.8) {
-        ctx.shadowBlur  = 16;
-        ctx.shadowColor = `rgba(221,219,209,0.65)`;
+        ctx.shadowBlur = 10;
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(221,219,209,${alpha})`;
+        ctx.fillStyle = `rgba(255,253,240,${alpha})`;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      } else if (p.r > 1.2) {
+        // 中間星：薄いグロー
+        ctx.shadowBlur  = 8;
+        ctx.shadowColor = 'rgba(196,193,168,0.5)';
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(230,228,215,${alpha})`;
         ctx.fill();
         ctx.shadowBlur = 0;
       } else {
+        // 暗い小星：グローなし
         ctx.beginPath();
         ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-        ctx.fillStyle = `rgba(221,219,209,${alpha})`;
+        ctx.fillStyle = `rgba(180,178,165,${alpha * 0.7})`;
         ctx.fill();
       }
     }
@@ -316,9 +321,15 @@ function initHeroCanvas() {
       mouse.y = e.clientY - r.top;
     }, { passive: true });
     hero.addEventListener('mouseleave', () => {
-      mouse.x = -9999;
-      mouse.y = -9999;
+      mouse.x = -9999; mouse.y = -9999;
     }, { passive: true });
+
+    // ヒーローが見えない間はrAFを停止
+    new IntersectionObserver(([entry]) => {
+      visible = entry.isIntersecting;
+      if (visible && !rafId) rafId = requestAnimationFrame(draw);
+      if (!visible) { cancelAnimationFrame(rafId); rafId = null; }
+    }).observe(hero);
   }
 
   resize();
