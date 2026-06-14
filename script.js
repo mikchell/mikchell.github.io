@@ -350,6 +350,8 @@ function initHeroCanvas() {
 
 // ── スクロール表示アニメーション ─────────────────────────
 function initScrollReveal() {
+  const aboutRevealItems = new Set(document.querySelectorAll('#about .reveal-item'));
+
   const observer = new IntersectionObserver((entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
