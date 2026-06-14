@@ -18,14 +18,14 @@ const ABOUT = {
 // ── 作品 ──────────────────────────────────────────────────────
 const WORKS = [
   {
-    title: "Pulseee (従業員パルスサーベイシステム)",
+    title: "「Pulseee」従業員パルスサーベイシステム",
     url: "https://pulseee.onrender.com",
     thumbnail: "images/Pulseee.gif",
     tags: ["Ruby on Rais", "JavaScript", "PostgreSQL", "NeonDB", "Render"],
     desc: "人事担当者や経営者が組織の状態をリアルタイムに把握するためのパルスサーベイツールとして、Ruby on Rails + Hotwire + PostgreSQL + Google OAuth 構成を用いて、複雑な認証設定や外部SaaSへの依存を最小限に抑えながら、Solid Queue による非同期ジョブとSlack Webhook 連携による自動通知により、サーベイ対象者への定期配信・未回答リマインドを人の手を介さずに動かし続け、ロールベースのアクセス制御と匿名性を保った定量集計により、管理者は回収率やグループ別スコアをダッシュボードで即座に確認できる、エンジニアなしでも日常運用が回るサーベイ基盤。",
   },
   {
-    title: "フリーランスアーティストのWebサイト",
+    title: "フリーランスアーティストの公式Webサイト",
     url: "",
     thumbnail: "images/ishikawa-official.gif",
     tags: ["Next.js", "microCMS", "Vercel", "Tailwind CSS", "Cloudflare"],
@@ -40,6 +40,105 @@ const ARTICLES = [
     url: "https://zenn.dev/mikchell/articles/nextjs-app-router",
     platform: "zenn",
     date: "2024-05-10",
+  },
+];
+
+// ── アーカイブ ─────────────────────────────────────────────────────────
+// year     : 年（文字列）
+// category : "Award" | "Talk" | "Paper" | "Hackathon" など自由記述
+// title    : 受賞名・発表タイトル
+// event    : イベント名・主催
+// url      : リンク（なければ空文字 ""）
+// image    : 画像パス（なければ省略 or 空文字 ""）例: "images/award.jpg"
+const ARCHIVES = [
+  {
+    year: "2026.05",
+    category: "Contest",
+    title: "株式会社いつも U20 新規事業創造コンテスト優勝",
+    event:
+      "株式会社いつもさんのアセットを活用して、新規の事業を提案し、優勝することができました。",
+    url: "",
+    image: "images/itsmo.jpg",
+  },
+  {
+    year: "2026.03",
+    category: "Paper",
+    title: "複数画像からの3次元構造復元に関する学会発表",
+    event: "IEICE2026にて学会発表を行いました。",
+    url: "",
+    image: "images/paper-ieice2026.jpg",
+  },
+
+  {
+    year: "2024.12",
+    category: "Contest",
+    title: "TMU EntreBloom 2024 準優勝・オーディエンス賞・企業賞受賞",
+    event:
+      "都立大生による都立大生のための履修管理アプリ「T-muse」を提案し、準優勝を果たしました。",
+    url: "https://research-miyacology.tmu.ac.jp/news/27923/",
+    image: "images/business-contest.jpg",
+  },
+  {
+    year: "2024.09",
+    category: "Internship",
+    title: "セイコーエプソン株式会社 2weeksインターン",
+    event: "プロジェクター投影PCアプリケーションの開発に従事しました。",
+    url: "",
+    image: "images/seiko-epson.jpg",
+  },
+  {
+    year: "2021.12",
+    category: "Sports",
+    title:
+      "群馬県バスケットボールIHにて準優勝を果たし、優秀選手賞を受賞しました。",
+    event:
+      "群馬県バスケットボールIHにて準優勝を果たし、優秀選手賞を受賞しました。",
+    url: "http://gunma.japanbasketball.jp/hs/yusyumeiboR2.pdf",
+    image: "images/best-player.jpg",
+  },
+];
+
+// ── キャリア年表 ───────────────────────────────────────────────────────
+// side    : "left" = 教育機関 / "right" = 職歴・活動
+// period  : 期間（文字列）例: "2021.04 〜 2025.03"
+// icon    : 絵文字 or 画像パス（例: "images/logo.png"）
+// title   : 英語名 or メインタイトル
+// subtitle: 日本語名 or サブタイトル
+const CAREER = [
+  {
+    period: "2018.04 〜 2021.03",
+    side: "left",
+    icon: "./images/太田高校.gif",
+    title: "Gunma Prefectural Ota High School",
+    subtitle: "群馬県立太田高等学校",
+  },
+  {
+    period: "2022.04 〜 2026.03",
+    side: "left",
+    icon: "./images/東京都立大学.png",
+    title: "Tokyo Metropolitan University",
+    subtitle: "東京都立大学 システムデザイン学部 <br>電子情報システム工学科",
+  },
+  {
+    period: "2024.09 ",
+    side: "right",
+    icon: "./images/セイコーエプソン.jpeg",
+    title: "Seiko Epson, Inc.",
+    subtitle: "セイコーエプソン株式会社 短期インターン",
+  },
+  {
+    period: "2025.07 〜 ",
+    side: "right",
+    icon: "./images/ローカルワークス.png",
+    title: "LocalWorks, Inc.",
+    subtitle: "株式会社ローカルワークス 長期インターン",
+  },
+  {
+    period: "2026.04 〜",
+    side: "left",
+    icon: "./images/東京都立大学.png",
+    title: "Tokyo Metropolitan University Graduate School",
+    subtitle: "東京都立大学大学院 システムデザイン研究科 <br>情報科学域専攻",
   },
 ];
 

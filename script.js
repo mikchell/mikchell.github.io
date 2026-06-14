@@ -157,6 +157,62 @@ function buildNavIcons() {
 }
 
 // ── フッターリンク ────────────────────────────────────────
+function buildArchive() {
+  const el = document.getElementById('archive-grid');
+  if (!el || typeof ARCHIVES === 'undefined' || !ARCHIVES.length) return;
+
+  el.innerHTML = ARCHIVES.map((item, i) => {
+    const tag = item.url ? 'a' : 'div';
+    const attrs = item.url
+      ? `href="${item.url}" target="_blank" rel="noopener" class="archive-card work-card${item.url ? ' archive-card--link' : ''}" style="transition-delay:${i * 0.08}s"`
+      : `class="archive-card work-card" style="transition-delay:${i * 0.08}s"`;
+    return `
+    <${tag} ${attrs}>
+      ${item.image ? `<div class="archive-thumb"><img src="${item.image}" alt="${item.title}" loading="lazy"></div>` : ''}
+      <div class="archive-card-inner">
+        <div class="archive-meta">
+          <span class="archive-year">${item.year}</span>
+          ${item.category ? `<span class="archive-category">${item.category}</span>` : ''}
+          ${item.url ? `<span class="archive-link-icon">↗</span>` : ''}
+        </div>
+        <h3 class="archive-title">${item.title}</h3>
+        <p class="archive-event">${item.event || ''}</p>
+      </div>
+    </${tag}>
+  `;
+  }).join('');
+}
+
+function buildCareer() {
+  const el = document.getElementById('career-timeline');
+  if (!el || typeof CAREER === 'undefined' || !CAREER.length) return;
+
+  const isImg = src => src && /\.(png|jpe?g|gif|webp|svg)$/i.test(src);
+
+  el.innerHTML = `
+    <h2 class="career-heading reveal-item">Career</h2>
+    <div class="career-track">
+      ${CAREER.map((item, i) => {
+        const row = i + 1;
+        return `
+        <div class="career-item career-item--${item.side}">
+          <div class="career-item-body reveal-item" style="grid-row:${row};transition-delay:${i * 0.1}s">
+            <div class="career-icon">
+              ${isImg(item.icon)
+                ? `<img src="${item.icon}" alt="${item.title}">`
+                : `<span>${item.icon}</span>`}
+            </div>
+            <h3 class="career-name">${item.title}</h3>
+            <p class="career-sub">${item.subtitle}</p>
+          </div>
+          <div class="career-item-dot" style="grid-row:${row}"></div>
+          <div class="career-item-period reveal-item" style="grid-row:${row};transition-delay:${i * 0.1 + 0.05}s">${item.period}</div>
+        </div>
+      `;}).join('')}
+    </div>
+  `;
+}
+
 function buildFooterLinks() {
   // フッターにはアイコンを表示しない
 }
@@ -361,7 +417,7 @@ function initScrollReveal() {
     });
   }, { threshold: 0.1 });
 
-  document.querySelectorAll('.work-card, .article-item, .reveal-item').forEach(el => {
+  document.querySelectorAll('.work-card, .archive-card, .article-item, .reveal-item').forEach(el => {
     if (!aboutRevealItems.has(el)) observer.observe(el);
   });
 
@@ -416,9 +472,11 @@ function initAboutBg() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
+  buildArchive();
   buildWorks();
   buildArticles();
   buildAbout();
+  buildCareer();
   buildNavIcons();
   buildHeroSocial();
   buildFooterLinks();
