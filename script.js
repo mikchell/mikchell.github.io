@@ -349,24 +349,59 @@ function initScrollReveal() {
   }, { threshold: 0.1 });
 
   document.querySelectorAll('.work-card, .article-item, .reveal-item').forEach(el => {
-    observer.observe(el);
+    if (!aboutRevealItems.has(el)) observer.observe(el);
   });
+
+  const aboutObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      entry.target.classList.toggle('visible', entry.isIntersecting);
+    });
+  }, { threshold: 0.15 });
+
+  aboutRevealItems.forEach(el => aboutObserver.observe(el));
 
   const aboutSection = document.getElementById('about');
   if (aboutSection) {
-    const aboutObserver = new IntersectionObserver((entries) => {
+    const imgObserver = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
         if (entry.isIntersecting) {
           aboutSection.classList.add('img-visible');
-          aboutObserver.disconnect();
+          imgObserver.disconnect();
         }
       });
     }, { threshold: 0.15 });
-    aboutObserver.observe(aboutSection);
+    imgObserver.observe(aboutSection);
   }
 }
 
 // ── 初期化 ───────────────────────────────────────────────
+function initAboutBg() {
+  const about = document.getElementById('about');
+  const bg = document.getElementById('about-bg');
+  if (!about || !bg) return;
+
+  let phase = 0;
+  let targetY = 0;
+  let smoothY = 0;
+
+  window.addEventListener('scroll', () => {
+    const rect = about.getBoundingClientRect();
+    const progress = (window.innerHeight - rect.top) / (window.innerHeight + about.offsetHeight);
+    targetY = (Math.max(0, Math.min(1, progress)) - 0.5) * 200;
+  }, { passive: true });
+
+  function tick() {
+    phase += 0.0004;
+    const dx = Math.sin(phase * 1.3) * 12;
+    const dy = Math.sin(phase * 0.7) * 10;
+    smoothY += (targetY - smoothY) * 0.08;
+    bg.style.transform = `translate(${dx}px, ${dy + smoothY}px)`;
+    requestAnimationFrame(tick);
+  }
+
+  requestAnimationFrame(tick);
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   buildWorks();
   buildArticles();
@@ -375,6 +410,7 @@ document.addEventListener('DOMContentLoaded', () => {
   buildHeroSocial();
   buildFooterLinks();
   initHeroCanvas();
+  initAboutBg();
 
   requestAnimationFrame(initScrollReveal);
 });
