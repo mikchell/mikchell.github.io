@@ -56,7 +56,8 @@ img { display: block; width: 100%; object-fit: cover; }
   margin: 0 auto;
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: flex-start;
+  gap: 3rem;
 }
 
 .nav-links {
@@ -86,7 +87,7 @@ img { display: block; width: 100%; object-fit: cover; }
 .nav-links a:hover { color: var(--text); }
 .nav-links a:hover::after { width: 100%; }
 
-.nav-icons { display: flex; gap: 1rem; align-items: center; }
+.nav-icons { display: flex; gap: 1rem; align-items: center; margin-left: auto; }
 .nav-icon-link {
   display: flex;
   align-items: center;
@@ -284,6 +285,8 @@ section:not(#hero) { padding: 8rem 2.5rem; }
   opacity: 0;
   transform: translateY(60px) scale(0.95);
   will-change: transform, opacity;
+  display: flex;
+  flex-direction: column;
 }
 .work-card.visible {
   animation: cardEntrance 0.8s cubic-bezier(0.16,1,0.3,1) forwards;
@@ -337,7 +340,7 @@ section:not(#hero) { padding: 8rem 2.5rem; }
   animation: float 4s ease-in-out infinite;
 }
 
-.work-body { padding: 1.5rem 1.75rem 2rem; }
+.work-body { padding: 1.5rem 1.75rem 2rem; display: flex; flex-direction: column; flex: 1; }
 
 .work-tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 0.75rem; }
 .work-tag {
@@ -376,6 +379,7 @@ section:not(#hero) { padding: 8rem 2.5rem; }
   text-transform: uppercase;
   color: var(--accent);
   transition: gap var(--transition);
+  margin-top: auto;
 }
 .work-link:hover { gap: 0.9rem; }
 .work-link::after { content: '→'; }
@@ -471,19 +475,19 @@ section:not(#hero) { padding: 8rem 2.5rem; }
   position: relative;
   overflow: hidden;
 }
-#about::after {
-  content: '';
+#about-bg {
   position: absolute;
-  inset: 0;
+  inset: -8%;
   background-image: url('images/myprofile.jpg');
   background-size: cover;
-  background-position: center 30%;
+  background-position: center 50%;
   opacity: 0;
   pointer-events: none;
   z-index: 0;
+  will-change: transform;
   transition: opacity 1.8s cubic-bezier(0.16, 1, 0.3, 1);
 }
-#about.img-visible::after {
+#about.img-visible #about-bg {
   opacity: 0.4;
 }
 #about .section-inner {
@@ -739,6 +743,14 @@ section:not(#hero) { padding: 8rem 2.5rem; }
 @keyframes shimmer {
   0%   { background-position: -200% center; }
   100% { background-position:  200% center; }
+}
+
+@keyframes aboutBgDrift {
+  0%   { transform: translate(-2%, -2%); }
+  25%  { transform: translate( 2%, -1%); }
+  50%  { transform: translate( 1%,  2%); }
+  75%  { transform: translate(-2%,  1%); }
+  100% { transform: translate(-2%, -2%); }
 }
 
 /* ===== スクロール表示アニメーション ===== */
