@@ -43,17 +43,17 @@ const WORKS = [
 
 // ── 記事 ──────────────────────────────────────────────────────
 const ARTICLES = [
-    {
+  {
+    title: "10年運用のGoogleドライブを、業務を止めずに共有ドライブへ移行した話",
+    url: "https://zenn.dev/localworksdev/articles/2026-06-google-drive-migration-project",
+    platform: "zenn",
+    date: "2026-06-22",
+  },
+  {
     title: "Google共有ドライブで社内ファイル管理体制を再設計した話",
     url: "https://zenn.dev/localworksdev/articles/2026-06-google-drive-shared-drive-design",
     platform: "zenn",
     date: "2026-06-18",
-  },
-  {
-    title: "Next.js App Router の実践的な使い方 — Server Components 完全解説",
-    url: "https://zenn.dev/mikchell/articles/nextjs-app-router",
-    platform: "zenn",
-    date: "2025-05-10",
   },
 ];
 
@@ -103,8 +103,7 @@ const ARCHIVES = [
   {
     year: "2021.12",
     category: "Sports",
-    title:
-      "群馬県バスケットボールIH準優勝、優秀選手賞を受賞。",
+    title: "群馬県バスケットボールIH準優勝、優秀選手賞を受賞。",
     event:
       "群馬県バスケットボールIH2021にて準優勝を果たし、優秀選手賞を受賞しました。",
     url: "http://gunma.japanbasketball.jp/hs/yusyumeiboR2.pdf",
