@@ -19,7 +19,7 @@ const ABOUT = {
 const WORKS = [
   {
     title: "「Pulseee」従業員パルスサーベイシステム",
-    url: "https://pulseee.onrender.com",
+    url: "https://github.com/localworks/pulseee",
     thumbnail: "images/Pulseee.gif",
     tags: ["Ruby on Rais", "JavaScript", "PostgreSQL", "NeonDB", "Render"],
     desc: "人事担当者や経営者が組織の状態をリアルタイムに把握するためのパルスサーベイツールとして、Ruby on Rails + Hotwire + PostgreSQL + Google OAuth 構成を用いて、複雑な認証設定や外部SaaSへの依存を最小限に抑えながら、Solid Queue による非同期ジョブとSlack Webhook 連携による自動通知により、サーベイ対象者への定期配信・未回答リマインドを人の手を介さずに動かし続け、ロールベースのアクセス制御と匿名性を保った定量集計により、管理者は回収率やグループ別スコアをダッシュボードで即座に確認できる、エンジニアなしでも日常運用が回るサーベイ基盤。",
