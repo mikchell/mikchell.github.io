@@ -10,18 +10,6 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
-
-  <script>
-    // オープニング演出はセッション中1回だけ。
-    // body が描かれる前に判定することで、2回目以降のちらつきを防ぐ。
-    try {
-      if (sessionStorage.getItem('brewed')) {
-        document.documentElement.classList.add('is-brewed');
-      }
-    } catch (e) {
-      // プライベートモード等で参照できない場合は毎回再生する
-    }
-  </script>
 </head>
 <body>
 
@@ -29,48 +17,65 @@
        CSS だけで最後まで再生されるため、JS が失敗しても取り残されない。 -->
   <div id="brew" class="brew">
     <div class="brew-stage">
-      <svg class="brew-art" viewBox="0 0 220 268" role="img" aria-label="珈琲を淹れています">
+      <svg class="brew-art" viewBox="0 0 220 300" role="img" aria-label="珈琲を淹れています">
         <defs>
           <clipPath id="brew-carafe-clip">
-            <path d="M70 170 h80 v56 a12 12 0 0 1 -12 12 h-56 a12 12 0 0 1 -12 -12 z" />
+            <path d="M70 206 h80 v56 a12 12 0 0 1 -12 12 h-56 a12 12 0 0 1 -12 -12 z" />
           </clipPath>
         </defs>
 
-        <!-- 注がれる湯 -->
-        <line class="brew-pour" x1="110" y1="10" x2="110" y2="60" />
+        <!-- ケトル。sway で「の」の字に動き、tip で傾ける -->
+        <g class="brew-kettle">
+          <g class="brew-kettle-tip">
+            <g class="brew-ink">
+              <path d="M18 44 h44 v16 a22 13 0 0 1 -44 0 z" />
+              <ellipse cx="40" cy="44" rx="22" ry="5.5" />
+              <line x1="40" y1="38.5" x2="40" y2="33" />
+              <circle cx="40" cy="31" r="2.6" />
+              <path d="M18 48 c-11 3 -11 13 0 16" />
+              <path d="M62 47 c17 1 25 6 31 14" />
+            </g>
+          </g>
+          <!-- 注がれる湯（ケトルと一緒に揺れる） -->
+          <path class="brew-stream" d="M91 77 C96 85 103 90 109 99" />
+        </g>
 
         <!-- ドリッパー -->
         <g class="brew-ink">
-          <ellipse class="brew-draw brew-d1" cx="110" cy="62" rx="48" ry="8" />
-          <path class="brew-draw brew-d1" d="M63 64 L97 118 h26 L157 64" />
+          <ellipse class="brew-draw brew-d1" cx="110" cy="98" rx="48" ry="8" />
+          <path class="brew-draw brew-d1" d="M63 100 L97 154 h26 L157 100" />
         </g>
 
         <!-- 粉の膨らみ -->
-        <ellipse class="brew-bed" cx="110" cy="66" rx="34" ry="5" />
+        <ellipse class="brew-bed" cx="110" cy="102" rx="34" ry="5" />
+
+        <!-- 抽出口から続く細い筋 -->
+        <line class="brew-trickle" x1="110" y1="156" x2="110" y2="176" />
 
         <!-- 落ちる雫 -->
-        <circle class="brew-drop brew-drop1" cx="110" cy="122" r="3" />
-        <circle class="brew-drop brew-drop2" cx="110" cy="122" r="2.6" />
-        <circle class="brew-drop brew-drop3" cx="110" cy="122" r="3" />
+        <circle class="brew-drop brew-drop1" cx="110" cy="160" r="3" />
+        <circle class="brew-drop brew-drop2" cx="110" cy="160" r="2.5" />
+        <circle class="brew-drop brew-drop3" cx="110" cy="160" r="3" />
+        <circle class="brew-drop brew-drop4" cx="110" cy="160" r="2.4" />
 
         <!-- サーバーに溜まる珈琲 -->
         <g clip-path="url(#brew-carafe-clip)">
-          <rect class="brew-liquid" x="68" y="170" width="84" height="70" />
+          <rect class="brew-liquid" x="68" y="206" width="84" height="70" />
         </g>
 
         <!-- サーバー -->
         <g class="brew-ink">
           <path class="brew-draw brew-d2"
-                d="M70 170 h80 v56 a12 12 0 0 1 -12 12 h-56 a12 12 0 0 1 -12 -12 z" />
-          <path class="brew-draw brew-d2" d="M150 184 a16 16 0 0 1 0 28" />
-          <line class="brew-draw brew-d2" x1="62" y1="170" x2="158" y2="170" />
+                d="M70 206 h80 v56 a12 12 0 0 1 -12 12 h-56 a12 12 0 0 1 -12 -12 z" />
+          <path class="brew-draw brew-d2" d="M150 220 a16 16 0 0 1 0 28" />
+          <line class="brew-draw brew-d2" x1="62" y1="206" x2="158" y2="206" />
         </g>
 
         <!-- 湯気 -->
         <g class="brew-ink">
-          <path class="brew-steam brew-s1" d="M94 160 c6 -10 -6 -16 0 -26" />
-          <path class="brew-steam brew-s2" d="M110 156 c6 -11 -6 -18 0 -29" />
-          <path class="brew-steam brew-s3" d="M126 160 c6 -10 -6 -16 0 -26" />
+          <path class="brew-steam brew-s1" d="M94 196 c6 -10 -6 -16 0 -26" />
+          <path class="brew-steam brew-s2" d="M110 192 c6 -11 -6 -18 0 -29" />
+          <path class="brew-steam brew-s3" d="M126 196 c6 -10 -6 -16 0 -26" />
         </g>
       </svg>
 

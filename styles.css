@@ -1189,12 +1189,12 @@ ul, ol { list-style: none; }
 }
 
 /* ================================================================
-   オープニング（珈琲を淹れる）
+   オープニング（ハンドドリップで珈琲を淹れる）
    ================================================================ */
 
 :root {
   /* 演出の長さ。Skip 押下時に JS が 0s へ書き換える */
-  --brew-delay: 3.1s;
+  --brew-delay: 3.6s;
   --coffee: #6f4e37;
 }
 
@@ -1217,11 +1217,11 @@ ul, ol { list-style: none; }
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 1.75rem;
+  gap: 1.5rem;
 }
 
 .brew-art {
-  inline-size: clamp(150px, 26vw, 210px);
+  inline-size: clamp(160px, 27vw, 215px);
   block-size: auto;
   overflow: visible;
 }
@@ -1234,89 +1234,137 @@ ul, ol { list-style: none; }
   stroke-linejoin: round;
 }
 
-/* 線を引いて器を描き起こす */
+/* ── 器を線で描き起こす ───────────────────────────────── */
 .brew-draw {
   stroke-dasharray: 340;
   stroke-dashoffset: 340;
-  animation: brew-draw 0.75s var(--ease) forwards;
+  animation: brew-draw 0.7s var(--ease) forwards;
 }
 .brew-d1 { animation-delay: 0.05s; }
-.brew-d2 { animation-delay: 0.3s; }
+.brew-d2 { animation-delay: 0.28s; }
 
 @keyframes brew-draw {
   to { stroke-dashoffset: 0; }
 }
 
-/* 注がれる湯 */
-.brew-pour {
-  stroke: var(--accent);
-  stroke-width: 2;
-  stroke-linecap: round;
-  stroke-dasharray: 10 8;
+/* ── ケトル ───────────────────────────────────────────
+   sway（左右の往復）と tip（傾き）を入れ子の g で分けて掛ける。
+   ゆっくりした往復が、湯を「の」の字に回し注ぐ所作になる。 */
+.brew-kettle {
   opacity: 0;
   animation:
-    brew-pour-in 0.3s var(--ease) 0.45s forwards,
-    brew-pour-flow 0.5s linear 0.45s infinite,
-    brew-pour-out 0.4s var(--ease) 2.25s forwards;
+    brew-kettle-in 0.5s var(--ease) 0.3s forwards,
+    brew-sway 1.5s ease-in-out 0.8s 2,
+    brew-kettle-out 0.45s var(--ease) 2.75s forwards;
 }
 
-@keyframes brew-pour-in   { to { opacity: 1; } }
-@keyframes brew-pour-out  { to { opacity: 0; } }
-@keyframes brew-pour-flow { to { stroke-dashoffset: -18; } }
+@keyframes brew-kettle-in  { from { opacity: 0; transform: translate(-10px, -6px); }
+                             to   { opacity: 1; transform: none; } }
+@keyframes brew-kettle-out { to { opacity: 0; transform: translate(-8px, -6px); } }
 
-/* 粉が膨らむ（ブルーム） */
+@keyframes brew-sway {
+  0%, 100% { transform: translateX(0); }
+  25%      { transform: translateX(7px); }
+  75%      { transform: translateX(-7px); }
+}
+
+.brew-kettle-tip {
+  transform-origin: 32px 62px;
+  animation:
+    brew-tip 0.5s var(--ease) 0.55s forwards,
+    brew-untip 0.4s var(--ease) 2.5s forwards;
+}
+
+@keyframes brew-tip   { to { transform: rotate(15deg); } }
+@keyframes brew-untip { to { transform: rotate(0deg); } }
+
+/* 注がれる湯。破線を流して途切れない水流に見せる */
+.brew-stream {
+  fill: none;
+  stroke: var(--accent);
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-dasharray: 9 7;
+  opacity: 0;
+  animation:
+    brew-fade-in 0.25s var(--ease) 0.75s forwards,
+    brew-flow 0.4s linear 0.75s infinite,
+    brew-fade-out 0.3s var(--ease) 2.5s forwards;
+}
+
+@keyframes brew-fade-in  { to { opacity: 0.85; } }
+@keyframes brew-fade-out { to { opacity: 0; } }
+@keyframes brew-flow     { to { stroke-dashoffset: -16; } }
+
+/* ── 粉の膨らみ（ブルーム） ───────────────────────────── */
 .brew-bed {
   fill: var(--coffee);
   opacity: 0;
-  transform-origin: 110px 66px;
-  animation: brew-bloom 1.1s var(--ease) 0.6s forwards;
+  transform-origin: 110px 102px;
+  animation: brew-bloom 1.3s var(--ease) 0.85s forwards;
 }
 
 @keyframes brew-bloom {
-  0%   { opacity: 0; transform: scale(0.75); }
-  55%  { opacity: 0.85; transform: scale(1.06); }
-  100% { opacity: 0.7; transform: scale(1); }
+  0%   { opacity: 0; transform: scale(0.7) translateY(2px); }
+  45%  { opacity: 0.9; transform: scale(1.08) translateY(-2px); }
+  100% { opacity: 0.75; transform: scale(1) translateY(0); }
 }
 
-/* 一滴ずつ落ちる */
+/* ── 抽出 ─────────────────────────────────────────────
+   細い筋を常時流しつつ、その先で雫が切れて落ちる。 */
+.brew-trickle {
+  stroke: var(--coffee);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-dasharray: 5 6;
+  opacity: 0;
+  animation:
+    brew-trickle-in 0.3s var(--ease) 1.15s forwards,
+    brew-flow 0.32s linear 1.15s infinite,
+    brew-fade-out 0.5s var(--ease) 2.95s forwards;
+}
+
+@keyframes brew-trickle-in { to { opacity: 0.8; } }
+
 .brew-drop {
   fill: var(--coffee);
   opacity: 0;
-  animation: brew-drip 0.62s cubic-bezier(0.55, 0, 0.85, 0.35) infinite;
+  animation: brew-drip 0.72s cubic-bezier(0.5, 0, 0.9, 0.4) infinite;
 }
-.brew-drop1 { animation-delay: 0.85s; }
-.brew-drop2 { animation-delay: 1.07s; }
-.brew-drop3 { animation-delay: 1.29s; }
+.brew-drop1 { animation-delay: 1.25s; }
+.brew-drop2 { animation-delay: 1.43s; }
+.brew-drop3 { animation-delay: 1.61s; }
+.brew-drop4 { animation-delay: 1.79s; }
 
 @keyframes brew-drip {
-  0%   { opacity: 0; transform: translateY(0) scaleY(0.8); }
-  15%  { opacity: 1; }
-  80%  { opacity: 1; transform: translateY(42px) scaleY(1.25); }
-  100% { opacity: 0; transform: translateY(48px) scaleY(0.6); }
+  0%   { opacity: 0; transform: translateY(0) scale(0.7, 0.8); }
+  18%  { opacity: 1; transform: translateY(6px) scale(0.9, 1.1); }
+  82%  { opacity: 1; transform: translateY(44px) scale(0.8, 1.35); }
+  100% { opacity: 0; transform: translateY(50px) scale(1.2, 0.5); }
 }
 
-/* サーバーに溜まっていく */
+/* ── サーバーに溜まる ─────────────────────────────────── */
 .brew-liquid {
   fill: var(--coffee);
   transform: translateY(70px);
-  animation: brew-fill 1.9s var(--ease) 0.9s forwards;
+  animation: brew-fill 2.1s var(--ease) 1.2s forwards;
 }
 
 @keyframes brew-fill {
   to { transform: translateY(16px); }
 }
 
-/* 湯気 */
+/* ── 湯気 ─────────────────────────────────────────────── */
 .brew-steam {
   stroke-width: 1.1;
   stroke-dasharray: 34;
   stroke-dashoffset: 34;
   opacity: 0;
-  animation: brew-steam 1.5s var(--ease) infinite;
+  animation: brew-steam 1.6s var(--ease) infinite;
 }
-.brew-s1 { animation-delay: 2.15s; }
-.brew-s2 { animation-delay: 2.3s; }
-.brew-s3 { animation-delay: 2.45s; }
+.brew-s1 { animation-delay: 2.5s; }
+.brew-s2 { animation-delay: 2.68s; }
+.brew-s3 { animation-delay: 2.86s; }
 
 @keyframes brew-steam {
   0%   { opacity: 0; stroke-dashoffset: 34; transform: translateY(6px); }
@@ -1324,7 +1372,7 @@ ul, ol { list-style: none; }
   100% { opacity: 0; stroke-dashoffset: 0; transform: translateY(-10px); }
 }
 
-/* ラベル */
+/* ── ラベル ───────────────────────────────────────────── */
 .brew-label {
   font-family: var(--font-ui);
   font-size: 0.68rem;
@@ -1344,7 +1392,7 @@ ul, ol { list-style: none; }
 .brew-dots i:nth-child(3) { animation-delay: 0.7s; }
 
 @keyframes brew-dot {
-  0%, 70% { opacity: 1; }
+  0%, 70%   { opacity: 1; }
   71%, 100% { opacity: 0; }
 }
 
@@ -1377,7 +1425,3 @@ ul, ol { list-style: none; }
   :root { --brew-delay: 0s; }
   .brew { display: none; }
 }
-
-/* 一度見たセッションでは演出を出さない（判定は <head> のインラインスクリプト） */
-.is-brewed { --brew-delay: 0s; }
-.is-brewed .brew { display: none; }
