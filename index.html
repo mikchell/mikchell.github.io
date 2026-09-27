@@ -17,27 +17,36 @@
        CSS だけで最後まで再生されるため、JS が失敗しても取り残されない。 -->
   <div id="brew" class="brew">
     <div class="brew-stage">
-      <svg class="brew-art" viewBox="0 0 220 300" role="img" aria-label="珈琲を淹れています">
+      <svg class="brew-art" viewBox="-18 0 238 300" role="img" aria-label="珈琲を淹れています">
         <defs>
           <clipPath id="brew-carafe-clip">
             <path d="M70 206 h80 v56 a12 12 0 0 1 -12 12 h-56 a12 12 0 0 1 -12 -12 z" />
           </clipPath>
         </defs>
 
-        <!-- ケトル。sway で「の」の字に動き、tip で傾ける -->
+        <!-- ドリップケトル。sway で「の」の字に動き、tip で傾ける -->
         <g class="brew-kettle">
-          <g class="brew-kettle-tip">
+          <!-- 拡大は静的な transform 属性で掛け、CSS アニメーションと分ける -->
+          <g transform="translate(-20 -11) scale(1.18)">
+            <g class="brew-kettle-tip">
             <g class="brew-ink">
-              <path d="M18 44 h44 v16 a22 13 0 0 1 -44 0 z" />
-              <ellipse cx="40" cy="44" rx="22" ry="5.5" />
-              <line x1="40" y1="38.5" x2="40" y2="33" />
-              <circle cx="40" cy="31" r="2.6" />
-              <path d="M18 48 c-11 3 -11 13 0 16" />
-              <path d="M62 47 c17 1 25 6 31 14" />
+              <!-- 取っ手。先に描いて、胴の塗りで付け根を隠す -->
+              <path d="M22 33 C8 36 7 58 21 63" />
+              <!-- 胴（下がやや広い） -->
+              <path class="brew-solid" d="M22 28 L16 64 a6 6 0 0 0 6 7 h46 a6 6 0 0 0 6 -7 L68 28 z" />
+              <!-- 蓋とつまみ -->
+              <ellipse class="brew-solid" cx="45" cy="28" rx="23" ry="6.5" />
+              <line x1="45" y1="21.5" x2="45" y2="16.5" />
+              <circle class="brew-solid" cx="45" cy="13.5" r="3.2" />
+              <!-- ガチョウ首の注ぎ口。1本線ではなく太さのある管として描く -->
+              <path class="brew-solid"
+                    d="M69 30 C80 14 102 12 110 30 C113 42 110 50 109 58
+                       L103 58 C104 48 106 40 102 32 C96 20 80 22 70 43 Z" />
+              </g>
             </g>
           </g>
           <!-- 注がれる湯（ケトルと一緒に揺れる） -->
-          <path class="brew-stream" d="M91 77 C96 85 103 90 109 99" />
+          <path class="brew-stream" d="M106 73 C108 81 110 89 110 97" />
         </g>
 
         <!-- ドリッパー -->

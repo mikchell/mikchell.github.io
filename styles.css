@@ -1226,6 +1226,9 @@ ul, ol { list-style: none; }
   overflow: visible;
 }
 
+/* 背後の線を透かせたくない面は紙色で塗る */
+.brew-solid { fill: var(--paper); }
+
 .brew-ink {
   fill: none;
   stroke: var(--ink);
@@ -1269,13 +1272,14 @@ ul, ol { list-style: none; }
 }
 
 .brew-kettle-tip {
-  transform-origin: 32px 62px;
+  /* 胴の底を支点に傾ける */
+  transform-origin: 45px 71px;
   animation:
     brew-tip 0.5s var(--ease) 0.55s forwards,
     brew-untip 0.4s var(--ease) 2.5s forwards;
 }
 
-@keyframes brew-tip   { to { transform: rotate(15deg); } }
+@keyframes brew-tip   { to { transform: rotate(12deg); } }
 @keyframes brew-untip { to { transform: rotate(0deg); } }
 
 /* 注がれる湯。破線を流して途切れない水流に見せる */
