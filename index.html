@@ -13,6 +13,61 @@
 </head>
 <body>
 
+  <!-- ページを開いた最初の画面。珈琲を淹れ終えると本編へ切り替わる。
+       CSS だけで最後まで再生されるため、JS が失敗しても取り残されない。 -->
+  <div id="brew" class="brew">
+    <div class="brew-stage">
+      <svg class="brew-art" viewBox="0 0 220 268" role="img" aria-label="珈琲を淹れています">
+        <defs>
+          <clipPath id="brew-carafe-clip">
+            <path d="M70 170 h80 v56 a12 12 0 0 1 -12 12 h-56 a12 12 0 0 1 -12 -12 z" />
+          </clipPath>
+        </defs>
+
+        <!-- 注がれる湯 -->
+        <line class="brew-pour" x1="110" y1="10" x2="110" y2="60" />
+
+        <!-- ドリッパー -->
+        <g class="brew-ink">
+          <ellipse class="brew-draw brew-d1" cx="110" cy="62" rx="48" ry="8" />
+          <path class="brew-draw brew-d1" d="M63 64 L97 118 h26 L157 64" />
+        </g>
+
+        <!-- 粉の膨らみ -->
+        <ellipse class="brew-bed" cx="110" cy="66" rx="34" ry="5" />
+
+        <!-- 落ちる雫 -->
+        <circle class="brew-drop brew-drop1" cx="110" cy="122" r="3" />
+        <circle class="brew-drop brew-drop2" cx="110" cy="122" r="2.6" />
+        <circle class="brew-drop brew-drop3" cx="110" cy="122" r="3" />
+
+        <!-- サーバーに溜まる珈琲 -->
+        <g clip-path="url(#brew-carafe-clip)">
+          <rect class="brew-liquid" x="68" y="170" width="84" height="70" />
+        </g>
+
+        <!-- サーバー -->
+        <g class="brew-ink">
+          <path class="brew-draw brew-d2"
+                d="M70 170 h80 v56 a12 12 0 0 1 -12 12 h-56 a12 12 0 0 1 -12 -12 z" />
+          <path class="brew-draw brew-d2" d="M150 184 a16 16 0 0 1 0 28" />
+          <line class="brew-draw brew-d2" x1="62" y1="170" x2="158" y2="170" />
+        </g>
+
+        <!-- 湯気 -->
+        <g class="brew-ink">
+          <path class="brew-steam brew-s1" d="M94 160 c6 -10 -6 -16 0 -26" />
+          <path class="brew-steam brew-s2" d="M110 156 c6 -11 -6 -18 0 -29" />
+          <path class="brew-steam brew-s3" d="M126 160 c6 -10 -6 -16 0 -26" />
+        </g>
+      </svg>
+
+      <p class="brew-label">Brewing<span class="brew-dots"><i>.</i><i>.</i><i>.</i></span></p>
+    </div>
+
+    <button type="button" class="brew-skip" id="brew-skip">Skip</button>
+  </div>
+
   <!-- 全画面背景ネットワーク（最背面に常駐） -->
   <canvas id="net-canvas" aria-hidden="true"></canvas>
 

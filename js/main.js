@@ -5,6 +5,7 @@
  * initNetwork() は内部で [data-node] を走査するため、必ず buildSections() の後に呼ぶ。
  */
 
+import { initBrew } from './brew.js';
 import { buildSections } from './sections.js';
 import { initNetwork } from './network.js';
 import {
@@ -12,6 +13,8 @@ import {
   initSpotlight, initMagnetic, initCursor, initFilters, initExpanders,
   initNameReveal,
 } from './interactions.js';
+
+initBrew();
 
 buildSections();
 initNameReveal();

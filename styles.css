@@ -688,7 +688,8 @@ ul, ol { list-style: none; }
 .article-item:hover .article-arrow { color: var(--accent); transform: translateX(4px); }
 
 /* ===== About ===== */
-/* 本文を写真の上に重ねる。写真は右側に寄せ、左へ向けて紙に溶けるようにする */
+/* 本文の背後に写真を置く。写真は右半分に実寸で見せ、
+   本文と接する左端だけをぼかして重なりを目立たせない。 */
 .about-layout {
   position: relative;
   isolation: isolate;
@@ -696,9 +697,9 @@ ul, ol { list-style: none; }
 
 .about-bg {
   position: absolute;
-  inset-block: -4%;
+  inset-block: -6% -2%;
   inset-inline-end: 0;
-  inline-size: min(58%, 620px);
+  inline-size: min(46%, 520px);
   z-index: -1;
   pointer-events: none;
 }
@@ -707,15 +708,13 @@ ul, ol { list-style: none; }
   inline-size: 100%;
   block-size: 100%;
   object-fit: cover;
-  opacity: 0.2;
-  filter: grayscale(1) contrast(1.05);
-  /* 左と上下の端をなだらかに消して、背景と一体化させる */
-  mask-image:
-    linear-gradient(to left, #000 35%, transparent 100%),
-    linear-gradient(to bottom, transparent 0%, #000 22%, #000 78%, transparent 100%);
-  mask-composite: intersect;
-  -webkit-mask-composite: source-in;
+  border-radius: var(--radius);
+  /* 本文側（左）の縁だけを溶かし、写真そのものは薄くしない */
+  mask-image: linear-gradient(to left, #000 62%, transparent 100%);
 }
+
+/* 本文は写真に掛からない幅で止める */
+.about-main { max-inline-size: 54%; }
 
 .about-bio {
   display: flex;
@@ -1114,8 +1113,15 @@ ul, ol { list-style: none; }
   .work-card:nth-child(even) > .work-body { order: 2; }
 
   /* 幅が狭いときは写真を全面に薄く敷く */
-  .about-bg { inline-size: 100%; }
-  .about-bg img { opacity: 0.12; mask-image: none; }
+  /* 1カラムでは写真を本文の上に通常の画像として積む */
+  .about-layout { display: flex; flex-direction: column-reverse; gap: 2rem; }
+  .about-main { max-inline-size: none; }
+  .about-bg {
+    position: static;
+    inline-size: 100%;
+    aspect-ratio: 16 / 10;
+  }
+  .about-bg img { mask-image: none; }
 }
 
 @media (max-width: 760px) {
@@ -1180,4 +1186,194 @@ ul, ol { list-style: none; }
     transition-duration: 0.001ms !important;
   }
   .reveal-item { opacity: 1; transform: none; }
+}
+
+/* ================================================================
+   オープニング（珈琲を淹れる）
+   ================================================================ */
+
+:root {
+  /* 演出の長さ。Skip 押下時に JS が 0s へ書き換える */
+  --brew-delay: 3.1s;
+  --coffee: #6f4e37;
+}
+
+.brew {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: grid;
+  place-items: center;
+  background: var(--paper);
+  /* JS が動かなくても必ず明けるよう、CSS 側で退場まで持たせる */
+  animation: brew-out 0.9s var(--ease) var(--brew-delay) forwards;
+}
+
+@keyframes brew-out {
+  to { opacity: 0; visibility: hidden; pointer-events: none; }
+}
+
+.brew-stage {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.75rem;
+}
+
+.brew-art {
+  inline-size: clamp(150px, 26vw, 210px);
+  block-size: auto;
+  overflow: visible;
+}
+
+.brew-ink {
+  fill: none;
+  stroke: var(--ink);
+  stroke-width: 1.25;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* 線を引いて器を描き起こす */
+.brew-draw {
+  stroke-dasharray: 340;
+  stroke-dashoffset: 340;
+  animation: brew-draw 0.75s var(--ease) forwards;
+}
+.brew-d1 { animation-delay: 0.05s; }
+.brew-d2 { animation-delay: 0.3s; }
+
+@keyframes brew-draw {
+  to { stroke-dashoffset: 0; }
+}
+
+/* 注がれる湯 */
+.brew-pour {
+  stroke: var(--accent);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-dasharray: 10 8;
+  opacity: 0;
+  animation:
+    brew-pour-in 0.3s var(--ease) 0.45s forwards,
+    brew-pour-flow 0.5s linear 0.45s infinite,
+    brew-pour-out 0.4s var(--ease) 2.25s forwards;
+}
+
+@keyframes brew-pour-in   { to { opacity: 1; } }
+@keyframes brew-pour-out  { to { opacity: 0; } }
+@keyframes brew-pour-flow { to { stroke-dashoffset: -18; } }
+
+/* 粉が膨らむ（ブルーム） */
+.brew-bed {
+  fill: var(--coffee);
+  opacity: 0;
+  transform-origin: 110px 66px;
+  animation: brew-bloom 1.1s var(--ease) 0.6s forwards;
+}
+
+@keyframes brew-bloom {
+  0%   { opacity: 0; transform: scale(0.75); }
+  55%  { opacity: 0.85; transform: scale(1.06); }
+  100% { opacity: 0.7; transform: scale(1); }
+}
+
+/* 一滴ずつ落ちる */
+.brew-drop {
+  fill: var(--coffee);
+  opacity: 0;
+  animation: brew-drip 0.62s cubic-bezier(0.55, 0, 0.85, 0.35) infinite;
+}
+.brew-drop1 { animation-delay: 0.85s; }
+.brew-drop2 { animation-delay: 1.07s; }
+.brew-drop3 { animation-delay: 1.29s; }
+
+@keyframes brew-drip {
+  0%   { opacity: 0; transform: translateY(0) scaleY(0.8); }
+  15%  { opacity: 1; }
+  80%  { opacity: 1; transform: translateY(42px) scaleY(1.25); }
+  100% { opacity: 0; transform: translateY(48px) scaleY(0.6); }
+}
+
+/* サーバーに溜まっていく */
+.brew-liquid {
+  fill: var(--coffee);
+  transform: translateY(70px);
+  animation: brew-fill 1.9s var(--ease) 0.9s forwards;
+}
+
+@keyframes brew-fill {
+  to { transform: translateY(16px); }
+}
+
+/* 湯気 */
+.brew-steam {
+  stroke-width: 1.1;
+  stroke-dasharray: 34;
+  stroke-dashoffset: 34;
+  opacity: 0;
+  animation: brew-steam 1.5s var(--ease) infinite;
+}
+.brew-s1 { animation-delay: 2.15s; }
+.brew-s2 { animation-delay: 2.3s; }
+.brew-s3 { animation-delay: 2.45s; }
+
+@keyframes brew-steam {
+  0%   { opacity: 0; stroke-dashoffset: 34; transform: translateY(6px); }
+  35%  { opacity: 0.45; }
+  100% { opacity: 0; stroke-dashoffset: 0; transform: translateY(-10px); }
+}
+
+/* ラベル */
+.brew-label {
+  font-family: var(--font-ui);
+  font-size: 0.68rem;
+  letter-spacing: 0.34em;
+  text-transform: uppercase;
+  color: var(--muted);
+  opacity: 0;
+  animation: fade-up 0.8s var(--ease) 0.5s forwards;
+}
+
+.brew-dots i {
+  font-style: normal;
+  opacity: 0;
+  animation: brew-dot 1.4s steps(1) infinite;
+}
+.brew-dots i:nth-child(2) { animation-delay: 0.35s; }
+.brew-dots i:nth-child(3) { animation-delay: 0.7s; }
+
+@keyframes brew-dot {
+  0%, 70% { opacity: 1; }
+  71%, 100% { opacity: 0; }
+}
+
+.brew-skip {
+  position: absolute;
+  inset-block-end: 2rem;
+  inset-inline-end: var(--gutter);
+  font-family: var(--font-ui);
+  font-size: 0.64rem;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--faint);
+  background: none;
+  border: 0;
+  border-block-end: 1px solid var(--line-2);
+  padding-block-end: 3px;
+  cursor: pointer;
+  transition: color 0.3s var(--ease), border-color 0.3s var(--ease);
+}
+
+.brew-skip:hover { color: var(--accent); border-block-end-color: var(--accent); }
+
+/* 演出が終わってから本編を動かすため、ヒーローの開始を後ろへずらす */
+.hero-name .ch { animation-delay: calc(var(--brew-delay) + 0.15s + var(--i) * 0.06s); }
+.hero-role     { animation-delay: calc(var(--brew-delay) + 0.8s); }
+.hero-spoke    { animation-delay: calc(var(--brew-delay) + 0.65s + var(--i, 0) * 0.09s); }
+
+/* モーションを抑える設定では演出を省き、すぐ本編を見せる */
+@media (prefers-reduced-motion: reduce) {
+  :root { --brew-delay: 0s; }
+  .brew { display: none; }
 }

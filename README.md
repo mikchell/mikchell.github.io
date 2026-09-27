@@ -13,11 +13,12 @@
 ビルド不要の静的サイトです。`main` への push がそのまま GitHub Pages へ反映されます。
 
 ```
-index.html      マークアップ
+index.html      マークアップ（オープニング演出の SVG を含む）
 styles.css      スタイル（デザイントークンは :root にまとめています）
 data.js         ★ 掲載内容。基本はこのファイルだけを編集します
 js/
   main.js         エントリポイント
+  brew.js         オープニング（珈琲を淹れる演出）の制御
   sections.js     data.js から各セクションの DOM を組み立てる
   network.js      背景ネットワークの描画エンジン
   interactions.js スクロール・カーソル連動の UI 挙動
@@ -25,6 +26,14 @@ images/         画像
 ```
 
 JavaScript はネイティブの ES Modules で読み込んでいるため、バンドラやパッケージ管理は不要です。
+
+## オープニング演出
+
+サイトを開くと、珈琲を淹れ終わるまでの約 3 秒間をローディング画面として見せます。
+演出は CSS だけで最後まで再生されるため、JavaScript が読めなくても画面が取り残されることはありません。
+
+長さを変えるときは `styles.css` の `--brew-delay` を書き換えます。`0s` にすると演出そのものが省かれます。
+Skip ボタンと Esc キーでも即座に本編へ移れます。`prefers-reduced-motion` が有効な環境では自動的に省略されます。
 
 ## 掲載内容の更新
 
