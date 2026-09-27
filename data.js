@@ -1,5 +1,5 @@
 // ── 自己紹介 ──────────────────────────────────────────────────
-const ABOUT = {
+export const ABOUT = {
   bio: `東京都立大学大学院 システムデザイン研究科 情報科学域専攻 M1
 
 技術・研究・ビジネスの領域を横断して行動し続ける推進力が私の強みです。
@@ -16,7 +16,7 @@ const ABOUT = {
 };
 
 // ── 作品 ──────────────────────────────────────────────────────
-const WORKS = [
+export const WORKS = [
   {
     title: "「Pulseee」従業員パルスサーベイシステム",
     url: "https://github.com/localworks/pulseee",
@@ -42,7 +42,7 @@ const WORKS = [
 ];
 
 // ── 記事 ──────────────────────────────────────────────────────
-const ARTICLES = [
+export const ARTICLES = [
   {
     title: "10年運用のGoogleドライブを、業務を止めずに共有ドライブへ移行した話",
     url: "https://zenn.dev/localworksdev/articles/2026-06-google-drive-migration-project",
@@ -64,7 +64,7 @@ const ARTICLES = [
 // event    : イベント名・主催
 // url      : リンク（なければ空文字 ""）
 // image    : 画像パス（なければ省略 or 空文字 ""）例: "images/award.jpg"
-const ARCHIVES = [
+export const ARCHIVES = [
   {
     year: "2026.05",
     category: "Contest",
@@ -117,7 +117,7 @@ const ARCHIVES = [
 // icon    : 絵文字 or 画像パス（例: "images/logo.png"）
 // title   : 英語名 or メインタイトル
 // subtitle: 日本語名 or サブタイトル
-const CAREER = [
+export const CAREER = [
   {
     period: "2018.04 〜 2021.03",
     side: "left",
@@ -156,7 +156,7 @@ const CAREER = [
 ];
 
 // ── SNSリンク（ヘッダーナビに表示、フッターには非表示） ──────────────
-const FOOTER_LINKS = [
+export const FOOTER_LINKS = [
   {
     label: "GitHub",
     url: "https://github.com/mikchell",

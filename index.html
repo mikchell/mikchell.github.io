@@ -1,25 +1,35 @@
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>mikchell — Portfolio</title>
+  <meta name="description" content="mikchell — Software Engineer. 技術・研究・ビジネスを横断するポートフォリオ。" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Noto+Sans+JP:wght@300;400;500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
 
+  <!-- 全画面背景ネットワーク（最背面に常駐） -->
+  <canvas id="net-canvas" aria-hidden="true"></canvas>
+
+  <!-- 上部スクロール進捗ライン -->
+  <div id="progress-bar" aria-hidden="true"></div>
+
   <!-- ナビゲーション -->
   <nav id="navbar">
     <div class="nav-inner">
+      <a class="nav-brand" href="#hero">
+        <span class="nav-brand-dot" aria-hidden="true"></span>mikchell
+      </a>
       <ul class="nav-links">
-        <li><a href="#hero">Home</a></li>
-        <li><a href="#archive">Archive</a></li>
-        <li><a href="#works">Works</a></li>
-        <li><a href="#articles">Articles</a></li>
-        <li><a href="#about">About</a></li>
+        <li><a href="#archive" data-nav="archive"><span class="nav-idx">00</span>Archive</a></li>
+        <li><a href="#works" data-nav="works"><span class="nav-idx">01</span>Works</a></li>
+        <li><a href="#articles" data-nav="articles"><span class="nav-idx">02</span>Articles</a></li>
+        <li><a href="#about" data-nav="about"><span class="nav-idx">03</span>About</a></li>
       </ul>
       <div id="nav-icons" class="nav-icons">
         <!-- data.js から生成 -->
@@ -29,19 +39,31 @@
 
   <!-- ヒーローセクション -->
   <section id="hero">
+    <div class="hero-graph">
 
-    <!-- キャンバスアニメーション -->
-    <canvas id="hero-canvas"></canvas>
+      <!-- 中心ノード -->
+      <div class="hero-hub" data-node="hub">
+        <h1 class="hero-name">mikchell</h1>
+        <p class="hero-role">Software Engineer</p>
+      </div>
 
-    <!-- 中央テキスト -->
-    <div class="hero-center">
-      <h1 class="hero-name">mikchell</h1>
-      <p class="hero-eyebrow">Software Engineer</p>
-    </div>
+      <!-- 周辺ノード（中心とエッジで接続される） -->
+      <a class="hero-spoke" data-node="spoke" style="--angle: -90deg; --i: 0"  href="#archive">
+        <span class="spoke-idx">00</span><span class="spoke-label">Archive</span>
+      </a>
+      <a class="hero-spoke" data-node="spoke" style="--angle: -18deg; --i: 1"  href="#works">
+        <span class="spoke-idx">01</span><span class="spoke-label">Works</span>
+      </a>
+      <a class="hero-spoke" data-node="spoke" style="--angle: 54deg; --i: 2"   href="#articles">
+        <span class="spoke-idx">02</span><span class="spoke-label">Articles</span>
+      </a>
+      <a class="hero-spoke" data-node="spoke" style="--angle: 126deg; --i: 3"  href="#about">
+        <span class="spoke-idx">03</span><span class="spoke-label">About</span>
+      </a>
+      <a class="hero-spoke" data-node="spoke" style="--angle: 198deg; --i: 4"  href="#footer">
+        <span class="spoke-idx">04</span><span class="spoke-label">Contact</span>
+      </a>
 
-    <!-- 右上ソーシャルアイコン -->
-    <div id="hero-social" class="hero-social">
-      <!-- data.js から生成 -->
     </div>
 
     <!-- スクロールヒント (左下) -->
@@ -49,15 +71,20 @@
       <span>Scroll</span>
       <div class="scroll-line"></div>
     </div>
-
   </section>
 
   <!-- アーカイブセクション -->
-  <section id="archive">
+  <section id="archive" class="net-section">
     <div class="section-inner">
-      <header class="section-header">
-        <span class="section-label">00 / Archive</span>
+      <header class="section-header reveal-item">
+        <span class="section-label">00</span>
+        <h2 class="section-title">Archive</h2>
+        <span class="section-rule" aria-hidden="true"></span>
+        <span class="section-count" id="archive-count"></span>
       </header>
+      <div id="archive-filters" class="filter-bar" role="group" aria-label="カテゴリで絞り込み">
+        <!-- data.js のカテゴリから生成 -->
+      </div>
       <div id="archive-grid" class="archive-grid">
         <!-- data.js から動的生成 -->
       </div>
@@ -65,10 +92,13 @@
   </section>
 
   <!-- 作品セクション -->
-  <section id="works">
+  <section id="works" class="net-section">
     <div class="section-inner">
-      <header class="section-header">
-        <span class="section-label">01 / Works</span>
+      <header class="section-header reveal-item">
+        <span class="section-label">01</span>
+        <h2 class="section-title">Works</h2>
+        <span class="section-rule" aria-hidden="true"></span>
+        <span class="section-count" id="works-count"></span>
       </header>
       <div id="works-grid" class="works-grid">
         <!-- data.js から動的生成 -->
@@ -77,39 +107,48 @@
   </section>
 
   <!-- 記事セクション -->
-  <section id="articles">
+  <section id="articles" class="net-section">
     <div class="section-inner">
-      <header class="section-header">
-        <span class="section-label">02 / Articles</span>
+      <header class="section-header reveal-item">
+        <span class="section-label">02</span>
+        <h2 class="section-title">Articles</h2>
+        <span class="section-rule" aria-hidden="true"></span>
+        <span class="section-count" id="articles-count"></span>
       </header>
-      <div class="articles-platforms">
-        <div id="articles-list" class="articles-list">
-          <!-- data.js から動的生成 -->
-        </div>
+      <div id="articles-list" class="articles-list">
+        <!-- data.js から動的生成 -->
       </div>
     </div>
   </section>
 
   <!-- About セクション -->
-  <section id="about">
-    <div id="about-bg"></div>
-    <div class="section-inner about-inner">
-      <div class="about-text">
-        <header class="section-header">
-          <span class="section-label reveal-item">03 / About</span>
-        </header>
-        <p id="about-bio" class="about-bio">
-          <!-- data.js から生成 -->
-        </p>
-        <div id="about-skills" class="about-skills">
-          <!-- data.js から生成 -->
+  <section id="about" class="net-section">
+    <div class="section-inner">
+      <header class="section-header reveal-item">
+        <span class="section-label">03</span>
+        <h2 class="section-title">About</h2>
+        <span class="section-rule" aria-hidden="true"></span>
+      </header>
+
+      <div class="about-layout">
+        <!-- 本文の背後に敷く写真。装飾なので読み上げ対象から外す -->
+        <div class="about-bg" aria-hidden="true">
+          <img src="images/myprofile.jpg" alt="" loading="lazy" decoding="async">
         </div>
-        <div id="about-links" class="about-links">
-          <!-- data.js から生成 -->
+
+        <div class="about-main">
+          <p id="about-bio" class="about-bio">
+            <!-- data.js から生成 -->
+          </p>
+          <div id="about-links" class="about-links">
+            <!-- data.js から生成 -->
+          </div>
         </div>
-        <div id="career-timeline" class="career-timeline">
-          <!-- data.js から生成 -->
-        </div>
+      </div>
+
+      <h3 class="sub-label timeline-label">Timeline</h3>
+      <div id="career-timeline" class="career-timeline">
+        <!-- data.js から生成 -->
       </div>
     </div>
   </section>
@@ -117,14 +156,17 @@
   <!-- フッター -->
   <footer id="footer">
     <div class="footer-inner">
-      <p class="footer-copy">&copy; <span id="footer-year"></span> mikchell. All rights reserved.</p>
+      <div class="footer-node" data-node="hub">
+        <span class="footer-mark" aria-hidden="true"></span>
+        <p class="footer-name">mikchell</p>
+      </div>
       <div id="footer-links" class="footer-social">
         <!-- data.js から生成 -->
       </div>
+      <p class="footer-copy">&copy; <span id="footer-year"></span> mikchell</p>
     </div>
   </footer>
 
-  <script src="data.js"></script>
-  <script src="script.js"></script>
+  <script type="module" src="js/main.js"></script>
 </body>
 </html>
