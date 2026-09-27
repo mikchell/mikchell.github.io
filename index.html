@@ -10,6 +10,18 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
+
+  <script>
+    // オープニング演出はセッション中1回だけ。
+    // body が描かれる前に判定することで、2回目以降のちらつきを防ぐ。
+    try {
+      if (sessionStorage.getItem('brewed')) {
+        document.documentElement.classList.add('is-brewed');
+      }
+    } catch (e) {
+      // プライベートモード等で参照できない場合は毎回再生する
+    }
+  </script>
 </head>
 <body>
 

@@ -16,6 +16,13 @@ export function initBrew() {
 
   const root = document.documentElement;
 
+  // 再生済みとして記録する。次に同じセッションで開いたときは演出を出さない。
+  try {
+    sessionStorage.setItem('brewed', '1');
+  } catch {
+    // 保存できない環境では毎回再生されるだけなので、無視してよい
+  }
+
   document.getElementById('brew-skip')?.addEventListener('click', () => skip(root));
 
   // Esc でも抜けられるようにする

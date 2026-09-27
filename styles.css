@@ -1377,3 +1377,7 @@ ul, ol { list-style: none; }
   :root { --brew-delay: 0s; }
   .brew { display: none; }
 }
+
+/* 一度見たセッションでは演出を出さない（判定は <head> のインラインスクリプト） */
+.is-brewed { --brew-delay: 0s; }
+.is-brewed .brew { display: none; }
