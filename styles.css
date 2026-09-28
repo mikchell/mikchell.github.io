@@ -1200,6 +1200,8 @@ ul, ol { list-style: none; }
   --brew-delay: calc(var(--brew-end) + 3s);
   /* 鉛筆画のトーン。黒鉛らしく、真っ黒より少し青みのあるグレー */
   --graphite: #3a3e46;
+  /* 湯気の色。白い紙の上でかろうじて見える、青みを帯びた淡い灰色 */
+  --steam: #c3cad3;
 }
 
 .brew {
@@ -1480,27 +1482,27 @@ ul, ol { list-style: none; }
    筋ごとに濃さ・速さ・流れる向きを変え、揃った動きに見せない。 */
 .brew-steam {
   fill: none;
-  stroke: var(--graphite);
-  stroke-width: 4.2;
+  stroke: var(--steam);
+  stroke-width: 5;
   stroke-linecap: round;
   opacity: 0;
   transform-box: fill-box;
   transform-origin: center bottom;
   animation: brew-steam var(--steam-dur, 3.6s) cubic-bezier(0.25, 0.1, 0.4, 1) infinite;
 }
-.brew-s1 { --steam-peak: 0.22; --drift: -5px; --steam-dur: 3.8s; animation-delay: calc(var(--brew-end) + 1.5s); }
-.brew-s2 { --steam-peak: 0.28; --drift: 3px;  --steam-dur: 4.3s; animation-delay: calc(var(--brew-end) + 1.7s); }
-.brew-s3 { --steam-peak: 0.2;  --drift: 6px;  --steam-dur: 3.5s; animation-delay: calc(var(--brew-end) + 2s); }
-.brew-s4 { --steam-peak: 0.16; --drift: -3px; --steam-dur: 4s;   animation-delay: calc(var(--brew-end) + 2.4s);
-           stroke-width: 3.2; }
-.brew-s5 { --steam-peak: 0.16; --drift: 4px;  --steam-dur: 3.7s; animation-delay: calc(var(--brew-end) + 2.8s);
-           stroke-width: 3.2; }
+.brew-s1 { --steam-peak: 0.45; --drift: -5px;  --steam-dur: 3.8s; animation-delay: calc(var(--brew-end) + 1.5s); }
+.brew-s2 { --steam-peak: 0.55; --drift: 3px;   --steam-dur: 4.3s; animation-delay: calc(var(--brew-end) + 1.7s); }
+.brew-s3 { --steam-peak: 0.4;  --drift: 6px;   --steam-dur: 3.5s; animation-delay: calc(var(--brew-end) + 2s); }
+.brew-s4 { --steam-peak: 0.35; --drift: -3px;  --steam-dur: 4s;   animation-delay: calc(var(--brew-end) + 2.4s);
+           stroke-width: 4; }
+.brew-s5 { --steam-peak: 0.35; --drift: 4px;   --steam-dur: 3.7s; animation-delay: calc(var(--brew-end) + 2.8s);
+           stroke-width: 4; }
 
 @keyframes brew-steam {
   0%   { opacity: 0; transform: translate(0, 4px) scale(0.6, 0.3); }
   25%  { opacity: var(--steam-peak, 0.2); }
   55%  { opacity: calc(var(--steam-peak, 0.2) * 0.8); }
-  100% { opacity: 0; transform: translate(var(--drift, 0), -26px) scale(1.9, 1.15); }
+  100% { opacity: 0; transform: translate(var(--drift, 0), -30px) scale(1.5, 1.25); }
 }
 
 /* ── ラベル ───────────────────────────────────────────── */

@@ -60,12 +60,23 @@
 
           <!-- 湯気。筋を大きな揺らぎで波打たせ、ぼかして柔らかい煙にする。
                縦に細長いノイズで、立ち上る流れに沿った揺らぎにする -->
-          <filter id="brew-steam-filter" filterUnits="userSpaceOnUse" x="70" y="70" width="80" height="110">
+          <filter id="brew-steam-filter" filterUnits="userSpaceOnUse" x="60" y="80" width="100" height="100">
             <feTurbulence type="fractalNoise" baseFrequency="0.028 0.018" numOctaves="2" seed="5" result="swirl" />
             <feDisplacementMap in="SourceGraphic" in2="swirl" scale="8"
                                xChannelSelector="R" yChannelSelector="G" result="curled" />
-            <feGaussianBlur in="curled" stdDeviation="2" />
+            <feGaussianBlur in="curled" stdDeviation="3.2" />
           </filter>
+
+          <!-- 湯気の濃さを上下でぼかすマスク。面の近くでは生まれかけ、上では溶けて消える -->
+          <linearGradient id="brew-steam-fade" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#fff" stop-opacity="0" />
+            <stop offset="0.45" stop-color="#fff" stop-opacity="1" />
+            <stop offset="0.8" stop-color="#fff" stop-opacity="0.9" />
+            <stop offset="1" stop-color="#fff" stop-opacity="0" />
+          </linearGradient>
+          <mask id="brew-steam-mask" maskUnits="userSpaceOnUse" x="70" y="96" width="80" height="72">
+            <rect x="70" y="96" width="80" height="72" fill="url(#brew-steam-fade)" />
+          </mask>
 
           <!-- 紙フィルターの口。粉はこの内側にだけ見える -->
           <clipPath id="brew-filter-clip">
@@ -238,7 +249,7 @@
         <!-- 湯気。鉛筆の線のフィルターから外し、柔らかい煙として描く。
              揺らぎ（ノイズ）はこの g に固定して掛け、中の筋だけを動かす。
              筋は止まった揺らぎの中を上っていくので、上るにつれて形が崩れ、ねじれていく -->
-        <g class="brew-steam-layer" filter="url(#brew-steam-filter)">
+        <g class="brew-steam-layer" filter="url(#brew-steam-filter)" mask="url(#brew-steam-mask)">
           <path class="brew-steam brew-s1" d="M101 164 C99 157 103 151 101 144 C99.5 138 102 133 100.5 127" />
           <path class="brew-steam brew-s2" d="M110 163 C112 156 108 150 110.5 143 C112.5 137 109.5 131 111 123" />
           <path class="brew-steam brew-s3" d="M119 164 C121 158 117.5 153 119.5 146 C121 141 118.5 136 120 130" />
