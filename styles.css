@@ -1195,7 +1195,8 @@ ul, ol { list-style: none; }
 :root {
   /* 演出の長さ。Skip 押下時に JS が 0s へ書き換える */
   --brew-delay: 3.6s;
-  --coffee: #6f4e37;
+  /* 鉛筆画のトーン。黒鉛らしく、真っ黒より少し青みのあるグレー */
+  --graphite: #3a3e46;
 }
 
 .brew {
@@ -1226,13 +1227,21 @@ ul, ol { list-style: none; }
   overflow: visible;
 }
 
+/* ハッチングの線。塗りつぶす代わりに細い斜線を重ねて陰影を出す */
+.brew-hatch-line {
+  stroke: var(--graphite);
+  stroke-width: 0.55;
+  stroke-opacity: 0.85;
+}
+.brew-hatch-line-2 { stroke-opacity: 0.6; }
+
 /* 背後の線を透かせたくない面は紙色で塗る */
 .brew-solid { fill: var(--paper); }
 
 .brew-ink {
   fill: none;
-  stroke: var(--ink);
-  stroke-width: 1.25;
+  stroke: var(--graphite);
+  stroke-width: 1.2;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
@@ -1277,7 +1286,7 @@ ul, ol { list-style: none; }
   fill: none;
   stroke-linecap: butt;
 }
-.brew-spout-edge { stroke: var(--ink); stroke-width: 5.5; }
+.brew-spout-edge { stroke: var(--graphite); stroke-width: 5.4; }
 .brew-spout-core { stroke: var(--paper); stroke-width: 3; }
 
 .brew-kettle-tip {
@@ -1294,8 +1303,8 @@ ul, ol { list-style: none; }
 /* 注がれる湯。破線を流して途切れない水流に見せる */
 .brew-stream {
   fill: none;
-  stroke: var(--accent);
-  stroke-width: 2.2;
+  stroke: var(--graphite);
+  stroke-width: 1.1;
   stroke-linecap: round;
   stroke-dasharray: 9 7;
   opacity: 0;
@@ -1305,7 +1314,7 @@ ul, ol { list-style: none; }
     brew-fade-out 0.3s var(--ease) 2.5s forwards;
 }
 
-@keyframes brew-fade-in  { to { opacity: 0.85; } }
+@keyframes brew-fade-in  { to { opacity: 0.7; } }
 @keyframes brew-fade-out { to { opacity: 0; } }
 @keyframes brew-flow     { to { stroke-dashoffset: -16; } }
 
@@ -1321,7 +1330,9 @@ ul, ol { list-style: none; }
 
 /* ── 粉の膨らみ（ブルーム） ───────────────────────────── */
 .brew-bed {
-  fill: var(--coffee);
+  fill: url(#brew-hatch);
+  stroke: var(--graphite);
+  stroke-width: 0.6;
   opacity: 0;
   transform-origin: 110px 102px;
   animation: brew-bloom 1.3s var(--ease) 0.85s forwards;
@@ -1336,8 +1347,8 @@ ul, ol { list-style: none; }
 /* ── 抽出 ─────────────────────────────────────────────
    細い筋を常時流しつつ、その先で雫が切れて落ちる。 */
 .brew-trickle {
-  stroke: var(--coffee);
-  stroke-width: 1.6;
+  stroke: var(--graphite);
+  stroke-width: 1.1;
   stroke-linecap: round;
   stroke-dasharray: 5 6;
   opacity: 0;
@@ -1350,7 +1361,7 @@ ul, ol { list-style: none; }
 @keyframes brew-trickle-in { to { opacity: 0.8; } }
 
 .brew-drop {
-  fill: var(--coffee);
+  fill: var(--graphite);
   opacity: 0;
   /* 自身の中心で伸縮させる。既定の原点 (0,0) だと縮むたびに左上へずれる */
   transform-box: fill-box;
@@ -1372,7 +1383,10 @@ ul, ol { list-style: none; }
 
 /* ── サーバーに溜まる ─────────────────────────────────── */
 .brew-liquid {
-  fill: var(--coffee);
+  fill: url(#brew-hatch-cross);
+  /* 上辺だけがクリップの内側に残り、液面の線になる */
+  stroke: var(--graphite);
+  stroke-width: 0.9;
   transform: translateY(70px);
   animation: brew-fill 2.1s var(--ease) 1.2s forwards;
 }
@@ -1383,7 +1397,7 @@ ul, ol { list-style: none; }
 
 /* ── 湯気 ─────────────────────────────────────────────── */
 .brew-steam {
-  stroke-width: 1.1;
+  stroke-width: 0.8;
   stroke-dasharray: 34;
   stroke-dashoffset: 34;
   opacity: 0;
