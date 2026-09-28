@@ -1237,6 +1237,8 @@ ul, ol { list-style: none; }
 
 /* 背後の線を透かせたくない面は紙色で塗る */
 .brew-solid { fill: var(--paper); }
+/* 塗りだけ使い、輪郭は別の線で描く面 */
+.brew-fill-only { stroke: none; }
 
 .brew-ink {
   fill: none;
@@ -1329,6 +1331,36 @@ ul, ol { list-style: none; }
   0%   { opacity: 1; transform: none; }
   45%  { opacity: 1; transform: translateY(-26px); }
   100% { opacity: 0; transform: translateY(-32px); }
+}
+
+/* 陰影と紙の折りじわ。器を描き終えてから、そっと浮かび上がらせる */
+.brew-shade {
+  fill: url(#brew-hatch);
+  opacity: 0;
+  animation: brew-fade-in 0.8s var(--ease) 1.2s forwards;
+}
+
+.brew-crease {
+  stroke-width: 0.5;
+  stroke-opacity: 0.55;
+  opacity: 0;
+  animation: brew-fade-in 0.8s var(--ease) 1.2s forwards;
+}
+
+/* 蒸らしで粉の表面に浮かび、ぷつぷつと消えていく泡 */
+.brew-bubble {
+  stroke-width: 0.5;
+  opacity: 0;
+  animation: brew-bubble 1.4s var(--ease) 2.1s 2;
+}
+.brew-bubble:nth-child(2) { animation-delay: 2.4s; }
+.brew-bubble:nth-child(3) { animation-delay: 2.25s; }
+.brew-bubble:nth-child(4) { animation-delay: 2.7s; }
+.brew-bubble:nth-child(5) { animation-delay: 2.55s; }
+
+@keyframes brew-bubble {
+  0%, 100% { opacity: 0; }
+  30%, 70% { opacity: 0.8; }
 }
 
 /* ── 粉の膨らみ（ブルーム） ───────────────────────────── */

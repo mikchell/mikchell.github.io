@@ -105,29 +105,52 @@
           <circle class="brew-drop brew-drop1" cx="110" cy="134" r="2.6" />
           <circle class="brew-drop brew-drop2" cx="110" cy="134" r="2.1" />
 
-          <!-- ドリッパー一式。カップの口に載せて淹れ、落とし終えたら持ち上げて外す -->
+          <!-- ドリッパー一式（円錐形の陶器のドリッパー）。
+               カップの口に載せて淹れ、落とし終えたら持ち上げて外す -->
           <g class="brew-dripper">
             <g class="brew-ink">
               <!-- カップの口に載る台座（厚みのある円盤） -->
               <path class="brew-solid brew-draw brew-d1"
                     d="M68 160 A42 9 0 0 0 152 160 v3 A42 9 0 0 1 68 163 Z" />
               <ellipse class="brew-solid brew-draw brew-d1" cx="110" cy="160" rx="42" ry="9" />
-              <!-- 取っ手 -->
-              <path class="brew-draw brew-d1" d="M72 112 C55 110 57 134 81 129" />
-              <!-- 円錐の本体。紙色で塗って、奥にある台座の線を隠す -->
-              <path class="brew-solid brew-draw brew-d1" d="M62 98 L97 154 h26 L158 98" />
-              <!-- 紙フィルター。本体の縁から上へはみ出して開いている -->
-              <ellipse class="brew-draw brew-d1" cx="110" cy="90" rx="51" ry="7" />
-              <path class="brew-draw brew-d1" d="M59 90 L62 98 M161 90 L158 98" />
-              <!-- 紙の継ぎ目（圧着のギザギザ） -->
-              <path class="brew-draw brew-d1"
-                    d="M141 96.5 l1.4 1.2 l-1.4 1.2 l1.4 1.2 l-1.4 1.2 l1.4 1.2 l-1.4 1.2" />
-              <!-- 本体の縁。奥側は紙に隠れるので手前の半分だけ描く -->
-              <path class="brew-draw brew-d1" d="M62 98 A48 8 0 0 0 158 98" />
+              <!-- 輪になった取っ手。先に描いて、本体の塗りで付け根を隠す -->
+              <path class="brew-draw brew-d1" d="M66 104 C45 103 45 131 80 127" />
+              <path class="brew-draw brew-d1" d="M69 110 C55 110 55 124 76 121" />
+              <!-- 円錐の本体と、台座へつながる短い首。紙色で塗り、奥の線を隠す -->
+              <path class="brew-solid brew-draw brew-d1"
+                    d="M63 101 L99 150 L100 161 A10 2 0 0 0 120 161 L121 150 L157 101 Z" />
+              <path class="brew-draw brew-d1" d="M99 150 A11 2 0 0 0 121 150" />
             </g>
 
-            <!-- 粉の膨らみ（紙の口の内側） -->
+            <!-- 本体の右側に落ちる陰 -->
+            <path class="brew-shade" d="M139 101 L157 101 L121 150 L115 150 Z" />
+            <path class="brew-shade" d="M116 151 L121 150 L120 161 L116 162 Z" />
+            <path class="brew-shade" d="M136 168 A42 9 0 0 0 152 160 v3 A42 9 0 0 1 136 171 Z" />
+
+            <g class="brew-ink">
+              <!-- 紙フィルター。縁から上へはみ出し、口は少し波打つ -->
+              <path class="brew-solid brew-fill-only" d="M59 90 A51 7 0 0 1 161 90 L157 99 L63 99 Z" />
+              <path class="brew-draw brew-d1" d="M63 99 L59 90 A51 7 0 0 1 161 90 L157 99" />
+              <path class="brew-draw brew-d1"
+                    d="M59 90 C72 95.5 92 97.5 110 96.6 C127 97.6 147 95.2 161 90" />
+              <!-- 紙の折りじわと、圧着の継ぎ目のギザギザ -->
+              <path class="brew-crease" d="M78 95.6 l1.2 6.2 M97 96.9 l0.4 7.6 M124 97.1 l-0.4 7.4" />
+              <path class="brew-draw brew-d1"
+                    d="M140 96 l1.4 1.2 l-1.4 1.2 l1.4 1.2 l-1.4 1.2 l1.4 1.2 l-1.4 1.2 l1.4 1.2" />
+              <!-- 本体の縁。厚みのある帯として、手前の半分だけ描く -->
+              <path class="brew-solid brew-draw brew-d1"
+                    d="M62 98 A48 8 0 0 0 158 98 L158 101 A48 8 0 0 1 62 101 Z" />
+            </g>
+
+            <!-- 粉の膨らみ（紙の口の内側）と、蒸らしで浮かぶ泡 -->
             <ellipse class="brew-bed" cx="110" cy="91" rx="30" ry="3.5" />
+            <g class="brew-ink">
+              <circle class="brew-bubble" cx="99" cy="90.6" r="1" />
+              <circle class="brew-bubble" cx="106" cy="92.2" r="0.8" />
+              <circle class="brew-bubble" cx="113" cy="89.6" r="1.1" />
+              <circle class="brew-bubble" cx="120" cy="91.6" r="0.8" />
+              <circle class="brew-bubble" cx="109" cy="90.4" r="0.6" />
+            </g>
           </g>
 
           <!-- 湯気 -->
