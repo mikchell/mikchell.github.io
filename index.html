@@ -17,11 +17,11 @@
        CSS だけで最後まで再生されるため、JS が失敗しても取り残されない。 -->
   <div id="brew" class="brew">
     <div class="brew-stage">
-      <svg class="brew-art" viewBox="-18 0 238 248" role="img" aria-label="珈琲を淹れています">
+      <svg class="brew-art" viewBox="-18 0 238 236" role="img" aria-label="珈琲を淹れています">
         <defs>
           <!-- カップの口。珈琲の面はこの楕円の内側だけに見える -->
           <clipPath id="brew-cup-clip">
-            <ellipse cx="110" cy="176" rx="39.4" ry="8.4" />
+            <ellipse cx="110" cy="164" rx="39.4" ry="8.4" />
           </clipPath>
 
           <!-- 鉛筆の線。低周波ノイズで輪郭を揺らし、高周波ノイズで紙目のかすれを抜く -->
@@ -78,14 +78,44 @@
             <path class="brew-stream" d="M111 36 C111 56 110 74 110 90" />
           </g>
 
-          <!-- ドリッパー一式。落とし終えたら持ち上げて外す -->
+          <!-- ソーサー付きのカップ -->
+          <g class="brew-ink">
+            <!-- ソーサーと、カップを受けるくぼみ -->
+            <ellipse class="brew-solid brew-draw brew-d2" cx="110" cy="217" rx="60" ry="10" />
+            <ellipse class="brew-draw brew-d2" cx="110" cy="216" rx="46" ry="6.5" />
+            <!-- 取っ手。先に描いて、胴の塗りで付け根を隠す -->
+            <path class="brew-draw brew-d2" d="M148 174 C171 170 173 197 142 199" />
+            <path class="brew-draw brew-d2" d="M149 180 C163 178 163 192 145 193" />
+            <!-- 胴。上辺は口の手前半分の弧 -->
+            <path class="brew-solid brew-draw brew-d2"
+                  d="M70 164 A40 9 0 0 0 150 164 C150 196 136 215 110 215 C84 215 70 196 70 164 Z" />
+          </g>
+
+          <!-- カップに溜まる珈琲。ドリッパーの陰で溜まり、外すと現れる -->
+          <g clip-path="url(#brew-cup-clip)">
+            <ellipse class="brew-liquid" cx="110" cy="170" rx="38" ry="8" />
+          </g>
+
+          <!-- カップの口 -->
+          <g class="brew-ink">
+            <ellipse class="brew-draw brew-d2" cx="110" cy="164" rx="40" ry="9" />
+          </g>
+
+          <!-- ドリッパーを持ち上げたとき、抽出口から切れ落ちる最後の雫 -->
+          <circle class="brew-drop brew-drop1" cx="110" cy="134" r="2.6" />
+          <circle class="brew-drop brew-drop2" cx="110" cy="134" r="2.1" />
+
+          <!-- ドリッパー一式。カップの口に載せて淹れ、落とし終えたら持ち上げて外す -->
           <g class="brew-dripper">
             <g class="brew-ink">
+              <!-- カップの口に載る台座（厚みのある円盤） -->
+              <path class="brew-solid brew-draw brew-d1"
+                    d="M68 160 A42 9 0 0 0 152 160 v3 A42 9 0 0 1 68 163 Z" />
+              <ellipse class="brew-solid brew-draw brew-d1" cx="110" cy="160" rx="42" ry="9" />
               <!-- 取っ手 -->
               <path class="brew-draw brew-d1" d="M72 112 C55 110 57 134 81 129" />
-              <!-- 円錐の本体と、下の抽出口 -->
-              <path class="brew-draw brew-d1" d="M62 98 L97 154 h26 L158 98" />
-              <path class="brew-draw brew-d1" d="M104 154 v3 h12 v-3" />
+              <!-- 円錐の本体。紙色で塗って、奥にある台座の線を隠す -->
+              <path class="brew-solid brew-draw brew-d1" d="M62 98 L97 154 h26 L158 98" />
               <!-- 紙フィルター。本体の縁から上へはみ出して開いている -->
               <ellipse class="brew-draw brew-d1" cx="110" cy="90" rx="51" ry="7" />
               <path class="brew-draw brew-d1" d="M59 90 L62 98 M161 90 L158 98" />
@@ -98,46 +128,13 @@
 
             <!-- 粉の膨らみ（紙の口の内側） -->
             <ellipse class="brew-bed" cx="110" cy="91" rx="30" ry="3.5" />
-
-            <!-- 抽出口から続く細い筋 -->
-            <line class="brew-trickle" x1="110" y1="158" x2="110" y2="165" />
-          </g>
-
-          <!-- 落ちる雫（ドリッパーを外したあとも落ちきれるよう、一式の外に置く）。
-               カップより先に描き、口より下はカップの胴の塗りで隠す -->
-          <circle class="brew-drop brew-drop1" cx="110" cy="160" r="2.6" />
-          <circle class="brew-drop brew-drop2" cx="110" cy="160" r="2.2" />
-          <circle class="brew-drop brew-drop3" cx="110" cy="160" r="2.6" />
-          <circle class="brew-drop brew-drop4" cx="110" cy="160" r="2.1" />
-
-          <!-- ソーサー付きのカップ -->
-          <g class="brew-ink">
-            <!-- ソーサーと、カップを受けるくぼみ -->
-            <ellipse class="brew-solid brew-draw brew-d2" cx="110" cy="229" rx="60" ry="10" />
-            <ellipse class="brew-draw brew-d2" cx="110" cy="228" rx="46" ry="6.5" />
-            <!-- 取っ手。先に描いて、胴の塗りで付け根を隠す -->
-            <path class="brew-draw brew-d2" d="M148 186 C171 182 173 209 142 211" />
-            <path class="brew-draw brew-d2" d="M149 192 C163 190 163 204 145 205" />
-            <!-- 胴。上辺は口の手前半分の弧 -->
-            <path class="brew-solid brew-draw brew-d2"
-                  d="M70 176 A40 9 0 0 0 150 176 C150 208 136 227 110 227 C84 227 70 208 70 176 Z" />
-          </g>
-
-          <!-- カップに溜まる珈琲。面が口の奥から上がってくる -->
-          <g clip-path="url(#brew-cup-clip)">
-            <ellipse class="brew-liquid" cx="110" cy="182" rx="38" ry="8" />
-          </g>
-
-          <!-- カップの口 -->
-          <g class="brew-ink">
-            <ellipse class="brew-draw brew-d2" cx="110" cy="176" rx="40" ry="9" />
           </g>
 
           <!-- 湯気 -->
           <g class="brew-ink">
-            <path class="brew-steam brew-s1" d="M96 168 c6 -10 -6 -16 0 -26" />
-            <path class="brew-steam brew-s2" d="M110 164 c6 -11 -6 -18 0 -29" />
-            <path class="brew-steam brew-s3" d="M124 168 c6 -10 -6 -16 0 -26" />
+            <path class="brew-steam brew-s1" d="M96 156 c6 -10 -6 -16 0 -26" />
+            <path class="brew-steam brew-s2" d="M110 152 c6 -11 -6 -18 0 -29" />
+            <path class="brew-steam brew-s3" d="M124 156 c6 -10 -6 -16 0 -26" />
           </g>
         </g>
       </svg>
