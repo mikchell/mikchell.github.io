@@ -1225,7 +1225,8 @@ ul, ol { list-style: none; }
 }
 
 .brew-art {
-  inline-size: clamp(160px, 27vw, 215px);
+  /* 大きなポットのために枠を左へ広げた分、カップの見た目の大きさを保つよう幅も広げる */
+  inline-size: clamp(200px, 34vw, 270px);
   block-size: auto;
   overflow: visible;
 }
@@ -1357,6 +1358,8 @@ ul, ol { list-style: none; }
 /* 陰影と紙の折りじわ。器を描き終えてから、そっと浮かび上がらせる */
 .brew-shade {
   fill: url(#brew-hatch);
+  /* 線の中（.brew-ink）に置いても輪郭を引かない */
+  stroke: none;
   opacity: 0;
   animation: brew-fade-in 0.8s var(--ease) 1.2s forwards;
 }
