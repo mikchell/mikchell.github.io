@@ -1235,7 +1235,8 @@ ul, ol { list-style: none; }
   /* 大きなポットのために枠を左へ広げた分、カップの見た目の大きさを保つよう幅も広げる */
   inline-size: var(--brew-art-w);
   block-size: auto;
-  overflow: visible;
+  /* カメラが寄ったとき、枠の外へはみ出した所は切り取る */
+  overflow: hidden;
 }
 
 /* ハッチングの線。塗りつぶす代わりに細い斜線を重ねて陰影を出す。
@@ -1261,6 +1262,22 @@ ul, ol { list-style: none; }
   stroke-linecap: round;
   stroke-linejoin: round;
 }
+
+/* ── カメラ ───────────────────────────────────────────
+   注いでいる間はドリッパーへ寄り、締めくくりで引いて全体を見せ、
+   最後に湯気の立つカップへゆっくり寄る。 */
+.brew-camera {
+  transform-box: view-box;
+  transform-origin: 104px 104px;
+  animation:
+    brew-cam-in 1.4s var(--ease) 1.2s forwards,
+    brew-cam-out 1.2s var(--ease) calc(var(--brew-end) + 0.2s) forwards,
+    brew-cam-cup 2.8s ease-in-out calc(var(--brew-end) + 1.6s) forwards;
+}
+
+@keyframes brew-cam-in  { to { transform: scale(1.22); } }
+@keyframes brew-cam-out { to { transform: none; } }
+@keyframes brew-cam-cup { to { transform: translate(0, -14px) scale(1.12); } }
 
 /* ── 器を線で描き起こす ───────────────────────────────── */
 .brew-draw {
@@ -1288,27 +1305,31 @@ ul, ol { list-style: none; }
     brew-kettle-in 1s var(--ease) 0.6s forwards,
     brew-swirl 1.8s linear 1.55s 1,
     brew-swirl 1.8s linear 3.85s infinite,
-    brew-kettle-out 0.8s var(--ease) calc(var(--brew-end) + 0.35s) forwards;
+    brew-kettle-out 1s var(--ease) calc(var(--brew-end) + 0.35s) forwards;
 }
 
 /* 左上から弧を描いて入り、少し行き過ぎてから止まる */
 @keyframes brew-kettle-in {
-  0%   { opacity: 0; transform: translate(-34px, -22px) rotate(-10deg); }
-  60%  { opacity: 1; transform: translate(3px, 2px) rotate(2deg); }
+  0%   { opacity: 0; transform: translate(-64px, -40px) rotate(-18deg); }
+  55%  { opacity: 1; transform: translate(6px, 4px) rotate(4deg); }
+  80%  { transform: translate(-2px, -1px) rotate(-1deg); }
   100% { opacity: 1; transform: none; }
 }
-@keyframes brew-kettle-out { to { opacity: 0; transform: translate(-30px, -20px) rotate(-8deg); } }
+@keyframes brew-kettle-out {
+  30%  { opacity: 1; transform: translate(4px, 3px) rotate(3deg); }
+  100% { opacity: 0; transform: translate(-60px, -40px) rotate(-16deg); }
+}
 
 /* 奥行きのある小さな円をゆっくり描く。手前（下）と奥（上）の動きは横より小さくする */
 @keyframes brew-swirl {
   0%, 100% { transform: translate(0, 0); }
-  12.5%    { transform: translate(7.07px, 0.73px); }
-  25%      { transform: translate(10px, 2.5px); }
-  37.5%    { transform: translate(7.07px, 4.27px); }
-  50%      { transform: translate(0, 5px); }
-  62.5%    { transform: translate(-7.07px, 4.27px); }
-  75%      { transform: translate(-10px, 2.5px); }
-  87.5%    { transform: translate(-7.07px, 0.73px); }
+  12.5%    { transform: translate(8.49px, 0.88px); }
+  25%      { transform: translate(12px, 3px); }
+  37.5%    { transform: translate(8.49px, 5.12px); }
+  50%      { transform: translate(0, 6px); }
+  62.5%    { transform: translate(-8.49px, 5.12px); }
+  75%      { transform: translate(-12px, 3px); }
+  87.5%    { transform: translate(-8.49px, 0.88px); }
 }
 
 /* 注ぎ口の管。太いインク線に細い紙色線を重ね、縁取りのある管に見せる */
@@ -1332,7 +1353,7 @@ ul, ol { list-style: none; }
 
 /* 少し深く傾けてから、注ぐ角度に戻る */
 @keyframes brew-tip {
-  65%  { transform: rotate(15deg); }
+  60%  { transform: rotate(19deg); }
   100% { transform: rotate(12deg); }
 }
 /* 蒸らしの間は、湯が切れる所まで起こして待つ */
@@ -1343,13 +1364,14 @@ ul, ol { list-style: none; }
 .brew-stream {
   fill: none;
   stroke: var(--graphite);
-  stroke-width: 1.1;
+  stroke-width: 2;
   stroke-linecap: round;
-  stroke-dasharray: 9 7;
+  /* 切れ目をごく短くし、途切れない太い水流に見せる */
+  stroke-dasharray: 22 2;
   opacity: 0;
   animation:
     brew-fade-in 0.3s var(--ease) 1.55s forwards,
-    brew-flow 0.5s linear 1.55s infinite,
+    brew-flow 0.22s linear 1.55s infinite,
     brew-fade-out 0.25s var(--ease) 3.3s forwards,
     brew-fade-in 0.3s var(--ease) 3.95s forwards,
     brew-fade-out 0.3s var(--ease) var(--brew-end) forwards;
@@ -1357,7 +1379,7 @@ ul, ol { list-style: none; }
 
 @keyframes brew-fade-in  { to { opacity: 0.7; } }
 @keyframes brew-fade-out { to { opacity: 0; } }
-@keyframes brew-flow     { to { stroke-dashoffset: -16; } }
+@keyframes brew-flow     { to { stroke-dashoffset: -24; } }
 
 /* ── ドリッパー ───────────────────────────────────────
    カップに載せたまま淹れ、落とし終えたら持ち上げて外す。
@@ -1370,9 +1392,9 @@ ul, ol { list-style: none; }
 
 @keyframes brew-dripper-out {
   0%   { opacity: 1; transform: none; }
-  15%  { opacity: 1; transform: translate(0, 2px); }
-  45%  { opacity: 1; transform: translate(4px, -30px) rotate(3deg); }
-  100% { opacity: 0; transform: translate(16px, -46px) rotate(7deg); }
+  15%  { opacity: 1; transform: translate(0, 3px); }
+  45%  { opacity: 1; transform: translate(6px, -38px) rotate(5deg); }
+  100% { opacity: 0; transform: translate(22px, -62px) rotate(12deg); }
 }
 
 /* 陰影と紙の折りじわ。器を描き終えてから、そっと浮かび上がらせる */
@@ -1405,6 +1427,30 @@ ul, ol { list-style: none; }
 @keyframes brew-bubble {
   0%, 100% { opacity: 0; }
   30%, 70% { opacity: 0.8; }
+}
+
+/* ── しぶき ───────────────────────────────────────────
+   湯が粉に当たる所から小さな粒が跳ね、弧を描いて落ちる。湯の筋と同じ間だけ見せる */
+.brew-splash {
+  opacity: 0;
+  animation:
+    brew-fade-in 0.3s var(--ease) 1.6s forwards,
+    brew-fade-out 0.2s var(--ease) 3.3s forwards,
+    brew-fade-in 0.3s var(--ease) 4s forwards,
+    brew-fade-out 0.2s var(--ease) var(--brew-end) forwards;
+}
+
+.brew-splash-drop {
+  fill: var(--graphite);
+  opacity: 0;
+  animation: brew-splash 0.55s cubic-bezier(0.2, 0.7, 0.5, 1) infinite;
+}
+
+@keyframes brew-splash {
+  0%   { opacity: 0; transform: translate(0, 0); }
+  15%  { opacity: 0.9; }
+  55%  { transform: translate(calc(var(--sx) * 0.7), var(--sy)); }
+  100% { opacity: 0; transform: translate(var(--sx), calc(var(--sy) * 0.2)); }
 }
 
 /* ── 粉 ─────────────────────────────────────────────────
@@ -1447,8 +1493,8 @@ ul, ol { list-style: none; }
 /* 盛り上がって、蒸らしが終わる頃にはしぼんで平らに戻る */
 @keyframes brew-dome {
   0%   { opacity: 0; transform: scaleY(0.2); }
-  35%  { opacity: 0.8; transform: scaleY(1); }
-  70%  { opacity: 0.6; transform: scaleY(0.8); }
+  30%  { opacity: 0.9; transform: scaleY(1.25); }
+  60%  { opacity: 0.7; transform: scaleY(0.95); }
   100% { opacity: 0; transform: scaleY(0.3); }
 }
 
@@ -1468,8 +1514,8 @@ ul, ol { list-style: none; }
 @keyframes brew-drip {
   0%   { opacity: 0; transform: translateY(0) scale(0.7, 0.8); }
   18%  { opacity: 1; transform: translateY(4px) scale(0.9, 1.1); }
-  82%  { opacity: 1; transform: translateY(30px) scale(0.8, 1.35); }
-  100% { opacity: 0; transform: translateY(34px) scale(1.2, 0.5); }
+  82%  { opacity: 1; transform: translateY(36px) scale(0.8, 1.35); }
+  100% { opacity: 0; transform: translateY(40px) scale(1.2, 0.5); }
 }
 
 /* 雫が落ちた所に広がる波紋 */
@@ -1487,7 +1533,7 @@ ul, ol { list-style: none; }
 
 @keyframes brew-ripple {
   0%   { opacity: 0.8; transform: scale(0.4); }
-  100% { opacity: 0; transform: scale(5.5); }
+  100% { opacity: 0; transform: scale(7.5); }
 }
 
 /* ── カップに溜まる ─────────────────────────────────── */
@@ -1521,15 +1567,14 @@ ul, ol { list-style: none; }
   transform-origin: center bottom;
   animation: brew-steam var(--steam-dur, 3.6s) cubic-bezier(0.25, 0.1, 0.4, 1) infinite;
 }
-.brew-s1 { --steam-peak: 0.95; --drift: -8px; --sway: 5px;  --steam-dur: 3.2s; animation-delay: calc(var(--brew-end) + 1.5s); }
-.brew-s2 { --steam-peak: 1;    --drift: 5px;  --sway: -6px; --steam-dur: 3.6s; animation-delay: calc(var(--brew-end) + 1.7s); }
-.brew-s3 { --steam-peak: 0.9;  --drift: 9px;  --sway: -4px; --steam-dur: 3s;   animation-delay: calc(var(--brew-end) + 2s); }
-.brew-s4 { --steam-peak: 0.85; --drift: -5px; --sway: 6px;  --steam-dur: 3.4s; animation-delay: calc(var(--brew-end) + 2.3s);
+.brew-s1 { --steam-peak: 1; --drift: -10px; --sway: 6px;  --steam-dur: 3.2s; animation-delay: calc(var(--brew-end) + 1.5s); }
+.brew-s2 { --steam-peak: 1; --drift: 6px;   --sway: -7px; --steam-dur: 3.6s; animation-delay: calc(var(--brew-end) + 1.7s); }
+.brew-s3 { --steam-peak: 1; --drift: 11px;  --sway: -5px; --steam-dur: 3s;   animation-delay: calc(var(--brew-end) + 2s); }
+.brew-s4 { --steam-peak: 0.9; --drift: -6px; --sway: 7px; --steam-dur: 3.4s; animation-delay: calc(var(--brew-end) + 2.3s);
            stroke-width: 4; }
-.brew-s5 { --steam-peak: 0.85; --drift: 7px;  --sway: -5px; --steam-dur: 3.1s; animation-delay: calc(var(--brew-end) + 2.6s);
+.brew-s5 { --steam-peak: 0.9; --drift: 8px;  --sway: -6px; --steam-dur: 3.1s; animation-delay: calc(var(--brew-end) + 2.6s);
            stroke-width: 4; }
 
-/* 面から勢いよく立ち上り、途中で逆へ揺らいでから、流れる向きへ広がって消える */
 @keyframes brew-steam {
   0%   { opacity: 0; transform: translate(0, 6px) scale(0.5, 0.25); }
   20%  { opacity: var(--steam-peak, 0.9); }

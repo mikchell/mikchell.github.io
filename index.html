@@ -59,22 +59,25 @@
           </filter>
 
           <!-- 湯気。筋を大きな揺らぎで波打たせ、ぼかして柔らかい煙にする。
-               白い紙の上でも白い湯気に見えるよう、白い芯の周りに淡い灰色のふちをぼかして敷く -->
+               透明な湯気に見えるよう、芯はほぼ透かし、ふちだけを淡い灰色でうっすら残す。
+               芯の白はわずかに重ね、背後の線をかすかに霞ませる -->
           <filter id="brew-steam-filter" filterUnits="userSpaceOnUse" x="50" y="40" width="120" height="140"
                   color-interpolation-filters="sRGB">
             <feTurbulence type="fractalNoise" baseFrequency="0.028 0.018" numOctaves="2" seed="5" result="swirl" />
             <feDisplacementMap in="SourceGraphic" in2="swirl" scale="10"
                                xChannelSelector="R" yChannelSelector="G" result="curled" />
-            <!-- ふち：形を少し太らせてから大きくぼかし、淡い灰色で塗る -->
-            <feMorphology in="curled" operator="dilate" radius="1.2" result="fat" />
-            <feGaussianBlur in="fat" stdDeviation="3.4" result="halo-blur" />
-            <feColorMatrix in="halo-blur" type="matrix"
-                           values="0 0 0 0 0.56  0 0 0 0 0.6  0 0 0 0 0.66  0 0 0 0.55 0" result="halo" />
-            <!-- 芯：白くぼかす -->
             <feGaussianBlur in="curled" stdDeviation="2.2" result="core" />
+            <!-- ふち：形を少し太らせてぼかし、芯を抜いて輪郭の霞だけにする -->
+            <feMorphology in="curled" operator="dilate" radius="1.4" result="fat" />
+            <feGaussianBlur in="fat" stdDeviation="2.6" result="fat-blur" />
+            <feComposite in="fat-blur" in2="core" operator="out" result="rim" />
+            <feColorMatrix in="rim" type="matrix"
+                           values="0 0 0 0 0.6  0 0 0 0 0.65  0 0 0 0 0.71  0 0 0 0.6 0" result="rim-tone" />
+            <feColorMatrix in="core" type="matrix"
+                           values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.35 0" result="veil" />
             <feMerge>
-              <feMergeNode in="halo" />
-              <feMergeNode in="core" />
+              <feMergeNode in="rim-tone" />
+              <feMergeNode in="veil" />
             </feMerge>
           </filter>
 
@@ -123,40 +126,50 @@
           </pattern>
         </defs>
 
+        <!-- カメラ。絵全体を包み、注いでいる間はドリッパーへ寄り、終わると引いてカップへ寄る -->
+        <g class="brew-camera">
+
         <!-- 絵全体を鉛筆のフィルターに通す -->
         <g filter="url(#brew-pencil)">
 
-          <!-- 細口のドリップポット。swirl で小さく円を描き、tip で傾ける -->
+          <!-- 円筒形のドリップケトル。swirl で円を描き、tip で傾ける -->
           <g class="brew-kettle">
             <!-- 位置と大きさは静的な transform 属性で掛け、CSS アニメーションと分ける -->
-            <g transform="translate(-75 -30) scale(1.45)">
+            <g transform="translate(-59.2 -27) scale(1.45)">
               <g class="brew-kettle-tip">
               <g class="brew-ink">
-                <!-- 背中で蓋の高さまで張り出す取っ手。二重線で厚みを出し、付け根は胴の塗りで隠す -->
-                <path d="M30 37 C22 21 1 22 -1 41 C-2.5 54 5 62 14 65" />
-                <path d="M29 44 C22 31 7.5 32 6 43 C5 51 9.5 56.5 16 59" />
-                <!-- 注ぎ口。胴の最下部から白鳥の首のように長く立ち上がり、先端が下を向く。
+                <!-- 背中の角ばった取っ手。胴の上と下の 2 点で付き、縦の握りを持つ。
+                     二重線で厚みを出し、付け根は胴の塗りで隠す -->
+                <path d="M16 34 L3 34 Q-1 34 -1 38 L-1 60 Q-1 64 3 64 L16 64" />
+                <path d="M16 40 L6.5 40 Q5 40 5 41.5 L5 56.5 Q5 58 6.5 58 L16 58" />
+                <!-- 注ぎ口。胴の下から横へ出て強く曲がって立ち上がり、上で鋭く折れて真下を向く。
                      根元は太く、先へ行くほど細くなる -->
                 <path class="brew-solid"
-                      d="M72 60 C88 58 94 46 98 33 C101 22 109 15 117 17 C121 18 123 22 123 27
-                         L120 28 C120 24 118.5 21 116 21 C110 20 105.5 26 102 35 C98 49 92 65 72 67.5 Z" />
-                <!-- 胴。裾が広がり、なだらかな肩から細い口へすぼまる -->
-                <path class="brew-solid"
-                      d="M27 32 C25 40 16 48 11 60 C9 65 9 69.5 13 71 L77 71 C81 69.5 81 65 79 60 C74 48 65 40 63 32 Z" />
-                <!-- 胴の右側に落ちる陰 -->
-                <path class="brew-shade" d="M59.5 35 C65 43 73 51 77 62 L70.5 64.6 C67.5 54 62 44 56.5 36.5 Z" />
-                <!-- 裾の継ぎ目 -->
-                <path d="M10.2 65 C30 67.6 60 67.6 79.8 65" />
-                <!-- 口の縁と、ドーム形の蓋とつまみ -->
-                <ellipse class="brew-solid" cx="45" cy="32" rx="18" ry="3.8" />
-                <path class="brew-solid" d="M29.5 31.5 C31 22.5 59 22.5 60.5 31.5" />
-                <line x1="45" y1="25.4" x2="45" y2="22.4" />
-                <ellipse class="brew-solid" cx="45" cy="20.4" rx="3.2" ry="2.1" />
+                      d="M74 58 C84.5 58 87 52 88 42 C89 30 92 20 99.5 16 C104.5 13.5 110.5 15 112.2 21
+                         L112.2 27.5 L108.8 27.5 L108.8 22 C108 18.8 104.5 18.3 101.5 20
+                         C96.5 23 93.5 32 92.8 43 C92 56 88 65 74 65 Z" />
+                <!-- 胴。まっすぐな円筒で、底は手前に丸く見える -->
+                <path class="brew-solid" d="M14 30 L14 67 A31 4 0 0 0 76 67 L76 30 Z" />
+                <!-- 胴の右側に落ちる陰と、底の少し上の継ぎ目 -->
+                <path class="brew-shade" d="M66 31 L76 30 L76 67 A31 4 0 0 1 71 69.8 L66 70.3 Z" />
+                <path d="M14 63 A31 4 0 0 0 76 63" class="brew-crease" />
+                <!-- 口の縁と、平らな蓋、小さな円筒のつまみ -->
+                <ellipse class="brew-solid" cx="45" cy="30" rx="31" ry="4" />
+                <ellipse cx="45" cy="29.6" rx="23" ry="2.8" />
+                <path class="brew-solid" d="M41 29 L41 22.5 A4 1.2 0 0 1 49 22.5 L49 29 A4 1.2 0 0 1 41 29 Z" />
+                <ellipse class="brew-solid" cx="45" cy="22.5" rx="4" ry="1.2" />
               </g>
               </g>
             </g>
-            <!-- 注がれる湯（ケトルと一緒に動く）。口から出た勢いで少し前へ膨らんで落ちる -->
-            <path class="brew-stream" d="M112 34 C113.5 50 112.5 72 111 90" />
+            <!-- 注がれる湯（ケトルと一緒に動く）。太く勢いよく流れ、口から出た勢いで少し前へ膨らむ -->
+            <path class="brew-stream" d="M112 34 C114 50 112.8 72 111 90" />
+            <!-- 湯が落ちる所に飛ぶしぶき -->
+            <g class="brew-splash">
+              <circle class="brew-splash-drop" cx="111" cy="89" r="1.4" style="--sx: -7px; --sy: -7px; animation-delay: 0s;" />
+              <circle class="brew-splash-drop" cx="111" cy="89" r="1.1" style="--sx: 6px; --sy: -9px; animation-delay: 0.14s;" />
+              <circle class="brew-splash-drop" cx="111" cy="89" r="1.3" style="--sx: -4px; --sy: -11px; animation-delay: 0.27s;" />
+              <circle class="brew-splash-drop" cx="111" cy="89" r="1" style="--sx: 9px; --sy: -6px; animation-delay: 0.39s;" />
+            </g>
           </g>
 
           <!-- ソーサー付きのカップ -->
@@ -186,8 +199,8 @@
           <g clip-path="url(#brew-cup-clip)">
             <ellipse class="brew-liquid" cx="110" cy="170" rx="38" ry="8" />
             <!-- 最後の雫が落ちた所に広がる波紋 -->
-            <ellipse class="brew-ripple brew-ripple1" cx="112" cy="167" rx="4" ry="1" />
-            <ellipse class="brew-ripple brew-ripple2" cx="112" cy="167" rx="4" ry="1" />
+            <ellipse class="brew-ripple brew-ripple1" cx="113" cy="167" rx="4" ry="1" />
+            <ellipse class="brew-ripple brew-ripple2" cx="113" cy="167" rx="4" ry="1" />
           </g>
 
           <!-- カップの口 -->
@@ -196,8 +209,8 @@
           </g>
 
           <!-- ドリッパーを持ち上げたとき、抽出口から切れ落ちる最後の雫 -->
-          <circle class="brew-drop brew-drop1" cx="112" cy="131" r="2.6" />
-          <circle class="brew-drop brew-drop2" cx="112" cy="131" r="2.1" />
+          <circle class="brew-drop brew-drop1" cx="113" cy="126" r="2.6" />
+          <circle class="brew-drop brew-drop2" cx="113" cy="126" r="2.1" />
 
           <!-- ドリッパー一式（円錐形の陶器のドリッパー）。
                カップの口に載せて淹れ、落とし終えたら持ち上げて外す -->
@@ -246,7 +259,7 @@
               <!-- 粉が奥の紙に接する線 -->
               <path class="brew-grounds-edge" d="M63.5 91 A47 5.2 0 0 1 156.5 91" />
               <!-- 蒸らしで盛り上がる粉の頂 -->
-              <path class="brew-dome" d="M88 92 C96 87.4 124 87.4 132 92" />
+              <path class="brew-dome" d="M84 92 C93 84 127 84 136 92" />
             </g>
 
             <!-- 蒸らしで浮かぶ泡 -->
@@ -269,6 +282,7 @@
           <path class="brew-steam brew-s3" d="M119 164 C121 158 117.5 153 119.5 146 C121 141 118.5 136 120 130" />
           <path class="brew-steam brew-s4" d="M105 163 C103 157 107 151 105 144 C103.5 138 106 132 104.5 125" />
           <path class="brew-steam brew-s5" d="M114.5 164 C116.5 158 113 152 115 146 C117 140 114 134 115.5 127" />
+        </g>
         </g>
       </svg>
 
