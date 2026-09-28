@@ -227,9 +227,17 @@
 
           <!-- 湯気 -->
           <g class="brew-ink">
-            <path class="brew-steam brew-s1" d="M96 156 c6 -10 -6 -16 0 -26" />
-            <path class="brew-steam brew-s2" d="M110 152 c6 -11 -6 -18 0 -29" />
-            <path class="brew-steam brew-s3" d="M124 156 c6 -10 -6 -16 0 -26" />
+            <!-- 形・長さの違う細い筋。pathLength を揃え、どの筋も同じ割合で立ち上らせる -->
+            <path class="brew-steam brew-s1" pathLength="100"
+                  d="M97 161 C93 153 100 147 97 139 C94 131 99 125 96 116" />
+            <path class="brew-steam brew-s2" pathLength="100"
+                  d="M108 160 C112 151 104 144 109 135 C113 127 106 119 110 108" />
+            <path class="brew-steam brew-s3" pathLength="100"
+                  d="M121 161 C125 154 118 148 122 140 C126 133 120 127 123 119" />
+            <path class="brew-steam brew-s4" pathLength="100"
+                  d="M103 159 C100 151 106 144 103 135 C100 127 105 120 101 111" />
+            <path class="brew-steam brew-s5" pathLength="100"
+                  d="M115 160 C118 153 113 147 116 140 C119 133 114 127 117 117" />
           </g>
         </g>
       </svg>

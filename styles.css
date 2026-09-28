@@ -1197,7 +1197,7 @@ ul, ol { list-style: none; }
      brew.js が円の切れ目の時刻を書き込む。既定値は JS が動かなかったときの保険 */
   --brew-end: 11.05s;
   /* 画面が明け始める時刻。Skip 押下時に JS が 0s へ書き換える */
-  --brew-delay: calc(var(--brew-end) + 2.5s);
+  --brew-delay: calc(var(--brew-end) + 3s);
   /* 鉛筆画のトーン。黒鉛らしく、真っ黒より少し青みのあるグレー */
   --graphite: #3a3e46;
 }
@@ -1224,9 +1224,14 @@ ul, ol { list-style: none; }
   gap: 1.5rem;
 }
 
+.brew-stage {
+  /* 絵の表示幅。ラベルの位置合わせにも使う */
+  --brew-art-w: clamp(200px, 34vw, 270px);
+}
+
 .brew-art {
   /* 大きなポットのために枠を左へ広げた分、カップの見た目の大きさを保つよう幅も広げる */
-  inline-size: clamp(200px, 34vw, 270px);
+  inline-size: var(--brew-art-w);
   block-size: auto;
   overflow: visible;
 }
@@ -1469,22 +1474,30 @@ ul, ol { list-style: none; }
   to { transform: none; }
 }
 
-/* ── 湯気 ─────────────────────────────────────────────── */
+/* ── 湯気 ─────────────────────────────────────────────
+   短い線分が筋に沿って下から上へ流れ、揺らぎながら薄れて消える。
+   筋ごとに太さ・濃さ・速さ・流れる向きを変え、揃った動きに見せない。 */
 .brew-steam {
   stroke-width: 0.8;
-  stroke-dasharray: 34;
-  stroke-dashoffset: 34;
+  /* 線分 38 と、筋より長い隙間。dashoffset を動かすと線分が筋を上っていく */
+  stroke-dasharray: 38 110;
+  stroke-dashoffset: 38;
   opacity: 0;
-  animation: brew-steam 2.2s var(--ease) infinite;
+  animation: brew-steam var(--steam-dur, 3s) cubic-bezier(0.3, 0, 0.6, 1) infinite;
 }
-.brew-s1 { animation-delay: calc(var(--brew-end) + 1.75s); }
-.brew-s2 { animation-delay: calc(var(--brew-end) + 1.95s); }
-.brew-s3 { animation-delay: calc(var(--brew-end) + 2.15s); }
+.brew-s1 { --steam-peak: 0.45; --drift: -3px; --steam-dur: 3.1s; animation-delay: calc(var(--brew-end) + 1.5s); }
+.brew-s2 { --steam-peak: 0.5;  --drift: 2px;  --steam-dur: 3.6s; animation-delay: calc(var(--brew-end) + 1.75s); }
+.brew-s3 { --steam-peak: 0.4;  --drift: 3px;  --steam-dur: 2.9s; animation-delay: calc(var(--brew-end) + 2.1s); }
+.brew-s4 { --steam-peak: 0.3;  --drift: -2px; --steam-dur: 3.4s; animation-delay: calc(var(--brew-end) + 2.45s);
+           stroke-width: 0.6; }
+.brew-s5 { --steam-peak: 0.3;  --drift: 2.5px; --steam-dur: 3.2s; animation-delay: calc(var(--brew-end) + 2.8s);
+           stroke-width: 0.6; }
 
 @keyframes brew-steam {
-  0%   { opacity: 0; stroke-dashoffset: 34; transform: translateY(6px); }
-  35%  { opacity: 0.45; }
-  100% { opacity: 0; stroke-dashoffset: 0; transform: translateY(-10px); }
+  0%   { opacity: 0; stroke-dashoffset: 38; transform: translate(0, 2px); }
+  25%  { opacity: var(--steam-peak, 0.4); }
+  60%  { opacity: var(--steam-peak, 0.4); }
+  100% { opacity: 0; stroke-dashoffset: -100; transform: translate(var(--drift, 0), -8px); }
 }
 
 /* ── ラベル ───────────────────────────────────────────── */
@@ -1494,22 +1507,28 @@ ul, ol { list-style: none; }
   letter-spacing: 0.34em;
   text-transform: uppercase;
   color: var(--muted);
+  /* 字間は末尾の文字の後ろにも付くため、同じ幅を先頭に足して左右の釣り合いを取る */
+  padding-inline-start: 0.34em;
+  /* 絵の枠の中心ではなく、カップとドリッパーの中心線（viewBox の x=110）に揃える。
+     枠は x=-80〜220 なので、中心から (110 - 70) / 300 だけ右へずらす */
+  translate: calc(var(--brew-art-w) * 40 / 300) 0;
   opacity: 0;
   animation: fade-up 0.8s var(--ease) 0.5s forwards;
 }
 
+/* 点は「.」「..」「...」と順に増え、消えてまた始まる。
+   隠れている点も幅を取るので、文字の位置は動かない */
 .brew-dots i {
   font-style: normal;
   opacity: 0;
-  animation: brew-dot 1.4s steps(1) infinite;
+  animation: brew-dot-1 1.6s steps(1) infinite;
 }
-.brew-dots i:nth-child(2) { animation-delay: 0.35s; }
-.brew-dots i:nth-child(3) { animation-delay: 0.7s; }
+.brew-dots i:nth-child(2) { animation-name: brew-dot-2; }
+.brew-dots i:nth-child(3) { animation-name: brew-dot-3; }
 
-@keyframes brew-dot {
-  0%, 70%   { opacity: 1; }
-  71%, 100% { opacity: 0; }
-}
+@keyframes brew-dot-1 { 0% { opacity: 0; } 25% { opacity: 1; } }
+@keyframes brew-dot-2 { 0% { opacity: 0; } 50% { opacity: 1; } }
+@keyframes brew-dot-3 { 0% { opacity: 0; } 75% { opacity: 1; } }
 
 .brew-skip {
   position: absolute;
