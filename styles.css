@@ -1194,7 +1194,7 @@ ul, ol { list-style: none; }
 
 :root {
   /* 演出の長さ。Skip 押下時に JS が 0s へ書き換える */
-  --brew-delay: 7.2s;
+  --brew-delay: 9.2s;
   /* 鉛筆画のトーン。黒鉛らしく、真っ黒より少し青みのあるグレー */
   --graphite: #3a3e46;
 }
@@ -1269,20 +1269,24 @@ ul, ol { list-style: none; }
   opacity: 0;
   animation:
     brew-kettle-in 0.8s var(--ease) 0.7s forwards,
-    brew-swirl 1.6s linear 2.95s 1,
-    brew-kettle-out 0.8s var(--ease) 4.8s forwards;
+    brew-swirl 1.8s linear 2.95s 2,
+    brew-kettle-out 0.8s var(--ease) 6.8s forwards;
 }
 
 @keyframes brew-kettle-in  { from { opacity: 0; transform: translate(-10px, -6px); }
                              to   { opacity: 1; transform: none; } }
 @keyframes brew-kettle-out { to { opacity: 0; transform: translate(-8px, -6px); } }
 
-/* 奥行きのある小さな円。手前（下）と奥（上）の動きは横より小さくする */
+/* 奥行きのある小さな円をゆっくり描く。手前（下）と奥（上）の動きは横より小さくする */
 @keyframes brew-swirl {
   0%, 100% { transform: translate(0, 0); }
-  25%      { transform: translate(6px, 1.5px); }
+  12.5%    { transform: translate(4.95px, 0.44px); }
+  25%      { transform: translate(7px, 1.5px); }
+  37.5%    { transform: translate(4.95px, 2.56px); }
   50%      { transform: translate(0, 3px); }
-  75%      { transform: translate(-6px, 1.5px); }
+  62.5%    { transform: translate(-4.95px, 2.56px); }
+  75%      { transform: translate(-7px, 1.5px); }
+  87.5%    { transform: translate(-4.95px, 0.44px); }
 }
 
 /* 注ぎ口の管。太いインク線に細い紙色線を重ね、縁取りのある管に見せる */
@@ -1301,7 +1305,7 @@ ul, ol { list-style: none; }
     brew-tip 0.7s var(--ease) 1.1s forwards,
     brew-tip-rest 0.5s var(--ease) 2.25s forwards,
     brew-tip 0.5s var(--ease) 2.6s forwards,
-    brew-untip 0.6s var(--ease) 4.5s forwards;
+    brew-untip 0.6s var(--ease) 6.5s forwards;
 }
 
 @keyframes brew-tip      { to { transform: rotate(12deg); } }
@@ -1322,7 +1326,7 @@ ul, ol { list-style: none; }
     brew-flow 0.5s linear 1.55s infinite,
     brew-fade-out 0.25s var(--ease) 2.25s forwards,
     brew-fade-in 0.3s var(--ease) 2.9s forwards,
-    brew-fade-out 0.3s var(--ease) 4.45s forwards;
+    brew-fade-out 0.3s var(--ease) 6.45s forwards;
 }
 
 @keyframes brew-fade-in  { to { opacity: 0.7; } }
@@ -1333,7 +1337,7 @@ ul, ol { list-style: none; }
    カップに載せたまま淹れ、落とし終えたら持ち上げて外す。
    外すと珈琲の溜まったカップが現れ、湯気が立つ。 */
 .brew-dripper {
-  animation: brew-dripper-out 1.3s var(--ease) 5.3s forwards;
+  animation: brew-dripper-out 1.3s var(--ease) 7.3s forwards;
 }
 
 @keyframes brew-dripper-out {
@@ -1398,8 +1402,8 @@ ul, ol { list-style: none; }
   transform-origin: center;
   animation: brew-drip 0.7s cubic-bezier(0.5, 0, 0.9, 0.4) forwards;
 }
-.brew-drop1 { animation-delay: 5.9s; }
-.brew-drop2 { animation-delay: 6.15s; }
+.brew-drop1 { animation-delay: 7.9s; }
+.brew-drop2 { animation-delay: 8.15s; }
 
 @keyframes brew-drip {
   0%   { opacity: 0; transform: translateY(0) scale(0.7, 0.8); }
@@ -1417,7 +1421,7 @@ ul, ol { list-style: none; }
   transform-box: fill-box;
   transform-origin: center;
   transform: translateY(26px) scale(0.8);
-  animation: brew-fill 3.2s var(--ease) 2s forwards;
+  animation: brew-fill 5.2s var(--ease) 2s forwards;
 }
 
 @keyframes brew-fill {
@@ -1432,9 +1436,9 @@ ul, ol { list-style: none; }
   opacity: 0;
   animation: brew-steam 2.2s var(--ease) infinite;
 }
-.brew-s1 { animation-delay: 6.2s; }
-.brew-s2 { animation-delay: 6.4s; }
-.brew-s3 { animation-delay: 6.6s; }
+.brew-s1 { animation-delay: 8.2s; }
+.brew-s2 { animation-delay: 8.4s; }
+.brew-s3 { animation-delay: 8.6s; }
 
 @keyframes brew-steam {
   0%   { opacity: 0; stroke-dashoffset: 34; transform: translateY(6px); }
