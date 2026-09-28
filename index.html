@@ -86,9 +86,19 @@
 
           <!-- ソーサー付きのカップ -->
           <g class="brew-ink">
-            <!-- ソーサーと、カップを受けるくぼみ -->
+            <!-- ソーサー。縁の下から底へすぼまる裏側を描き、厚みのある皿にする -->
+            <path class="brew-solid brew-draw brew-d2"
+                  d="M50 217 C52 225 72 232 110 232 C148 232 168 225 170 217 Z" />
+          </g>
+          <!-- ソーサーの裏側の陰 -->
+          <path class="brew-shade" d="M140 229.6 C155 227.6 166 223.4 168.6 219 C166 225 152 230.6 128 231.6 Z" />
+          <g class="brew-ink">
             <ellipse class="brew-solid brew-draw brew-d2" cx="110" cy="217" rx="60" ry="10" />
-            <ellipse class="brew-draw brew-d2" cx="110" cy="216" rx="46" ry="6.5" />
+            <!-- 縁の内側の段と、カップを受けるくぼみ -->
+            <path class="brew-draw brew-d2" d="M56 216.5 A54 8 0 0 0 164 216.5" />
+            <path class="brew-crease" d="M72 218 A38 5.5 0 0 0 148 218" />
+            <!-- カップの高台。先に描いて、胴の塗りで上端を隠す -->
+            <path class="brew-solid brew-draw brew-d2" d="M95 211 L96 219 A14 2.6 0 0 0 124 219 L125 211 Z" />
             <!-- 取っ手。先に描いて、胴の塗りで付け根を隠す -->
             <path class="brew-draw brew-d2" d="M148 174 C171 170 173 197 142 199" />
             <path class="brew-draw brew-d2" d="M149 180 C163 178 163 192 145 193" />
