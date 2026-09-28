@@ -1367,32 +1367,34 @@ ul, ol { list-style: none; }
   transform-box: fill-box;
   transform-origin: center;
   /* 筋が消えるのと合わせて滴下も止める */
-  animation: brew-drip 0.72s cubic-bezier(0.5, 0, 0.9, 0.4) 2;
+  animation: brew-drip 0.55s cubic-bezier(0.5, 0, 0.9, 0.4) 2;
 }
 .brew-drop1 { animation-delay: 1.25s; }
-.brew-drop2 { animation-delay: 1.43s; }
-.brew-drop3 { animation-delay: 1.61s; }
-.brew-drop4 { animation-delay: 1.79s; }
+.brew-drop2 { animation-delay: 1.39s; }
+.brew-drop3 { animation-delay: 1.53s; }
+.brew-drop4 { animation-delay: 1.67s; }
 
 @keyframes brew-drip {
   0%   { opacity: 0; transform: translateY(0) scale(0.7, 0.8); }
-  18%  { opacity: 1; transform: translateY(6px) scale(0.9, 1.1); }
-  82%  { opacity: 1; transform: translateY(54px) scale(0.8, 1.35); }
-  100% { opacity: 0; transform: translateY(60px) scale(1.2, 0.5); }
+  18%  { opacity: 1; transform: translateY(4px) scale(0.9, 1.1); }
+  82%  { opacity: 1; transform: translateY(18px) scale(0.8, 1.35); }
+  100% { opacity: 0; transform: translateY(22px) scale(1.2, 0.5); }
 }
 
-/* ── サーバーに溜まる ─────────────────────────────────── */
+/* ── カップに溜まる ─────────────────────────────────── */
 .brew-liquid {
   fill: url(#brew-hatch-cross);
-  /* 上辺だけがクリップの内側に残り、液面の線になる */
   stroke: var(--graphite);
   stroke-width: 0.9;
-  transform: translateY(70px);
+  /* 深い所では面が小さく見えるよう、沈めながら縮めておく */
+  transform-box: fill-box;
+  transform-origin: center;
+  transform: translateY(26px) scale(0.8);
   animation: brew-fill 2.1s var(--ease) 1.2s forwards;
 }
 
 @keyframes brew-fill {
-  to { transform: translateY(16px); }
+  to { transform: none; }
 }
 
 /* ── 湯気 ─────────────────────────────────────────────── */
