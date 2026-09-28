@@ -1475,29 +1475,32 @@ ul, ol { list-style: none; }
 }
 
 /* ── 湯気 ─────────────────────────────────────────────
-   短い線分が筋に沿って下から上へ流れ、揺らぎながら薄れて消える。
-   筋ごとに太さ・濃さ・速さ・流れる向きを変え、揃った動きに見せない。 */
+   太く薄い筋をぼかした柔らかい煙。珈琲の面から生まれ、
+   上るにつれて横へ広がり、揺らぎの中でねじれながら薄れて消える。
+   筋ごとに濃さ・速さ・流れる向きを変え、揃った動きに見せない。 */
 .brew-steam {
-  stroke-width: 0.8;
-  /* 線分 38 と、筋より長い隙間。dashoffset を動かすと線分が筋を上っていく */
-  stroke-dasharray: 38 110;
-  stroke-dashoffset: 38;
+  fill: none;
+  stroke: var(--graphite);
+  stroke-width: 4.2;
+  stroke-linecap: round;
   opacity: 0;
-  animation: brew-steam var(--steam-dur, 3s) cubic-bezier(0.3, 0, 0.6, 1) infinite;
+  transform-box: fill-box;
+  transform-origin: center bottom;
+  animation: brew-steam var(--steam-dur, 3.6s) cubic-bezier(0.25, 0.1, 0.4, 1) infinite;
 }
-.brew-s1 { --steam-peak: 0.45; --drift: -3px; --steam-dur: 3.1s; animation-delay: calc(var(--brew-end) + 1.5s); }
-.brew-s2 { --steam-peak: 0.5;  --drift: 2px;  --steam-dur: 3.6s; animation-delay: calc(var(--brew-end) + 1.75s); }
-.brew-s3 { --steam-peak: 0.4;  --drift: 3px;  --steam-dur: 2.9s; animation-delay: calc(var(--brew-end) + 2.1s); }
-.brew-s4 { --steam-peak: 0.3;  --drift: -2px; --steam-dur: 3.4s; animation-delay: calc(var(--brew-end) + 2.45s);
-           stroke-width: 0.6; }
-.brew-s5 { --steam-peak: 0.3;  --drift: 2.5px; --steam-dur: 3.2s; animation-delay: calc(var(--brew-end) + 2.8s);
-           stroke-width: 0.6; }
+.brew-s1 { --steam-peak: 0.22; --drift: -5px; --steam-dur: 3.8s; animation-delay: calc(var(--brew-end) + 1.5s); }
+.brew-s2 { --steam-peak: 0.28; --drift: 3px;  --steam-dur: 4.3s; animation-delay: calc(var(--brew-end) + 1.7s); }
+.brew-s3 { --steam-peak: 0.2;  --drift: 6px;  --steam-dur: 3.5s; animation-delay: calc(var(--brew-end) + 2s); }
+.brew-s4 { --steam-peak: 0.16; --drift: -3px; --steam-dur: 4s;   animation-delay: calc(var(--brew-end) + 2.4s);
+           stroke-width: 3.2; }
+.brew-s5 { --steam-peak: 0.16; --drift: 4px;  --steam-dur: 3.7s; animation-delay: calc(var(--brew-end) + 2.8s);
+           stroke-width: 3.2; }
 
 @keyframes brew-steam {
-  0%   { opacity: 0; stroke-dashoffset: 38; transform: translate(0, 2px); }
-  25%  { opacity: var(--steam-peak, 0.4); }
-  60%  { opacity: var(--steam-peak, 0.4); }
-  100% { opacity: 0; stroke-dashoffset: -100; transform: translate(var(--drift, 0), -8px); }
+  0%   { opacity: 0; transform: translate(0, 4px) scale(0.6, 0.3); }
+  25%  { opacity: var(--steam-peak, 0.2); }
+  55%  { opacity: calc(var(--steam-peak, 0.2) * 0.8); }
+  100% { opacity: 0; transform: translate(var(--drift, 0), -26px) scale(1.9, 1.15); }
 }
 
 /* ── ラベル ───────────────────────────────────────────── */

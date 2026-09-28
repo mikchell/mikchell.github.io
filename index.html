@@ -58,6 +58,15 @@
             <feComposite in="pressed" in2="grain-mask" operator="in" />
           </filter>
 
+          <!-- 湯気。筋を大きな揺らぎで波打たせ、ぼかして柔らかい煙にする。
+               縦に細長いノイズで、立ち上る流れに沿った揺らぎにする -->
+          <filter id="brew-steam-filter" filterUnits="userSpaceOnUse" x="70" y="70" width="80" height="110">
+            <feTurbulence type="fractalNoise" baseFrequency="0.028 0.018" numOctaves="2" seed="5" result="swirl" />
+            <feDisplacementMap in="SourceGraphic" in2="swirl" scale="8"
+                               xChannelSelector="R" yChannelSelector="G" result="curled" />
+            <feGaussianBlur in="curled" stdDeviation="2" />
+          </filter>
+
           <!-- 紙フィルターの口。粉はこの内側にだけ見える -->
           <clipPath id="brew-filter-clip">
             <ellipse cx="110" cy="90" rx="50.3" ry="6.3" />
@@ -224,21 +233,17 @@
               <circle class="brew-bubble" cx="109" cy="90.4" r="0.6" />
             </g>
           </g>
+        </g>
 
-          <!-- 湯気 -->
-          <g class="brew-ink">
-            <!-- 形・長さの違う細い筋。pathLength を揃え、どの筋も同じ割合で立ち上らせる -->
-            <path class="brew-steam brew-s1" pathLength="100"
-                  d="M97 161 C93 153 100 147 97 139 C94 131 99 125 96 116" />
-            <path class="brew-steam brew-s2" pathLength="100"
-                  d="M108 160 C112 151 104 144 109 135 C113 127 106 119 110 108" />
-            <path class="brew-steam brew-s3" pathLength="100"
-                  d="M121 161 C125 154 118 148 122 140 C126 133 120 127 123 119" />
-            <path class="brew-steam brew-s4" pathLength="100"
-                  d="M103 159 C100 151 106 144 103 135 C100 127 105 120 101 111" />
-            <path class="brew-steam brew-s5" pathLength="100"
-                  d="M115 160 C118 153 113 147 116 140 C119 133 114 127 117 117" />
-          </g>
+        <!-- 湯気。鉛筆の線のフィルターから外し、柔らかい煙として描く。
+             揺らぎ（ノイズ）はこの g に固定して掛け、中の筋だけを動かす。
+             筋は止まった揺らぎの中を上っていくので、上るにつれて形が崩れ、ねじれていく -->
+        <g class="brew-steam-layer" filter="url(#brew-steam-filter)">
+          <path class="brew-steam brew-s1" d="M101 164 C99 157 103 151 101 144 C99.5 138 102 133 100.5 127" />
+          <path class="brew-steam brew-s2" d="M110 163 C112 156 108 150 110.5 143 C112.5 137 109.5 131 111 123" />
+          <path class="brew-steam brew-s3" d="M119 164 C121 158 117.5 153 119.5 146 C121 141 118.5 136 120 130" />
+          <path class="brew-steam brew-s4" d="M105 163 C103 157 107 151 105 144 C103.5 138 106 132 104.5 125" />
+          <path class="brew-steam brew-s5" d="M114.5 164 C116.5 158 113 152 115 146 C117 140 114 134 115.5 127" />
         </g>
       </svg>
 
