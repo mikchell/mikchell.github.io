@@ -59,12 +59,23 @@
           </filter>
 
           <!-- 湯気。筋を大きな揺らぎで波打たせ、ぼかして柔らかい煙にする。
-               縦に細長いノイズで、立ち上る流れに沿った揺らぎにする -->
-          <filter id="brew-steam-filter" filterUnits="userSpaceOnUse" x="60" y="80" width="100" height="100">
+               白い紙の上でも白い湯気に見えるよう、白い芯の周りに淡い灰色のふちをぼかして敷く -->
+          <filter id="brew-steam-filter" filterUnits="userSpaceOnUse" x="50" y="40" width="120" height="140"
+                  color-interpolation-filters="sRGB">
             <feTurbulence type="fractalNoise" baseFrequency="0.028 0.018" numOctaves="2" seed="5" result="swirl" />
-            <feDisplacementMap in="SourceGraphic" in2="swirl" scale="8"
+            <feDisplacementMap in="SourceGraphic" in2="swirl" scale="10"
                                xChannelSelector="R" yChannelSelector="G" result="curled" />
-            <feGaussianBlur in="curled" stdDeviation="3.2" />
+            <!-- ふち：形を少し太らせてから大きくぼかし、淡い灰色で塗る -->
+            <feMorphology in="curled" operator="dilate" radius="1.2" result="fat" />
+            <feGaussianBlur in="fat" stdDeviation="3.4" result="halo-blur" />
+            <feColorMatrix in="halo-blur" type="matrix"
+                           values="0 0 0 0 0.56  0 0 0 0 0.6  0 0 0 0 0.66  0 0 0 0.55 0" result="halo" />
+            <!-- 芯：白くぼかす -->
+            <feGaussianBlur in="curled" stdDeviation="2.2" result="core" />
+            <feMerge>
+              <feMergeNode in="halo" />
+              <feMergeNode in="core" />
+            </feMerge>
           </filter>
 
           <!-- 湯気の濃さを上下でぼかすマスク。面の近くでは生まれかけ、上では溶けて消える -->
@@ -74,8 +85,8 @@
             <stop offset="0.8" stop-color="#fff" stop-opacity="0.9" />
             <stop offset="1" stop-color="#fff" stop-opacity="0" />
           </linearGradient>
-          <mask id="brew-steam-mask" maskUnits="userSpaceOnUse" x="70" y="96" width="80" height="72">
-            <rect x="70" y="96" width="80" height="72" fill="url(#brew-steam-fade)" />
+          <mask id="brew-steam-mask" maskUnits="userSpaceOnUse" x="50" y="56" width="120" height="112">
+            <rect x="50" y="56" width="120" height="112" fill="url(#brew-steam-fade)" />
           </mask>
 
           <!-- 紙フィルターの口。粉はこの内側にだけ見える -->
@@ -174,6 +185,9 @@
           <!-- カップに溜まる珈琲。ドリッパーの陰で溜まり、外すと現れる -->
           <g clip-path="url(#brew-cup-clip)">
             <ellipse class="brew-liquid" cx="110" cy="170" rx="38" ry="8" />
+            <!-- 最後の雫が落ちた所に広がる波紋 -->
+            <ellipse class="brew-ripple brew-ripple1" cx="112" cy="167" rx="4" ry="1" />
+            <ellipse class="brew-ripple brew-ripple2" cx="112" cy="167" rx="4" ry="1" />
           </g>
 
           <!-- カップの口 -->
@@ -182,8 +196,8 @@
           </g>
 
           <!-- ドリッパーを持ち上げたとき、抽出口から切れ落ちる最後の雫 -->
-          <circle class="brew-drop brew-drop1" cx="110" cy="134" r="2.6" />
-          <circle class="brew-drop brew-drop2" cx="110" cy="134" r="2.1" />
+          <circle class="brew-drop brew-drop1" cx="112" cy="131" r="2.6" />
+          <circle class="brew-drop brew-drop2" cx="112" cy="131" r="2.1" />
 
           <!-- ドリッパー一式（円錐形の陶器のドリッパー）。
                カップの口に載せて淹れ、落とし終えたら持ち上げて外す -->
