@@ -36,7 +36,18 @@
             <feComposite in="drawn" in2="grain-mask" operator="in" />
           </filter>
 
-          <!-- 粉の膨らみなど、軽い陰影に使う片方向のハッチング -->
+          <!-- 紙フィルターの口。粉はこの内側にだけ見える -->
+          <clipPath id="brew-filter-clip">
+            <ellipse cx="110" cy="90" rx="50.3" ry="6.3" />
+          </clipPath>
+
+          <!-- 挽いた粉のざらつきを出す点描 -->
+          <pattern id="brew-stipple" patternUnits="userSpaceOnUse" width="3.4" height="2.6">
+            <circle cx="0.8" cy="0.7" r="0.34" class="brew-stipple-dot" />
+            <circle cx="2.5" cy="1.9" r="0.28" class="brew-stipple-dot" />
+          </pattern>
+
+          <!-- 軽い陰影に使う片方向のハッチング -->
           <pattern id="brew-hatch" patternUnits="userSpaceOnUse" width="3.2" height="3.2"
                    patternTransform="rotate(40)">
             <line x1="0" y1="0" x2="0" y2="3.2" class="brew-hatch-line" />
@@ -158,8 +169,20 @@
                     d="M62 98 A48 8 0 0 0 158 98 L158 101 A48 8 0 0 1 62 101 Z" />
             </g>
 
-            <!-- 粉の膨らみ（紙の口の内側）と、蒸らしで浮かぶ泡 -->
-            <ellipse class="brew-bed" cx="110" cy="91" rx="30" ry="3.5" />
+            <!-- 紙の中に敷き詰めた粉。湯が落ちた中心から濡れて色が濃くなり、
+                 蒸らしでこんもり膨らんでから落ち着く -->
+            <g clip-path="url(#brew-filter-clip)">
+              <ellipse class="brew-grounds" cx="110" cy="92.5" rx="49" ry="5.6" />
+              <ellipse class="brew-wet" cx="110" cy="92.5" rx="38" ry="4.3" />
+            </g>
+            <g class="brew-ink">
+              <!-- 粉が奥の紙に接する線 -->
+              <path class="brew-grounds-edge" d="M63.5 91 A47 5.2 0 0 1 156.5 91" />
+              <!-- 蒸らしで盛り上がる粉の頂 -->
+              <path class="brew-dome" d="M88 92 C96 87.4 124 87.4 132 92" />
+            </g>
+
+            <!-- 蒸らしで浮かぶ泡 -->
             <g class="brew-ink">
               <circle class="brew-bubble" cx="99" cy="90.6" r="1" />
               <circle class="brew-bubble" cx="106" cy="92.2" r="0.8" />

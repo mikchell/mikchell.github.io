@@ -1376,20 +1376,49 @@ ul, ol { list-style: none; }
   30%, 70% { opacity: 0.8; }
 }
 
-/* ── 粉の膨らみ（ブルーム） ───────────────────────────── */
-.brew-bed {
-  fill: url(#brew-hatch);
-  stroke: var(--graphite);
-  stroke-width: 0.6;
+/* ── 粉 ─────────────────────────────────────────────────
+   乾いた粉は最初から紙の中に敷き詰めておく。
+   湯が落ちると中心から濡れて広がり、蒸らしで膨らんでから落ち着く。 */
+.brew-stipple-dot { fill: var(--graphite); }
+
+.brew-grounds,
+.brew-grounds-edge {
+  fill: url(#brew-stipple);
   opacity: 0;
-  transform-origin: 110px 102px;
-  animation: brew-bloom 2s var(--ease) 1.7s forwards;
+  animation: brew-fade-in 0.8s var(--ease) 1.2s forwards;
+}
+.brew-grounds-edge {
+  fill: none;
+  stroke-width: 0.6;
 }
 
-@keyframes brew-bloom {
-  0%   { opacity: 0; transform: scale(0.7) translateY(2px); }
-  45%  { opacity: 0.9; transform: scale(1.08) translateY(-2px); }
-  100% { opacity: 0.75; transform: scale(1) translateY(0); }
+.brew-wet {
+  fill: url(#brew-hatch-cross);
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: brew-wet 1.6s var(--ease) 1.65s forwards;
+}
+
+@keyframes brew-wet {
+  from { opacity: 0; transform: scale(0.12); }
+  to   { opacity: 0.75; transform: scale(1); }
+}
+
+.brew-dome {
+  stroke-width: 0.7;
+  opacity: 0;
+  transform-box: fill-box;
+  transform-origin: center bottom;
+  animation: brew-dome 2.6s var(--ease) 1.8s forwards;
+}
+
+/* 盛り上がって、蒸らしが終わる頃にはしぼんで平らに戻る */
+@keyframes brew-dome {
+  0%   { opacity: 0; transform: scaleY(0.2); }
+  35%  { opacity: 0.8; transform: scaleY(1); }
+  70%  { opacity: 0.6; transform: scaleY(0.8); }
+  100% { opacity: 0; transform: scaleY(0.3); }
 }
 
 /* ── 最後の雫 ─────────────────────────────────────────
