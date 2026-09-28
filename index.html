@@ -1,25 +1,314 @@
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>mikchell — Portfolio</title>
+  <meta name="description" content="mikchell — Software Engineer. 技術・研究・ビジネスを横断するポートフォリオ。" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Noto+Sans+JP:wght@300;400;500&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
 
+  <!-- ページを開いた最初の画面。珈琲を淹れ終えると本編へ切り替わる。
+       CSS だけで最後まで再生されるため、JS が失敗しても取り残されない。 -->
+  <div id="brew" class="brew">
+    <div class="brew-stage">
+      <svg class="brew-art" viewBox="-80 -12 300 248" role="img" aria-label="珈琲を淹れています">
+        <defs>
+          <!-- カップの口。珈琲の面はこの楕円の内側だけに見える -->
+          <clipPath id="brew-cup-clip">
+            <ellipse cx="110" cy="164" rx="39.4" ry="8.4" />
+          </clipPath>
+
+          <!-- 鉛筆の線。手で引いた線のムラを重ねていく
+               1. 低周波ノイズで輪郭を揺らす
+               2. 別の揺らぎでずらした線を薄く重ね、なぞり直した二度描きにする
+               3. ゆるやかなノイズで線の濃淡を変え、筆圧のムラを出す
+               4. 高周波ノイズで紙目のかすれを抜く -->
+          <filter id="brew-pencil" filterUnits="userSpaceOnUse" x="-100" y="-30" width="340" height="290"
+                  color-interpolation-filters="sRGB">
+            <feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7" result="wobble" />
+            <feDisplacementMap in="SourceGraphic" in2="wobble" scale="2.6"
+                               xChannelSelector="R" yChannelSelector="G" result="line" />
+
+            <feTurbulence type="fractalNoise" baseFrequency="0.05" numOctaves="2" seed="23" result="wobble-2" />
+            <feDisplacementMap in="SourceGraphic" in2="wobble-2" scale="4.2"
+                               xChannelSelector="G" yChannelSelector="R" result="retrace-raw" />
+            <feColorMatrix in="retrace-raw" type="matrix"
+                           values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 0.3 0" result="retrace" />
+            <feMerge result="drawn">
+              <feMergeNode in="retrace" />
+              <feMergeNode in="line" />
+            </feMerge>
+
+            <!-- 筆圧：ゆるやかなノイズを不透明度にし、弱い所ほど線を淡くする（0.65〜1） -->
+            <feTurbulence type="fractalNoise" baseFrequency="0.02" numOctaves="1" seed="11" result="pressure-noise" />
+            <feColorMatrix in="pressure-noise" type="matrix"
+                           values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  1.5 0 0 0 0.2" result="pressure" />
+            <feComposite in="drawn" in2="pressure" operator="in" result="pressed" />
+
+            <feTurbulence type="fractalNoise" baseFrequency="1.1" numOctaves="1" seed="3" result="grain" />
+            <!-- ノイズの明るさをそのまま不透明度にし、7割ほどを残す -->
+            <feColorMatrix in="grain" type="matrix"
+                           values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 -1.6 1.55" result="grain-mask" />
+            <feComposite in="pressed" in2="grain-mask" operator="in" />
+          </filter>
+
+          <!-- 湯気。筋を大きな揺らぎで波打たせ、ぼかして柔らかい煙にする。
+               透明な湯気に見えるよう、芯はほぼ透かし、ふちだけを淡い灰色でうっすら残す。
+               芯の白はわずかに重ね、背後の線をかすかに霞ませる -->
+          <filter id="brew-steam-filter" filterUnits="userSpaceOnUse" x="50" y="40" width="120" height="140"
+                  color-interpolation-filters="sRGB">
+            <feTurbulence type="fractalNoise" baseFrequency="0.028 0.018" numOctaves="2" seed="5" result="swirl" />
+            <feDisplacementMap in="SourceGraphic" in2="swirl" scale="10"
+                               xChannelSelector="R" yChannelSelector="G" result="curled" />
+            <feGaussianBlur in="curled" stdDeviation="2.2" result="core" />
+            <!-- ふち：形を少し太らせてぼかし、芯を抜いて輪郭の霞だけにする -->
+            <feMorphology in="curled" operator="dilate" radius="1.4" result="fat" />
+            <feGaussianBlur in="fat" stdDeviation="2.6" result="fat-blur" />
+            <feComposite in="fat-blur" in2="core" operator="out" result="rim" />
+            <feColorMatrix in="rim" type="matrix"
+                           values="0 0 0 0 0.6  0 0 0 0 0.65  0 0 0 0 0.71  0 0 0 0.6 0" result="rim-tone" />
+            <feColorMatrix in="core" type="matrix"
+                           values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.35 0" result="veil" />
+            <feMerge>
+              <feMergeNode in="rim-tone" />
+              <feMergeNode in="veil" />
+            </feMerge>
+          </filter>
+
+          <!-- 湯気の濃さを上下でぼかすマスク。面の近くでは生まれかけ、上では溶けて消える -->
+          <linearGradient id="brew-steam-fade" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#fff" stop-opacity="0" />
+            <stop offset="0.45" stop-color="#fff" stop-opacity="1" />
+            <stop offset="0.8" stop-color="#fff" stop-opacity="0.9" />
+            <stop offset="1" stop-color="#fff" stop-opacity="0" />
+          </linearGradient>
+          <mask id="brew-steam-mask" maskUnits="userSpaceOnUse" x="50" y="56" width="120" height="112">
+            <rect x="50" y="56" width="120" height="112" fill="url(#brew-steam-fade)" />
+          </mask>
+
+          <!-- 紙フィルターの口。粉はこの内側にだけ見える -->
+          <clipPath id="brew-filter-clip">
+            <ellipse cx="110" cy="90" rx="50.3" ry="6.3" />
+          </clipPath>
+
+          <!-- 挽いた粉のざらつきを出す点描。粒の大きさと並びを揃えない -->
+          <pattern id="brew-stipple" patternUnits="userSpaceOnUse" width="7.3" height="5.1">
+            <circle cx="0.8" cy="0.7" r="0.34" class="brew-stipple-dot" />
+            <circle cx="3.1" cy="1.6" r="0.26" class="brew-stipple-dot" />
+            <circle cx="5.6" cy="0.5" r="0.3" class="brew-stipple-dot" />
+            <circle cx="1.9" cy="3.4" r="0.24" class="brew-stipple-dot" />
+            <circle cx="4.6" cy="3.9" r="0.36" class="brew-stipple-dot" />
+            <circle cx="6.7" cy="2.8" r="0.22" class="brew-stipple-dot" />
+          </pattern>
+
+          <!-- 軽い陰影に使う片方向のハッチング。間隔と濃さを 1 本ずつ変える -->
+          <pattern id="brew-hatch" patternUnits="userSpaceOnUse" width="10" height="10"
+                   patternTransform="rotate(38)">
+            <line x1="0.4" y1="0" x2="0.1" y2="10" class="brew-hatch-line" />
+            <line x1="3.6" y1="0" x2="3.4" y2="10" class="brew-hatch-line brew-hatch-line-3" />
+            <line x1="6.3" y1="0" x2="6.6" y2="10" class="brew-hatch-line brew-hatch-line-2" />
+          </pattern>
+
+          <!-- 珈琲の濃さを出すクロスハッチング。二方向目は直角にせず、少し寝かせる -->
+          <pattern id="brew-hatch-cross" patternUnits="userSpaceOnUse" width="8" height="8"
+                   patternTransform="rotate(38)">
+            <line x1="0.3" y1="0" x2="0" y2="8" class="brew-hatch-line" />
+            <line x1="2.9" y1="0" x2="3.1" y2="8" class="brew-hatch-line brew-hatch-line-2" />
+            <line x1="5.4" y1="0" x2="5.2" y2="8" class="brew-hatch-line" />
+            <line x1="0" y1="1.2" x2="8" y2="2.6" class="brew-hatch-line brew-hatch-line-2" />
+            <line x1="0" y1="4.4" x2="8" y2="5.9" class="brew-hatch-line brew-hatch-line-3" />
+          </pattern>
+        </defs>
+
+        <!-- カメラ。絵全体を包み、注いでいる間はドリッパーへ寄り、終わると引いてカップへ寄る -->
+        <g class="brew-camera">
+
+        <!-- 絵全体を鉛筆のフィルターに通す -->
+        <g filter="url(#brew-pencil)">
+
+          <!-- 円筒形のドリップケトル。swirl で円を描き、tip で傾ける -->
+          <g class="brew-kettle">
+            <!-- 位置と大きさは静的な transform 属性で掛け、CSS アニメーションと分ける -->
+            <g transform="translate(-59.2 -27) scale(1.45)">
+              <g class="brew-kettle-tip">
+              <g class="brew-ink">
+                <!-- 背中の角ばった取っ手。胴の上と下の 2 点で付き、縦の握りを持つ。
+                     二重線で厚みを出し、付け根は胴の塗りで隠す -->
+                <path d="M16 34 L3 34 Q-1 34 -1 38 L-1 60 Q-1 64 3 64 L16 64" />
+                <path d="M16 40 L6.5 40 Q5 40 5 41.5 L5 56.5 Q5 58 6.5 58 L16 58" />
+                <!-- 注ぎ口。胴の下から横へ出て強く曲がって立ち上がり、上で鋭く折れて真下を向く。
+                     根元は太く、先へ行くほど細くなる -->
+                <path class="brew-solid"
+                      d="M74 58 C84.5 58 87 52 88 42 C89 30 92 20 99.5 16 C104.5 13.5 110.5 15 112.2 21
+                         L112.2 27.5 L108.8 27.5 L108.8 22 C108 18.8 104.5 18.3 101.5 20
+                         C96.5 23 93.5 32 92.8 43 C92 56 88 65 74 65 Z" />
+                <!-- 胴。まっすぐな円筒で、底は手前に丸く見える -->
+                <path class="brew-solid" d="M14 30 L14 67 A31 4 0 0 0 76 67 L76 30 Z" />
+                <!-- 胴の右側に落ちる陰と、底の少し上の継ぎ目 -->
+                <path class="brew-shade" d="M66 31 L76 30 L76 67 A31 4 0 0 1 71 69.8 L66 70.3 Z" />
+                <path d="M14 63 A31 4 0 0 0 76 63" class="brew-crease" />
+                <!-- 口の縁と、平らな蓋、小さな円筒のつまみ -->
+                <ellipse class="brew-solid" cx="45" cy="30" rx="31" ry="4" />
+                <ellipse cx="45" cy="29.6" rx="23" ry="2.8" />
+                <path class="brew-solid" d="M41 29 L41 22.5 A4 1.2 0 0 1 49 22.5 L49 29 A4 1.2 0 0 1 41 29 Z" />
+                <ellipse class="brew-solid" cx="45" cy="22.5" rx="4" ry="1.2" />
+              </g>
+              </g>
+            </g>
+            <!-- 注がれる湯（ケトルと一緒に動く）。太く勢いよく流れ、口から出た勢いで少し前へ膨らむ -->
+            <path class="brew-stream" d="M112 34 C114 50 112.8 72 111 90" />
+            <!-- 湯が落ちる所に飛ぶしぶき -->
+            <g class="brew-splash">
+              <circle class="brew-splash-drop" cx="111" cy="89" r="1.4" style="--sx: -7px; --sy: -7px; animation-delay: 0s;" />
+              <circle class="brew-splash-drop" cx="111" cy="89" r="1.1" style="--sx: 6px; --sy: -9px; animation-delay: 0.14s;" />
+              <circle class="brew-splash-drop" cx="111" cy="89" r="1.3" style="--sx: -4px; --sy: -11px; animation-delay: 0.27s;" />
+              <circle class="brew-splash-drop" cx="111" cy="89" r="1" style="--sx: 9px; --sy: -6px; animation-delay: 0.39s;" />
+            </g>
+          </g>
+
+          <!-- ソーサー付きのカップ -->
+          <g class="brew-ink">
+            <!-- ソーサー。縁の下から底へすぼまる裏側を描き、厚みのある皿にする -->
+            <path class="brew-solid brew-draw brew-d2"
+                  d="M50 217 C52 225 72 232 110 232 C148 232 168 225 170 217 Z" />
+          </g>
+          <!-- ソーサーの裏側の陰 -->
+          <path class="brew-shade" d="M140 229.6 C155 227.6 166 223.4 168.6 219 C166 225 152 230.6 128 231.6 Z" />
+          <g class="brew-ink">
+            <ellipse class="brew-solid brew-draw brew-d2" cx="110" cy="217" rx="60" ry="10" />
+            <!-- 縁の内側の段と、カップを受けるくぼみ -->
+            <path class="brew-draw brew-d2" d="M56 216.5 A54 8 0 0 0 164 216.5" />
+            <path class="brew-crease" d="M72 218 A38 5.5 0 0 0 148 218" />
+            <!-- カップの高台。先に描いて、胴の塗りで上端を隠す -->
+            <path class="brew-solid brew-draw brew-d2" d="M95 211 L96 219 A14 2.6 0 0 0 124 219 L125 211 Z" />
+            <!-- 取っ手。先に描いて、胴の塗りで付け根を隠す -->
+            <path class="brew-draw brew-d2" d="M148 174 C171 170 173 197 142 199" />
+            <path class="brew-draw brew-d2" d="M149 180 C163 178 163 192 145 193" />
+            <!-- 胴。上辺は口の手前半分の弧 -->
+            <path class="brew-solid brew-draw brew-d2"
+                  d="M70 164 A40 9 0 0 0 150 164 C150 196 136 215 110 215 C84 215 70 196 70 164 Z" />
+          </g>
+
+          <!-- カップに溜まる珈琲。ドリッパーの陰で溜まり、外すと現れる -->
+          <g clip-path="url(#brew-cup-clip)">
+            <ellipse class="brew-liquid" cx="110" cy="170" rx="38" ry="8" />
+            <!-- 最後の雫が落ちた所に広がる波紋 -->
+            <ellipse class="brew-ripple brew-ripple1" cx="113" cy="167" rx="4" ry="1" />
+            <ellipse class="brew-ripple brew-ripple2" cx="113" cy="167" rx="4" ry="1" />
+          </g>
+
+          <!-- カップの口 -->
+          <g class="brew-ink">
+            <ellipse class="brew-draw brew-d2" cx="110" cy="164" rx="40" ry="9" />
+          </g>
+
+          <!-- ドリッパーを持ち上げたとき、抽出口から切れ落ちる最後の雫 -->
+          <circle class="brew-drop brew-drop1" cx="113" cy="126" r="2.6" />
+          <circle class="brew-drop brew-drop2" cx="113" cy="126" r="2.1" />
+
+          <!-- ドリッパー一式（円錐形の陶器のドリッパー）。
+               カップの口に載せて淹れ、落とし終えたら持ち上げて外す -->
+          <g class="brew-dripper">
+            <g class="brew-ink">
+              <!-- カップの口に載る台座（厚みのある円盤） -->
+              <path class="brew-solid brew-draw brew-d1"
+                    d="M68 160 A42 9 0 0 0 152 160 v3 A42 9 0 0 1 68 163 Z" />
+              <ellipse class="brew-solid brew-draw brew-d1" cx="110" cy="160" rx="42" ry="9" />
+              <!-- 輪になった取っ手。先に描いて、本体の塗りで付け根を隠す -->
+              <path class="brew-draw brew-d1" d="M66 104 C45 103 45 131 80 127" />
+              <path class="brew-draw brew-d1" d="M69 110 C55 110 55 124 76 121" />
+              <!-- 円錐の本体と、台座へつながる短い首。紙色で塗り、奥の線を隠す -->
+              <path class="brew-solid brew-draw brew-d1"
+                    d="M63 101 L99 150 L100 161 A10 2 0 0 0 120 161 L121 150 L157 101 Z" />
+              <path class="brew-draw brew-d1" d="M99 150 A11 2 0 0 0 121 150" />
+            </g>
+
+            <!-- 本体の右側に落ちる陰 -->
+            <path class="brew-shade" d="M139 101 L157 101 L121 150 L115 150 Z" />
+            <path class="brew-shade" d="M116 151 L121 150 L120 161 L116 162 Z" />
+            <path class="brew-shade" d="M136 168 A42 9 0 0 0 152 160 v3 A42 9 0 0 1 136 171 Z" />
+
+            <g class="brew-ink">
+              <!-- 紙フィルター。縁から上へはみ出し、口は少し波打つ -->
+              <path class="brew-solid brew-fill-only" d="M59 90 A51 7 0 0 1 161 90 L157 99 L63 99 Z" />
+              <path class="brew-draw brew-d1" d="M63 99 L59 90 A51 7 0 0 1 161 90 L157 99" />
+              <path class="brew-draw brew-d1"
+                    d="M59 90 C72 95.5 92 97.5 110 96.6 C127 97.6 147 95.2 161 90" />
+              <!-- 紙の折りじわと、圧着の継ぎ目のギザギザ -->
+              <path class="brew-crease" d="M78 95.6 l1.2 6.2 M97 96.9 l0.4 7.6 M124 97.1 l-0.4 7.4" />
+              <path class="brew-draw brew-d1"
+                    d="M140 96 l1.4 1.2 l-1.4 1.2 l1.4 1.2 l-1.4 1.2 l1.4 1.2 l-1.4 1.2 l1.4 1.2" />
+              <!-- 本体の縁。厚みのある帯として、手前の半分だけ描く -->
+              <path class="brew-solid brew-draw brew-d1"
+                    d="M62 98 A48 8 0 0 0 158 98 L158 101 A48 8 0 0 1 62 101 Z" />
+            </g>
+
+            <!-- 紙の中に敷き詰めた粉。湯が落ちた中心から濡れて色が濃くなり、
+                 蒸らしでこんもり膨らんでから落ち着く -->
+            <g clip-path="url(#brew-filter-clip)">
+              <ellipse class="brew-grounds" cx="110" cy="92.5" rx="49" ry="5.6" />
+              <ellipse class="brew-wet" cx="110" cy="92.5" rx="38" ry="4.3" />
+            </g>
+            <g class="brew-ink">
+              <!-- 粉が奥の紙に接する線 -->
+              <path class="brew-grounds-edge" d="M63.5 91 A47 5.2 0 0 1 156.5 91" />
+              <!-- 蒸らしで盛り上がる粉の頂 -->
+              <path class="brew-dome" d="M84 92 C93 84 127 84 136 92" />
+            </g>
+
+            <!-- 蒸らしで浮かぶ泡 -->
+            <g class="brew-ink">
+              <circle class="brew-bubble" cx="99" cy="90.6" r="1" />
+              <circle class="brew-bubble" cx="106" cy="92.2" r="0.8" />
+              <circle class="brew-bubble" cx="113" cy="89.6" r="1.1" />
+              <circle class="brew-bubble" cx="120" cy="91.6" r="0.8" />
+              <circle class="brew-bubble" cx="109" cy="90.4" r="0.6" />
+            </g>
+          </g>
+        </g>
+
+        <!-- 湯気。鉛筆の線のフィルターから外し、柔らかい煙として描く。
+             揺らぎ（ノイズ）はこの g に固定して掛け、中の筋だけを動かす。
+             筋は止まった揺らぎの中を上っていくので、上るにつれて形が崩れ、ねじれていく -->
+        <g class="brew-steam-layer" filter="url(#brew-steam-filter)" mask="url(#brew-steam-mask)">
+          <path class="brew-steam brew-s1" d="M101 164 C99 157 103 151 101 144 C99.5 138 102 133 100.5 127" />
+          <path class="brew-steam brew-s2" d="M110 163 C112 156 108 150 110.5 143 C112.5 137 109.5 131 111 123" />
+          <path class="brew-steam brew-s3" d="M119 164 C121 158 117.5 153 119.5 146 C121 141 118.5 136 120 130" />
+          <path class="brew-steam brew-s4" d="M105 163 C103 157 107 151 105 144 C103.5 138 106 132 104.5 125" />
+          <path class="brew-steam brew-s5" d="M114.5 164 C116.5 158 113 152 115 146 C117 140 114 134 115.5 127" />
+        </g>
+        </g>
+      </svg>
+
+      <p class="brew-label">Brewing<span class="brew-dots"><i>.</i><i>.</i><i>.</i></span></p>
+    </div>
+
+    <button type="button" class="brew-skip" id="brew-skip">Skip</button>
+  </div>
+
+  <!-- 全画面背景ネットワーク（最背面に常駐） -->
+  <canvas id="net-canvas" aria-hidden="true"></canvas>
+
+  <!-- 上部スクロール進捗ライン -->
+  <div id="progress-bar" aria-hidden="true"></div>
+
   <!-- ナビゲーション -->
   <nav id="navbar">
     <div class="nav-inner">
+      <a class="nav-brand" href="#hero">
+        <span class="nav-brand-dot" aria-hidden="true"></span>mikchell
+      </a>
       <ul class="nav-links">
-        <li><a href="#hero">Home</a></li>
-        <li><a href="#archive">Archive</a></li>
-        <li><a href="#works">Works</a></li>
-        <li><a href="#articles">Articles</a></li>
-        <li><a href="#about">About</a></li>
+        <li><a href="#archive" data-nav="archive"><span class="nav-idx">00</span>Archive</a></li>
+        <li><a href="#works" data-nav="works"><span class="nav-idx">01</span>Works</a></li>
+        <li><a href="#articles" data-nav="articles"><span class="nav-idx">02</span>Articles</a></li>
+        <li><a href="#about" data-nav="about"><span class="nav-idx">03</span>About</a></li>
       </ul>
       <div id="nav-icons" class="nav-icons">
         <!-- data.js から生成 -->
@@ -29,19 +318,31 @@
 
   <!-- ヒーローセクション -->
   <section id="hero">
+    <div class="hero-graph">
 
-    <!-- キャンバスアニメーション -->
-    <canvas id="hero-canvas"></canvas>
+      <!-- 中心ノード -->
+      <div class="hero-hub" data-node="hub">
+        <h1 class="hero-name">mikchell</h1>
+        <p class="hero-role">Software Engineer</p>
+      </div>
 
-    <!-- 中央テキスト -->
-    <div class="hero-center">
-      <h1 class="hero-name">mikchell</h1>
-      <p class="hero-eyebrow">Software Engineer</p>
-    </div>
+      <!-- 周辺ノード（中心とエッジで接続される） -->
+      <a class="hero-spoke" data-node="spoke" style="--angle: -90deg; --i: 0"  href="#archive">
+        <span class="spoke-idx">00</span><span class="spoke-label">Archive</span>
+      </a>
+      <a class="hero-spoke" data-node="spoke" style="--angle: -18deg; --i: 1"  href="#works">
+        <span class="spoke-idx">01</span><span class="spoke-label">Works</span>
+      </a>
+      <a class="hero-spoke" data-node="spoke" style="--angle: 54deg; --i: 2"   href="#articles">
+        <span class="spoke-idx">02</span><span class="spoke-label">Articles</span>
+      </a>
+      <a class="hero-spoke" data-node="spoke" style="--angle: 126deg; --i: 3"  href="#about">
+        <span class="spoke-idx">03</span><span class="spoke-label">About</span>
+      </a>
+      <a class="hero-spoke" data-node="spoke" style="--angle: 198deg; --i: 4"  href="#footer">
+        <span class="spoke-idx">04</span><span class="spoke-label">Contact</span>
+      </a>
 
-    <!-- 右上ソーシャルアイコン -->
-    <div id="hero-social" class="hero-social">
-      <!-- data.js から生成 -->
     </div>
 
     <!-- スクロールヒント (左下) -->
@@ -49,15 +350,20 @@
       <span>Scroll</span>
       <div class="scroll-line"></div>
     </div>
-
   </section>
 
   <!-- アーカイブセクション -->
-  <section id="archive">
+  <section id="archive" class="net-section">
     <div class="section-inner">
-      <header class="section-header">
-        <span class="section-label">00 / Archive</span>
+      <header class="section-header reveal-item">
+        <span class="section-label">00</span>
+        <h2 class="section-title">Archive</h2>
+        <span class="section-rule" aria-hidden="true"></span>
+        <span class="section-count" id="archive-count"></span>
       </header>
+      <div id="archive-filters" class="filter-bar" role="group" aria-label="カテゴリで絞り込み">
+        <!-- data.js のカテゴリから生成 -->
+      </div>
       <div id="archive-grid" class="archive-grid">
         <!-- data.js から動的生成 -->
       </div>
@@ -65,10 +371,13 @@
   </section>
 
   <!-- 作品セクション -->
-  <section id="works">
+  <section id="works" class="net-section">
     <div class="section-inner">
-      <header class="section-header">
-        <span class="section-label">01 / Works</span>
+      <header class="section-header reveal-item">
+        <span class="section-label">01</span>
+        <h2 class="section-title">Works</h2>
+        <span class="section-rule" aria-hidden="true"></span>
+        <span class="section-count" id="works-count"></span>
       </header>
       <div id="works-grid" class="works-grid">
         <!-- data.js から動的生成 -->
@@ -77,39 +386,48 @@
   </section>
 
   <!-- 記事セクション -->
-  <section id="articles">
+  <section id="articles" class="net-section">
     <div class="section-inner">
-      <header class="section-header">
-        <span class="section-label">02 / Articles</span>
+      <header class="section-header reveal-item">
+        <span class="section-label">02</span>
+        <h2 class="section-title">Articles</h2>
+        <span class="section-rule" aria-hidden="true"></span>
+        <span class="section-count" id="articles-count"></span>
       </header>
-      <div class="articles-platforms">
-        <div id="articles-list" class="articles-list">
-          <!-- data.js から動的生成 -->
-        </div>
+      <div id="articles-list" class="articles-list">
+        <!-- data.js から動的生成 -->
       </div>
     </div>
   </section>
 
   <!-- About セクション -->
-  <section id="about">
-    <div id="about-bg"></div>
-    <div class="section-inner about-inner">
-      <div class="about-text">
-        <header class="section-header">
-          <span class="section-label reveal-item">03 / About</span>
-        </header>
-        <p id="about-bio" class="about-bio">
-          <!-- data.js から生成 -->
-        </p>
-        <div id="about-skills" class="about-skills">
-          <!-- data.js から生成 -->
+  <section id="about" class="net-section">
+    <div class="section-inner">
+      <header class="section-header reveal-item">
+        <span class="section-label">03</span>
+        <h2 class="section-title">About</h2>
+        <span class="section-rule" aria-hidden="true"></span>
+      </header>
+
+      <div class="about-layout">
+        <!-- 本文の背後に敷く写真。装飾なので読み上げ対象から外す -->
+        <div class="about-bg" aria-hidden="true">
+          <img src="images/myprofile.jpg" alt="" loading="lazy" decoding="async">
         </div>
-        <div id="about-links" class="about-links">
-          <!-- data.js から生成 -->
+
+        <div class="about-main">
+          <p id="about-bio" class="about-bio">
+            <!-- data.js から生成 -->
+          </p>
+          <div id="about-links" class="about-links">
+            <!-- data.js から生成 -->
+          </div>
         </div>
-        <div id="career-timeline" class="career-timeline">
-          <!-- data.js から生成 -->
-        </div>
+      </div>
+
+      <h3 class="sub-label timeline-label">Timeline</h3>
+      <div id="career-timeline" class="career-timeline">
+        <!-- data.js から生成 -->
       </div>
     </div>
   </section>
@@ -117,14 +435,17 @@
   <!-- フッター -->
   <footer id="footer">
     <div class="footer-inner">
-      <p class="footer-copy">&copy; <span id="footer-year"></span> mikchell. All rights reserved.</p>
+      <div class="footer-node" data-node="hub">
+        <span class="footer-mark" aria-hidden="true"></span>
+        <p class="footer-name">mikchell</p>
+      </div>
       <div id="footer-links" class="footer-social">
         <!-- data.js から生成 -->
       </div>
+      <p class="footer-copy">&copy; <span id="footer-year"></span> mikchell</p>
     </div>
   </footer>
 
-  <script src="data.js"></script>
-  <script src="script.js"></script>
+  <script type="module" src="js/main.js"></script>
 </body>
 </html>
