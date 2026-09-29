@@ -8,7 +8,7 @@
   <meta name="description" content="mikchell — Software Engineer. 技術・研究・ビジネスを横断するポートフォリオ。" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@600&family=Noto+Sans+JP:wght@400;500;700&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
@@ -322,8 +322,9 @@
   <!-- ナビゲーション -->
   <nav id="navbar">
     <div class="nav-inner">
-      <a class="nav-brand" href="#hero">
-        <span class="nav-brand-dot" aria-hidden="true"></span>mikchell
+      <!-- ターミナル風のロゴ。青いプロンプトの後に名前を置き、末尾でカーソルが点滅する -->
+      <a class="nav-brand" href="#hero" aria-label="mikchell">
+        <span class="nav-brand-prompt" aria-hidden="true">~/</span><span class="nav-brand-name">mikchell</span><span class="nav-brand-cursor" aria-hidden="true"></span>
       </a>
       <ul class="nav-links">
         <li><a href="#archive" data-nav="archive"><span class="nav-idx">00</span>Archive</a></li>

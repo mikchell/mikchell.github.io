@@ -35,10 +35,12 @@
   /* タイポ
      display : 見出し・名前（細身のセリフ。ギャラリーの表題のように）
      ui      : 番号・ラベル・ボタン（小さなゴシック）
-     sans    : 日本語本文 */
+     sans    : 日本語本文
+     mono    : ヘッダーのロゴ（ターミナル風の等幅） */
   --font-display: 'Instrument Serif', 'Times New Roman', Georgia, serif;
   --font-ui:      'Inter', system-ui, -apple-system, sans-serif;
   --font-sans:    'Noto Sans JP', 'Inter', system-ui, sans-serif;
+  --font-mono:    'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
 
   /* その他 */
   --radius:     3px;
@@ -136,26 +138,50 @@ ul, ol { list-style: none; }
   gap: clamp(1rem, 4vw, 3rem);
 }
 
-/* セリフ体は小さいと縦横線が潰れるため、ナビでも十分な字面サイズを確保する */
-.nav-brand {
-  font-family: var(--font-display);
-  font-size: 1.5rem;
-  line-height: 1;
-  letter-spacing: 0.01em;
-  display: inline-flex;
-  align-items: center;
-  gap: 0.6rem;
-  /* 細い線を滲ませずに描く */
-  -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
+/* PC では本文の幅に揃えず画面いっぱいに広げ、ロゴを左端、ナビを右端に寄せる */
+@media (min-width: 1024px) {
+  .nav-inner {
+    max-inline-size: none;
+    padding-inline: clamp(1.5rem, 2.5vw, 2.75rem);
+  }
 }
 
-.nav-brand-dot {
-  inline-size: 6px;
-  block-size: 6px;
-  border-radius: 50%;
+/* ロゴ。ターミナル風に、青いプロンプト「~/」の後に名前を置き、末尾でカーソルが点滅する */
+.nav-brand {
+  display: inline-flex;
+  align-items: center;
+  font-family: var(--font-mono);
+  font-weight: 600;
+  font-size: 1.3rem;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  color: var(--ink);
+}
+
+.nav-brand-prompt {
+  color: var(--accent);
+  margin-inline-end: 0.5em;
+}
+
+/* 文字の高さに合わせた四角いカーソル */
+.nav-brand-cursor {
+  inline-size: 0.56em;
+  block-size: 1.1em;
+  margin-inline-start: 0.18em;
   background: var(--accent);
-  box-shadow: 0 0 0 3px var(--accent-soft);
+  animation: nav-cursor-blink 1.1s steps(1) infinite;
+}
+
+@keyframes nav-cursor-blink {
+  50% { opacity: 0; }
+}
+
+/* ホバーで名前も青くする */
+.nav-brand-name { transition: color 0.3s var(--ease); }
+.nav-brand:hover .nav-brand-name { color: var(--accent); }
+
+@media (prefers-reduced-motion: reduce) {
+  .nav-brand-cursor { animation: none; }
 }
 
 .nav-links {
