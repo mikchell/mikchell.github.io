@@ -61,7 +61,7 @@
           <!-- 湯気。筋を大きな揺らぎで波打たせ、ぼかして柔らかい煙にする。
                透明な湯気に見えるよう、芯はほぼ透かし、ふちだけを淡い灰色でうっすら残す。
                芯の白はわずかに重ね、背後の線をかすかに霞ませる -->
-          <filter id="brew-steam-filter" filterUnits="userSpaceOnUse" x="40" y="10" width="140" height="170"
+          <filter id="brew-steam-filter" filterUnits="userSpaceOnUse" x="0" y="0" width="220" height="180"
                   color-interpolation-filters="sRGB">
             <feTurbulence type="fractalNoise" baseFrequency="0.028 0.018" numOctaves="2" seed="5" result="swirl" />
             <feDisplacementMap in="SourceGraphic" in2="swirl" scale="15"
@@ -81,6 +81,14 @@
             </feMerge>
           </filter>
 
+          <!-- 霞。揺らぎで形を崩し、大きくぼかして輪郭のないもやにする -->
+          <filter id="brew-haze-filter" filterUnits="userSpaceOnUse" x="0" y="0" width="220" height="180">
+            <feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="9" result="haze-noise" />
+            <feDisplacementMap in="SourceGraphic" in2="haze-noise" scale="14"
+                               xChannelSelector="R" yChannelSelector="G" result="haze-shape" />
+            <feGaussianBlur in="haze-shape" stdDeviation="5" />
+          </filter>
+
           <!-- 湯気の濃さを上下でぼかすマスク。面の近くでは生まれかけ、上では溶けて消える -->
           <linearGradient id="brew-steam-fade" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0" stop-color="#fff" stop-opacity="0" />
@@ -88,8 +96,8 @@
             <stop offset="0.8" stop-color="#fff" stop-opacity="0.9" />
             <stop offset="1" stop-color="#fff" stop-opacity="0" />
           </linearGradient>
-          <mask id="brew-steam-mask" maskUnits="userSpaceOnUse" x="40" y="30" width="140" height="138">
-            <rect x="40" y="30" width="140" height="138" fill="url(#brew-steam-fade)" />
+          <mask id="brew-steam-mask" maskUnits="userSpaceOnUse" x="0" y="20" width="220" height="148">
+            <rect x="0" y="20" width="220" height="148" fill="url(#brew-steam-fade)" />
           </mask>
 
           <!-- 紙フィルターの口。粉はこの内側にだけ見える -->
@@ -271,14 +279,21 @@
         <!-- 湯気。鉛筆の線のフィルターから外し、柔らかい煙として描く。
              揺らぎ（ノイズ）はこの g に固定して掛け、中の筋だけを動かす。
              筋は止まった揺らぎの中を上っていくので、上るにつれて形が崩れ、ねじれていく -->
+        <!-- 面の上に広がる霞。輪郭を持たない淡いもやとして、膨らみながら四方へ広がって消える -->
+        <g filter="url(#brew-haze-filter)" mask="url(#brew-steam-mask)">
+          <ellipse class="brew-haze brew-h1" cx="110" cy="156" rx="16" ry="7" />
+          <ellipse class="brew-haze brew-h2" cx="110" cy="156" rx="12" ry="6" />
+        </g>
+
         <g class="brew-steam-layer" filter="url(#brew-steam-filter)" mask="url(#brew-steam-mask)">
-          <path class="brew-steam brew-s1" d="M101 164 C99 157 103 151 101 144 C99.5 138 102 133 100.5 127" />
-          <path class="brew-steam brew-s2" d="M110 163 C112 156 108 150 110.5 143 C112.5 137 109.5 131 111 123" />
-          <path class="brew-steam brew-s3" d="M119 164 C121 158 117.5 153 119.5 146 C121 141 118.5 136 120 130" />
-          <path class="brew-steam brew-s4" d="M105 163 C103 157 107 151 105 144 C103.5 138 106 132 104.5 125" />
-          <path class="brew-steam brew-s5" d="M114.5 164 C116.5 158 113 152 115 146 C117 140 114 134 115.5 127" />
-          <path class="brew-steam brew-s6" d="M96 165 C94.5 159 98 154 96.5 148 C95 143 97.5 139 96 134" />
-          <path class="brew-steam brew-s7" d="M124 165 C125.5 159 122 154 123.5 148 C125 143 122.5 139 124 134" />
+          <!-- 面の左右に並ぶ筋。外側の筋ほど外へ大きく開いていく -->
+          <path class="brew-steam brew-s1" d="M94 165 C92 158 96 152 94 145 C92.5 139 95 134 93.5 128" />
+          <path class="brew-steam brew-s2" d="M100 165 C98 158 102 152 100 145 C98.5 139 101 134 99.5 128" />
+          <path class="brew-steam brew-s3" d="M105 165 C103 158 107 152 105 145 C103.5 139 106 134 104.5 128" />
+          <path class="brew-steam brew-s4" d="M110 165 C108 158 112 152 110 145 C108.5 139 111 134 109.5 128" />
+          <path class="brew-steam brew-s5" d="M115 165 C113 158 117 152 115 145 C113.5 139 116 134 114.5 128" />
+          <path class="brew-steam brew-s6" d="M120 165 C118 158 122 152 120 145 C118.5 139 121 134 119.5 128" />
+          <path class="brew-steam brew-s7" d="M126 165 C124 158 128 152 126 145 C124.5 139 127 134 125.5 128" />
         </g>
         </g>
       </svg>
