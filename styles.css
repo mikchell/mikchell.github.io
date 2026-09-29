@@ -1228,7 +1228,7 @@ ul, ol { list-style: none; }
 
 .brew-stage {
   /* 絵の表示幅。ラベルの位置合わせにも使う */
-  /* 寄っても全体が収まるよう、絵の周りに余白を取った枠（330 × 280）を表示する */
+  /* 寄っても全体が収まるよう、絵の周りに余白を取った枠（330 × 305）を表示する */
   --brew-art-w: clamp(220px, 37.4vw, 297px);
 }
 
@@ -1267,8 +1267,8 @@ ul, ol { list-style: none; }
 /* ── カメラ ───────────────────────────────────────────
    注いでいる間は寄り、締めくくりで引いて、最後に湯気の立つカップへゆっくり寄る。
    どの時点でも絵全体が枠に収まるよう、寄る大きさと中心を決めている。
-   - 注いでいる間：ポットからソーサーまで（x -62〜172, y 1〜234）を 1.15 倍にし、
-     枠（y -30〜250）の上下に収まるよう 7 だけ上へずらす
+   - 注いでいる間：ポットからソーサーまで（x -48〜172, y -26〜234）を 1.15 倍にし、
+     枠（y -55〜250）の上下に収まるよう 4.55 だけ上へずらす
    - 最後：カップと湯気（x 50〜172, y 60〜234）へ 1.2 倍。中心 (110,160) に寄るよう平行移動を足す */
 .brew-camera {
   transform-box: view-box;
@@ -1279,7 +1279,7 @@ ul, ol { list-style: none; }
     brew-cam-cup 2.8s ease-in-out calc(var(--brew-end) + 1.6s) forwards;
 }
 
-@keyframes brew-cam-in  { to { transform: translate(0, -7px) scale(1.15); } }
+@keyframes brew-cam-in  { to { transform: translate(0, -4.55px) scale(1.15); } }
 @keyframes brew-cam-out { to { transform: none; } }
 @keyframes brew-cam-cup { to { transform: translate(-8px, -8.6px) scale(1.2); } }
 
@@ -1347,7 +1347,7 @@ ul, ol { list-style: none; }
 
 .brew-kettle-tip {
   /* 胴の底を支点に傾ける */
-  transform-origin: 45px 71px;
+  transform-origin: 43px 71px;
   animation:
     brew-tip 0.7s var(--ease) 1.1s forwards,
     brew-tip-rest 0.4s var(--ease) 3.35s forwards,
