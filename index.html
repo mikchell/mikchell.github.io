@@ -61,10 +61,10 @@
           <!-- 湯気。筋を大きな揺らぎで波打たせ、ぼかして柔らかい煙にする。
                透明な湯気に見えるよう、芯はほぼ透かし、ふちだけを淡い灰色でうっすら残す。
                芯の白はわずかに重ね、背後の線をかすかに霞ませる -->
-          <filter id="brew-steam-filter" filterUnits="userSpaceOnUse" x="50" y="40" width="120" height="140"
+          <filter id="brew-steam-filter" filterUnits="userSpaceOnUse" x="40" y="10" width="140" height="170"
                   color-interpolation-filters="sRGB">
             <feTurbulence type="fractalNoise" baseFrequency="0.028 0.018" numOctaves="2" seed="5" result="swirl" />
-            <feDisplacementMap in="SourceGraphic" in2="swirl" scale="10"
+            <feDisplacementMap in="SourceGraphic" in2="swirl" scale="15"
                                xChannelSelector="R" yChannelSelector="G" result="curled" />
             <feGaussianBlur in="curled" stdDeviation="2.2" result="core" />
             <!-- ふち：形を少し太らせてぼかし、芯を抜いて輪郭の霞だけにする -->
@@ -88,8 +88,8 @@
             <stop offset="0.8" stop-color="#fff" stop-opacity="0.9" />
             <stop offset="1" stop-color="#fff" stop-opacity="0" />
           </linearGradient>
-          <mask id="brew-steam-mask" maskUnits="userSpaceOnUse" x="50" y="56" width="120" height="112">
-            <rect x="50" y="56" width="120" height="112" fill="url(#brew-steam-fade)" />
+          <mask id="brew-steam-mask" maskUnits="userSpaceOnUse" x="40" y="30" width="140" height="138">
+            <rect x="40" y="30" width="140" height="138" fill="url(#brew-steam-fade)" />
           </mask>
 
           <!-- 紙フィルターの口。粉はこの内側にだけ見える -->
@@ -200,19 +200,12 @@
           <!-- カップに溜まる珈琲。ドリッパーの陰で溜まり、外すと現れる -->
           <g clip-path="url(#brew-cup-clip)">
             <ellipse class="brew-liquid" cx="110" cy="170" rx="38" ry="8" />
-            <!-- 最後の雫が落ちた所に広がる波紋 -->
-            <ellipse class="brew-ripple brew-ripple1" cx="113" cy="167" rx="4" ry="1" />
-            <ellipse class="brew-ripple brew-ripple2" cx="113" cy="167" rx="4" ry="1" />
           </g>
 
           <!-- カップの口 -->
           <g class="brew-ink">
             <ellipse class="brew-draw brew-d2" cx="110" cy="164" rx="40" ry="9" />
           </g>
-
-          <!-- ドリッパーを持ち上げたとき、抽出口から切れ落ちる最後の雫 -->
-          <circle class="brew-drop brew-drop1" cx="113" cy="126" r="2.6" />
-          <circle class="brew-drop brew-drop2" cx="113" cy="126" r="2.1" />
 
           <!-- ドリッパー一式（円錐形の陶器のドリッパー）。
                カップの口に載せて淹れ、落とし終えたら持ち上げて外す -->
@@ -284,6 +277,8 @@
           <path class="brew-steam brew-s3" d="M119 164 C121 158 117.5 153 119.5 146 C121 141 118.5 136 120 130" />
           <path class="brew-steam brew-s4" d="M105 163 C103 157 107 151 105 144 C103.5 138 106 132 104.5 125" />
           <path class="brew-steam brew-s5" d="M114.5 164 C116.5 158 113 152 115 146 C117 140 114 134 115.5 127" />
+          <path class="brew-steam brew-s6" d="M96 165 C94.5 159 98 154 96.5 148 C95 143 97.5 139 96 134" />
+          <path class="brew-steam brew-s7" d="M124 165 C125.5 159 122 154 123.5 148 C125 143 122.5 139 124 134" />
         </g>
         </g>
       </svg>
