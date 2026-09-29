@@ -29,7 +29,7 @@
                2. 別の揺らぎでずらした線を薄く重ね、なぞり直した二度描きにする
                3. ゆるやかなノイズで線の濃淡を変え、筆圧のムラを出す
                4. 高周波ノイズで紙目のかすれを抜く -->
-          <filter id="brew-pencil" filterUnits="userSpaceOnUse" x="-100" y="-30" width="340" height="290"
+          <filter id="brew-pencil" filterUnits="userSpaceOnUse" x="-100" y="-60" width="340" height="320"
                   color-interpolation-filters="sRGB">
             <feTurbulence type="fractalNoise" baseFrequency="0.035" numOctaves="2" seed="7" result="wobble" />
             <feDisplacementMap in="SourceGraphic" in2="wobble" scale="2.6"
@@ -59,27 +59,25 @@
           </filter>
 
           <!-- 湯気。筋を大きな揺らぎで波打たせ、ぼかして柔らかい煙にする。
-               透明な湯気に見えるよう、芯はほぼ透かし、ふちだけを淡い灰色でうっすら残す。
-               芯の白はわずかに重ね、背後の線をかすかに霞ませる -->
+               暗い色は一切使わず白だけで描き、背後の淡い陰の上に白く浮かび上がらせる -->
           <filter id="brew-steam-filter" filterUnits="userSpaceOnUse" x="0" y="0" width="220" height="180"
                   color-interpolation-filters="sRGB">
             <feTurbulence type="fractalNoise" baseFrequency="0.028 0.018" numOctaves="2" seed="5" result="swirl" />
             <feDisplacementMap in="SourceGraphic" in2="swirl" scale="15"
                                xChannelSelector="R" yChannelSelector="G" result="curled" />
-            <feGaussianBlur in="curled" stdDeviation="2.2" result="core" />
-            <!-- ふち：形を少し太らせてぼかし、芯を抜いて輪郭の霞だけにする -->
-            <feMorphology in="curled" operator="dilate" radius="1.4" result="fat" />
-            <feGaussianBlur in="fat" stdDeviation="2.6" result="fat-blur" />
-            <feComposite in="fat-blur" in2="core" operator="out" result="rim" />
-            <feColorMatrix in="rim" type="matrix"
-                           values="0 0 0 0 0.6  0 0 0 0 0.65  0 0 0 0 0.71  0 0 0 0.6 0" result="rim-tone" />
-            <feColorMatrix in="core" type="matrix"
-                           values="0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.35 0" result="veil" />
-            <feMerge>
-              <feMergeNode in="rim-tone" />
-              <feMergeNode in="veil" />
-            </feMerge>
+            <feGaussianBlur in="curled" stdDeviation="2.4" />
           </filter>
+
+          <!-- 湯気の背後に鉛筆で塗る陰の濃さ。中心ほど濃く、外へ向かって紙へ溶ける -->
+          <radialGradient id="brew-backdrop-fade" cx="0.5" cy="0.5" r="0.5">
+            <stop offset="0" stop-color="#fff" stop-opacity="1" />
+            <stop offset="0.35" stop-color="#fff" stop-opacity="0.75" />
+            <stop offset="0.7" stop-color="#fff" stop-opacity="0.25" />
+            <stop offset="1" stop-color="#fff" stop-opacity="0" />
+          </radialGradient>
+          <mask id="brew-backdrop-mask" maskUnits="userSpaceOnUse" x="-20" y="0" width="260" height="200">
+            <ellipse cx="110" cy="112" rx="92" ry="80" fill="url(#brew-backdrop-fade)" />
+          </mask>
 
           <!-- 霞。揺らぎで形を崩し、大きくぼかして輪郭のないもやにする -->
           <filter id="brew-haze-filter" filterUnits="userSpaceOnUse" x="0" y="0" width="220" height="180">
@@ -140,6 +138,10 @@
         <!-- 絵全体を鉛筆のフィルターに通す -->
         <g filter="url(#brew-pencil)">
 
+          <!-- 白い湯気を浮かび上がらせるため、カップの周りの背景に鉛筆の斜線で淡く塗る陰。
+               白い湯気がこの斜線を消しゴムで抜いたように見える。ドリッパーを外した後に現れる -->
+          <rect class="brew-backdrop" x="18" y="32" width="184" height="160" mask="url(#brew-backdrop-mask)" />
+
           <!-- 背の高い細口のドリップポット。swirl で円を描き、tip で傾ける -->
           <g class="brew-kettle">
             <!-- 位置と大きさは静的な transform 属性で掛け、CSS アニメーションと分ける -->
@@ -172,7 +174,13 @@
               </g>
             </g>
             <!-- 注がれる湯（ケトルと一緒に動く）。太く勢いよく流れ、口から出た勢いで少し前へ膨らむ -->
-            <path class="brew-stream" d="M113 13 C115.5 36 113 68 111 90" />
+            <g class="brew-stream">
+              <!-- 水流。注ぎ口から前へ押し出されて放物線を描き、落ちるにつれて細くなる -->
+              <path class="brew-stream-body"
+                    d="M111.9 13 C114.6 24 114 58 110.3 90 L111.7 90 C115.6 58 116.6 24 114.3 13 Z" />
+              <!-- 水流の中を流れ落ちる光の筋 -->
+              <path class="brew-stream-glint" d="M113.3 14 C115.4 26 114.6 58 111 88" />
+            </g>
             <!-- 湯が落ちる所に飛ぶしぶき -->
             <g class="brew-splash">
               <circle class="brew-splash-drop" cx="111" cy="89" r="1.4" style="--sx: -7px; --sy: -7px; animation-delay: 0s;" />

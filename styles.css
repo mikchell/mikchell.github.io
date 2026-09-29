@@ -1200,7 +1200,7 @@ ul, ol { list-style: none; }
   --brew-delay: calc(var(--brew-end) + 3s);
   /* 鉛筆画のトーン。黒鉛らしく、真っ黒より少し青みのあるグレー */
   --graphite: #3a3e46;
-  /* 湯気の色。白い紙の上でかろうじて見える、青みを帯びた淡い灰色 */
+  /* 湯気の色。暗い色は使わず白だけで描き、背後の淡い陰で浮かび上がらせる */
   --steam: #ffffff;
 }
 
@@ -1366,24 +1366,33 @@ ul, ol { list-style: none; }
 
 /* 注がれる湯。破線を流して途切れない水流に見せる */
 .brew-stream {
-  fill: none;
-  stroke: var(--graphite);
-  stroke-width: 2;
-  stroke-linecap: round;
-  /* 切れ目をごく短くし、途切れない太い水流に見せる */
-  stroke-dasharray: 22 2;
   opacity: 0;
   animation:
     brew-fade-in 0.3s var(--ease) 1.55s forwards,
-    brew-flow 0.22s linear 1.55s infinite,
     brew-fade-out 0.25s var(--ease) 3.3s forwards,
     brew-fade-in 0.3s var(--ease) 3.95s forwards,
     brew-fade-out 0.3s var(--ease) var(--brew-end) forwards;
 }
 
+/* 途切れない一本の水流。塗りで描き、根元は太く先は細い */
+.brew-stream-body {
+  fill: var(--graphite);
+  stroke: none;
+}
+
+/* 水流の中を流れ落ちる光。短い白い線分を下へ流し、水が動いているように見せる */
+.brew-stream-glint {
+  fill: none;
+  stroke: var(--paper);
+  stroke-width: 0.55;
+  stroke-linecap: round;
+  stroke-dasharray: 3 10;
+  animation: brew-flow 0.26s linear infinite;
+}
+
 @keyframes brew-fade-in  { to { opacity: 0.7; } }
 @keyframes brew-fade-out { to { opacity: 0; } }
-@keyframes brew-flow     { to { stroke-dashoffset: -24; } }
+@keyframes brew-flow     { to { stroke-dashoffset: -13; } }
 
 /* ── ドリッパー ───────────────────────────────────────
    カップに載せたまま淹れ、落とし終えたら持ち上げて外す。
@@ -1519,6 +1528,15 @@ ul, ol { list-style: none; }
   to { transform: none; }
 }
 
+/* 湯気の背後の陰。ドリッパーを外した後、白い湯気が見えるよう背景をそっと沈める */
+.brew-backdrop {
+  fill: url(#brew-hatch-cross);
+  opacity: 0;
+  animation: brew-backdrop-in 1.6s var(--ease) calc(var(--brew-end) + 1s) forwards;
+}
+
+@keyframes brew-backdrop-in { to { opacity: 0.6; } }
+
 /* ── 湯気 ─────────────────────────────────────────────
    太く淡い筋をぼかした柔らかい煙。珈琲の面の左右から立ち上り、
    外側の筋ほど外へ大きく傾いて開き、四方へ広がりながら薄れて消える。
@@ -1558,8 +1576,8 @@ ul, ol { list-style: none; }
 }
 
 .brew-haze {
-  /* 白い紙の上でうっすら見える、ごく淡い灰色のもや */
-  fill: #dde2e8;
+  /* 湯気と同じく白で描き、背後の陰の上で白いもやに見せる */
+  fill: var(--steam);
   opacity: 0;
   transform-box: fill-box;
   transform-origin: center;
@@ -1571,7 +1589,7 @@ ul, ol { list-style: none; }
 /* 面の上から膨らみ、上へ上りながら四方へ広がって消える */
 @keyframes brew-haze {
   0%   { opacity: 0; transform: translate(0, 4px) scale(0.6, 0.5); }
-  25%  { opacity: 0.55; }
+  25%  { opacity: 0.8; }
   100% { opacity: 0; transform: translate(0, -40px) scale(4.2, 3.2); }
 }
 
