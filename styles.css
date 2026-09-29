@@ -136,27 +136,49 @@ ul, ol { list-style: none; }
   gap: clamp(1rem, 4vw, 3rem);
 }
 
-/* セリフ体は小さいと縦横線が潰れるため、ナビでも十分な字面サイズを確保する */
+/* ロゴ。ネットワーク図のノードを模したマークと、ナビと同じゴシック体の太字を並べる */
 .nav-brand {
-  font-family: var(--font-display);
-  font-size: 1.5rem;
-  line-height: 1;
-  letter-spacing: 0.01em;
   display: inline-flex;
   align-items: center;
-  gap: 0.6rem;
-  /* 細い線を滲ませずに描く */
-  -webkit-font-smoothing: antialiased;
-  text-rendering: optimizeLegibility;
+  gap: 0.45rem;
+  color: var(--ink);
 }
 
-.nav-brand-dot {
-  inline-size: 6px;
-  block-size: 6px;
-  border-radius: 50%;
-  background: var(--accent);
-  box-shadow: 0 0 0 3px var(--accent-soft);
+.nav-brand-mark {
+  inline-size: 25px;
+  block-size: 25px;
+  overflow: visible;
 }
+
+.nav-brand-edges line {
+  stroke: var(--ink);
+  stroke-width: 1.3;
+  stroke-linecap: round;
+  stroke-opacity: 0.45;
+  transition: stroke 0.3s var(--ease), stroke-opacity 0.3s var(--ease);
+}
+
+.nav-brand-node { fill: var(--ink); }
+.nav-brand-hub  { fill: var(--accent); }
+
+.nav-brand-halo {
+  fill: var(--accent-soft);
+  transform-box: fill-box;
+  transform-origin: center;
+  transition: transform 0.4s var(--ease), fill 0.4s var(--ease);
+}
+
+.nav-brand-name {
+  font-family: var(--font-ui);
+  font-weight: 600;
+  font-size: 1.02rem;
+  letter-spacing: -0.015em;
+  line-height: 1;
+}
+
+/* ホバーで線が青くなり、青いノードの光が広がる */
+.nav-brand:hover .nav-brand-edges line { stroke: var(--accent); stroke-opacity: 0.8; }
+.nav-brand:hover .nav-brand-halo { transform: scale(1.5); fill: rgba(var(--accent-rgb), 0.14); }
 
 .nav-links {
   display: flex;

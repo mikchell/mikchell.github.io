@@ -302,7 +302,19 @@
   <nav id="navbar">
     <div class="nav-inner">
       <a class="nav-brand" href="#hero">
-        <span class="nav-brand-dot" aria-hidden="true"></span>mikchell
+        <!-- ネットワーク図に合わせたマーク。3 つのノードを線でつなぎ、頂点の 1 つだけを青く光らせる -->
+        <svg class="nav-brand-mark" viewBox="0 0 24 24" aria-hidden="true">
+          <g class="nav-brand-edges">
+            <line x1="12" y1="4.5" x2="4.5" y2="18" />
+            <line x1="12" y1="4.5" x2="19.5" y2="15" />
+            <line x1="4.5" y1="18" x2="19.5" y2="15" />
+          </g>
+          <circle class="nav-brand-node" cx="4.5" cy="18" r="2" />
+          <circle class="nav-brand-node" cx="19.5" cy="15" r="2" />
+          <circle class="nav-brand-halo" cx="12" cy="4.5" r="4.5" />
+          <circle class="nav-brand-hub" cx="12" cy="4.5" r="2.6" />
+        </svg>
+        <span class="nav-brand-name">mikchell</span>
       </a>
       <ul class="nav-links">
         <li><a href="#archive" data-nav="archive"><span class="nav-idx">00</span>Archive</a></li>
